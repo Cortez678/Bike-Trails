@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Bike Trails | Веломаршруты для райдеров</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Hero секция -->
+        <header class="hero">
+            <div class="hero-badge">🚵‍♂️ RIDE THE TRAILS</div>
+            <h1 class="hero-title">Bike <span class="gradient-text">Trails</span></h1>
+            <p class="hero-subtitle">Откройте лучшие веломаршруты для райдеров любого уровня</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">12+</div>
+                    <div class="stat-label">Маршрутов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">340км</div>
+                    <div class="stat-label">Всего трасс</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Уровня сложности</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Фильтры -->
+        <div class="filters-section">
+            <h2 class="section-title">Выбери свой маршрут</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-level="all">Все маршруты</button>
+                <button class="filter-btn" data-level="easy">🟢 Лёгкие</button>
+                <button class="filter-btn" data-level="medium">🔵 Средние</button>
+                <button class="filter-btn" data-level="hard">⚫ Сложные</button>
+            </div>
+        </div>
+
+        <!-- Список маршрутов -->
+        <div class="trails-container" id="trailsContainer">
+            <!-- Карточки будут добавлены через JS -->
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2025 Bike Trails — для настоящих райдеров</p>
+            <p class="footer-note">Выбирай маршрут, бери велосипед и вперёд!</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
