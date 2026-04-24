@@ -1,354 +1,151 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0a0f1a 0%, #0d1425 100%);
-    color: #e8edf5;
-    line-height: 1.5;
-}
-
-.app-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem 2rem 1rem;
-}
-
-.hero {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 1rem;
-    background: rgba(15, 25, 45, 0.6);
-    border-radius: 2rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.hero-badge {
-    display: inline-block;
-    background: rgba(74, 144, 226, 0.2);
-    padding: 0.4rem 1rem;
-    border-radius: 100px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #4a90e2;
-    margin-bottom: 1rem;
-}
-
-.hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    letter-spacing: -1px;
-}
-
-.gradient-text {
-    background: linear-gradient(135deg, #4a90e2, #7b3fe4);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.hero-subtitle {
-    font-size: 1.2rem;
-    color: #9aaec5;
-    max-width: 600px;
-    margin: 0 auto 2rem;
-}
-
-.stats-grid {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-}
-
-.stat-card {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 1rem 1.8rem;
-    border-radius: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #4a90e2;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: #8a9bb5;
-    margin-top: 0.3rem;
-}
-
-.filters-section {
-    margin-bottom: 2.5rem;
-}
-
-.section-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.filter-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.filter-btn {
-    background: rgba(30, 40, 60, 0.8);
-    border: none;
-    padding: 0.7rem 1.8rem;
-    border-radius: 100px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #c0d0e8;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.filter-btn:hover {
-    background: rgba(74, 144, 226, 0.3);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.filter-btn.active {
-    background: linear-gradient(135deg, #4a90e2, #7b3fe4);
-    color: white;
-    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
-}
-
-.trails-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.8rem;
-    margin: 2rem 0;
-}
-
-.trail-card {
-    background: rgba(20, 30, 45, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 1.5rem;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    cursor: pointer;
-}
-
-.trail-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.5);
-    border-color: rgba(74, 144, 226, 0.3);
-}
-
-.card-image {
-    height: 180px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    padding: 0.8rem;
-}
-
-.difficulty-badge {
-    display: inline-block;
-    padding: 0.3rem 0.9rem;
-    border-radius: 100px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-}
-
-.difficulty-easy { color: #4cd964; }
-.difficulty-medium { color: #ff9f0a; }
-.difficulty-hard { color: #ff3b30; }
-
-.card-content {
-    padding: 1.3rem;
-}
-
-.trail-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.trail-description {
-    font-size: 0.85rem;
-    color: #a0b2cc;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-}
-
-.trail-stats {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.8rem;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: #b8c7e5;
-}.rating {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.5rem;
-}
-
-.stars {
-    color: #ffb800;
-    letter-spacing: 2px;
-}
-
-/* Страница маршрута */
-.trail-page {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.back-link {
-    display: inline-block;
-    margin-bottom: 2rem;
-    color: #4a90e2;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.back-link:hover {
-    color: #7b3fe4;
-}
-
-.trail-header {
-    margin-bottom: 2rem;
-}
-
-.trail-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.trail-meta {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-}
-
-.meta-item {
-    background: rgba(74, 144, 226, 0.15);
-    padding: 0.5rem 1rem;
-    border-radius: 100px;
-    font-size: 0.9rem;
-}
-
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.gallery img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 1rem;
-    transition: transform 0.3s;
-}
-
-.gallery img:hover {
-    transform: scale(1.02);
-}
-
-.trail-description-full {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1.5rem;
-    border-radius: 1rem;
-    margin-bottom: 2rem;
-    line-height: 1.6;
-}
-
-.trail-description-full h3 {
-    margin-bottom: 1rem;
-    color: #4a90e2;
-}
-
-.trail-description-full ul {
-    margin-left: 1.5rem;
-    margin-top: 0.5rem;
-}
-
-.trail-description-full li {
-    margin-bottom: 0.3rem;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid rgba(74, 144, 226, 0.2);
-    border-top: 3px solid #4a90e2;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 3rem auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.footer {
-    text-align: center;
-    margin-top: 3rem;
-    padding: 2rem 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 0.85rem;
-    color: #6e85a8;
-}
-
-.footer-note {
-    margin-top: 0.5rem;
-    font-size: 0.75rem;
-}
-
-@media (max-width: 768px) {
-    .app-container {
-        padding: 1rem;
+const trailsData = [
+    {
+        id: 1,
+        name: "Воробьёвы горы",
+        description: "Легендарный маршрут по Москве-реке с панорамным видом на город. Проходит через парк, набережную и смотровые площадки.",
+        difficulty: "easy",
+        distance: 15.5,
+        elevation: 120,
+        rating: 4.8,
+        location: "Москва"
+    },
+    {
+        id: 2,
+        name: "Куршская коса",
+        description: "Уникальный маршрут по национальному парку между морем и заливом. Песчаные дюны, сосновый лес и побережье Балтики.",
+        difficulty: "medium",
+        distance: 22.0,
+        elevation: 180,
+        rating: 4.9,
+        location: "Калининградская область"
+    },
+    {
+        id: 3,
+        name: "Лаго-Наки",
+        description: "Высокогорный маршрут по альпийским лугам Адыгеи. Горы, водопады и виды, которые захватывают дух.",
+        difficulty: "hard",
+        distance: 28.5,
+        elevation: 850,
+        rating: 5.0,
+        location: "Адыгея"
+    },
+    {
+        id: 4,
+        name: "Алтайский Марс",
+        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы в долине реки Чуя.",
+        difficulty: "hard",
+        distance: 32.0,
+        elevation: 620,
+        rating: 4.9,
+        location: "Республика Алтай"
+    },
+    {
+        id: 5,
+        name: "Байкальская петля",
+        description: "Кольцевой маршрут вдоль озера Байкал с заездом в пик Черского и живописные бухты.",
+        difficulty: "medium",
+        distance: 35.0,
+        elevation: 540,
+        rating: 4.8,
+        location: "Иркутская область / Бурятия"
+    },
+    {
+        id: 6,
+        name: "Долина гейзеров",
+        description: "Сложнейший маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы и дикая природа.",
+        difficulty: "hard",
+        distance: 18.0,
+        elevation: 950,
+        rating: 5.0,
+        location: "Камчатский край"
     }
-    .hero-title {
-        font-size: 2.3rem;
-    }
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-    .section-title {
-        font-size: 1.4rem;
-    }
-    .trails-container {
-        grid-template-columns: 1fr;
-    }
-    .trail-header h1 {
-        font-size: 1.8rem;
-    }
-    .gallery {
-        grid-template-columns: 1fr;
+];
+
+function getDifficultyColor(difficulty) {
+    switch(difficulty) {
+        case 'easy': return { class: 'difficulty-easy', text: '🟢 Лёгкий' };
+        case 'medium': return { class: 'difficulty-medium', text: '🔵 Средний' };
+        case 'hard': return { class: 'difficulty-hard', text: '⚫ Сложный' };
+        default: return { class: '', text: difficulty };
     }
 }
+
+function getImageGradient(id) {
+    const gradients = {
+        1: 'linear-gradient(135deg, #2d5a2c, #1a3d19)',
+        2: 'linear-gradient(135deg, #c2a559, #8b6b3d)',
+        3: 'linear-gradient(135deg, #2c5a5a, #1a3d3d)',
+        4: 'linear-gradient(135deg, #8b3d3d, #5a2c2c)',
+        5: 'linear-gradient(135deg, #2c5a8b, #1a3d5a)',
+        6: 'linear-gradient(135deg, #3d3d5a, #2c2c3d)'
+    };
+    return gradients[id] || 'linear-gradient(135deg, #2b2d42, #353b48)';
+}
+
+function getStarsHTML(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    let starsHTML = '';
+    for (let i = 0; i < fullStars; i++) starsHTML += '★';
+    if (hasHalfStar) starsHTML += '½';
+    const emptyStars = 5 - Math.ceil(rating);
+    for (let i = 0; i < emptyStars; i++) starsHTML += '☆';
+    return `<span class="stars">${starsHTML}</span> <span style="font-size:0.8rem; color:#8a9bb5;">${rating}</span>`;
+}
+
+function createTrailCard(trail) {
+    const diff = getDifficultyColor(trail.difficulty);
+    const backgroundGradient = getImageGradient(trail.id);
+    return `
+        <div class="trail-card" data-difficulty="${trail.difficulty}" data-id="${trail.id}">
+            <div class="card-image" style="background: ${backgroundGradient};">
+                <span class="difficulty-badge ${diff.class}">${diff.text}</span>
+            </div>
+            <div class="card-content">
+                <h3 class="trail-title">${trail.name}</h3>
+                <p class="trail-description">${trail.description}</p>
+                <div class="trail-stats">
+                    <span class="stat-item">📏 ${trail.distance} км</span><span class="stat-item">⛰️ ${trail.elevation} м</span>
+                    <span class="stat-item">📍 ${trail.location}</span>
+                </div>
+                <div class="rating">${getStarsHTML(trail.rating)}</div>
+            </div>
+        </div>
+    `;
+}
+
+function filterTrails(level) {
+    const filteredTrails = level === 'all' 
+        ? trailsData 
+        : trailsData.filter(trail => trail.difficulty === level);
+    const container = document.getElementById('trailsContainer');
+    if (filteredTrails.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:3rem; color:#8a9bb5;">🚴 Нет маршрутов с таким уровнем сложности</div>';
+        return;
+    }
+    container.innerHTML = filteredTrails.map(trail => createTrailCard(trail)).join('');
+    
+    document.querySelectorAll('.trail-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const id = card.getAttribute('data-id');
+            window.location.href = `trail-${id}.html`;
+        });
+    });
+}
+
+function setupFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const level = btn.getAttribute('data-level');
+            filterTrails(level);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    filterTrails('all');
+    setupFilters();
+});
