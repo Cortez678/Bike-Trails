@@ -2,35 +2,24 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Bike Trails | Веломаршруты для райдеров</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Trails | Веломаршруты России</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
-        <!-- Hero секция -->
         <header class="hero">
-            <div class="hero-badge">🚵‍♂️ RIDE THE TRAILS</div>
+            <div class="hero-badge">🚵‍♂️ RIDE RUSSIA</div>
             <h1 class="hero-title">Bike <span class="gradient-text">Trails</span></h1>
-            <p class="hero-subtitle">Откройте лучшие веломаршруты для райдеров любого уровня</p>
+            <p class="hero-subtitle">Лучшие веломаршруты по России — от Калининграда до Камчатки</p>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">12+</div>
-                    <div class="stat-label">Маршрутов</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">340км</div>
-                    <div class="stat-label">Всего трасс</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">4</div>
-                    <div class="stat-label">Уровня сложности</div>
-                </div>
+                <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Маршрутов</div></div>
+                <div class="stat-card"><div class="stat-value">6+</div><div class="stat-label">Регионов</div></div>
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Уровня</div></div>
             </div>
         </header>
 
-        <!-- Фильтры -->
         <div class="filters-section">
             <h2 class="section-title">Выбери свой маршрут</h2>
             <div class="filter-buttons">
@@ -41,19 +30,15 @@
             </div>
         </div>
 
-        <!-- Список маршрутов -->
         <div class="trails-container" id="trailsContainer">
-            <!-- Карточки будут добавлены через JS -->
             <div class="loading-spinner"></div>
         </div>
 
-        <!-- Footer -->
         <footer class="footer">
-            <p>© 2025 Bike Trails — для настоящих райдеров</p>
-            <p class="footer-note">Выбирай маршрут, бери велосипед и вперёд!</p>
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+            <p class="footer-note">Нажмите на карточку, чтобы открыть маршрут</p>
         </footer>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
