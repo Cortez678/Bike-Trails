@@ -352,3 +352,14 @@ body {
         grid-template-columns: 1fr;
     }
 }
+.card-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #2a3f5e;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0.8rem;
+}
