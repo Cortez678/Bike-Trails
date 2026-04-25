@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Помощь | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="help.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка с возвратом -->
+        <div class="help-header">
+            <a href="index.html" class="back-link">← На главную</a>
+            <h1>🆘 Помощь райдерам</h1>
+            <p>Задай вопрос или найди ответ среди популярных проблем</p>
+        </div>
+
+        <!-- Форма добавления вопроса -->
+        <div class="ask-question">
+            <h2>❓ Задать вопрос</h2>
+            <input type="text" id="questionTitle" placeholder="Кратко опишите проблему...">
+            <textarea id="questionText" rows="3" placeholder="Подробно опишите ситуацию..."></textarea>
+            <button id="submitQuestionBtn" class="submit-btn">✉️ Отправить вопрос</button>
+        </div>
+
+        <!-- Список вопросов -->
+        <div class="questions-section">
+            <h2>📋 Частые вопросы и ответы</h2>
+            <div id="questionsList" class="questions-list">
+                <!-- Вопросы будут загружены через JS -->
+                <div class="loading">Загрузка вопросов...</div>
+            </div>
+        </div>
+
+        <!-- Быстрые советы -->
+        <div class="quick-tips">
+            <h3>⚡ Быстрые советы на дорогу</h3>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🛞</div>
+                    <h4>Прокол колеса</h4>
+                    <p>Всегда имейте с собой запасную камеру, насос и набор заплаток. При проколе — снимите колесо, найдите причину, замените камеру.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🔗</div>
+                    <h4>Слетела цепь</h4>
+                    <p>Установите цепь на маленькую звезду спереди и сзади, затем аккуратно проворачивайте педали. Всегда берите с собой перчатки!</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">⚙️</div>
+                    <h4>Проблемы с переключением</h4>
+                    <p>Часто помогает регулировка тросика. Найдите винт на манетке и подкручивайте его по четверти оборота.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🔊</div>
+                    <h4>Скрип в педалях</h4>
+                    <p>Смажьте крепления педалей и каретку. Если не помогает — возможно, пора заменить втулки.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
+    </div>
+
+    <script src="help.js"></script>
+</body>
+</html>
