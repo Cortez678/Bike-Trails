@@ -384,4 +384,18 @@ body {
 .btn-help:hover {
     background: #4a90e2;
     color: white;
+}.btn-premium {
+    background: linear-gradient(135deg, #ffd700, #ff9500);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    color: #1a1a2e;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: transform 0.2s;
+}
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
 }
