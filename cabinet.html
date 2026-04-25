@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .cabinet-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .cabinet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .favorite-card {
+            background: rgba(20,30,45,0.7);
+            border-radius: 1rem;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .favorite-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .favorite-card .info {
+            padding: 1rem;
+        }
+        .empty-favorites {
+            text-align: center;
+            padding: 3rem;
+            color: #8a9bb5;
+        }
+        .btn-back {
+            background: rgba(74,144,226,0.2);
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="cabinet-container">
+        <div class="cabinet-header">
+            <h1>👤 Личный кабинет</h1>
+            <button class="btn-back" onclick="location.href='index.html'">← На главную</button>
+        </div>
+        
+        <div class="user-info-card">
+            <h3>📌 Информация</h3>
+            <p><strong>Имя пользователя:</strong> <span id="usernameDisplay"></span></p>
+            <p><strong>Дата регистрации:</strong> <span id="regDateDisplay"></span></p>
+            <button id="logoutBtn" style="margin-top:1rem; background:#ff3b30; border:none; padding:0.5rem 1rem; border-radius:2rem; color:white; cursor:pointer;">Выйти</button>
+        </div>
+        
+        <h2 style="margin-top: 2rem;">⭐ Избранные маршруты</h2>
+        <div id="favoritesContainer" class="favorites-grid">
+            <div class="empty-favorites">У вас пока нет избранных маршрутов</div>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+    <script>
+        const user = checkAuth();
+        if (user) {
+            document.getElementById('usernameDisplay').innerText = user.username;
+            
+            // Загружаем избранные маршруты
+            const trails = [
+                { id: 1, name: "Воробьёвы горы", image: "images/vorobyovy-gory-1.jpg" },
+                { id: 2, name: "Куршская коса", image: "images/kurshskaya-kosa-1.jpg" },
+                { id: 3, name: "Лаго-Наки", image: "images/lago-naki-1.jpg" },
+                { id: 4, name: "Алтайский Марс", image: "images/altai-mars-1.jpg" },
+                { id: 5, name: "Байкальская петля", image: "images/baikal-loop-1.jpg" },
+                { id: 6, name: "Долина гейзеров", image: "images/kamchatka-1.jpg" }
+            ];
+            
+            const favorites = user.favorites || [];
+            const container = document.getElementById('favoritesContainer');
+            
+            if (favorites.length === 0) {
+                container.innerHTML = '<div class="empty-favorites">⭐ У вас пока нет избранных маршрутов. Добавьте их на главной странице!</div>';
+            } else {
+                const favoriteTrails = trails.filter(t => favorites.includes(t.id));
+                container.innerHTML = favoriteTrails.map(trail => `<div class="favorite-card" onclick="location.href='trail-${trail.id}.html'">
+                        <img src="${trail.image}" alt="${trail.name}" onerror="this.src='https://picsum.photos/400/250'">
+                        <div class="info">
+                            <h3>${trail.name}</h3>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            logout();
+        });
+    </script>
+</body>
+</html>
