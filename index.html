@@ -1,9 +1,82 @@
-<!DOCTYPE html>
+<p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Модальное окно входа/регистрации -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Вход</h2>
+            <div class="error-message" id="errorMessage"></div>
+            <input type="text" id="username" placeholder="Имя пользователя">
+            <input type="password" id="password" placeholder="Пароль">
+            <button id="submitBtn">Войти</button>
+            <div class="modal-switch" id="switchMode">
+                Нет аккаунта? <span>Зарегистрироваться</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // PWA установка
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+        const closeBannerBtn = document.getElementById('closeBannerBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (installBanner) installBanner.style.display = 'block';
+        });
+
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                }
+                if (installBanner) installBanner.style.display = 'none';
+            });
+        }
+
+        if (closeBannerBtn) {
+            closeBannerBtn.addEventListener('click', () => {
+                if (installBanner) installBanner.style.display = 'none';
+            });
+        }
+
+        // Регистрация Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/Bike-Trails/sw.js')
+                    .then(reg => console.log('SW зарегистрирован:', reg))
+                    .catch(err => console.error('Ошибка SW:', err));
+            });
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Bike Trails | Веломаршруты России</title>
+    
+    <!-- PWA метатеги для установки на телефон -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bike Trails">
+    <meta name="theme-color" content="#0a0f1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Bike Trails">
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,6 +87,19 @@
         <div class="header-top">
             <div class="logo">🚴‍♂️ Bike Trails</div>
             <div class="auth-buttons" id="authButtons"></div>
+        </div>
+
+        <!-- Баннер установки PWA -->
+        <div id="installBanner" class="install-banner" style="display: none;">
+            <div class="install-banner-content">
+                <div class="install-icon">📱</div>
+                <div class="install-text">
+                    <strong>Установить приложение</strong>
+                    <span>Быстрый доступ с главного экрана</span>
+                </div>
+                <button id="installBtn" class="install-btn">Установить</button>
+                <button id="closeBannerBtn" class="close-banner">✕</button>
+            </div>
         </div>
 
         <header class="hero">
@@ -59,27 +145,3 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Модальное окно входа/регистрации -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h2 id="modalTitle">Вход</h2>
-            <div class="error-message" id="errorMessage"></div>
-            <input type="text" id="username" placeholder="Имя пользователя">
-            <input type="password" id="password" placeholder="Пароль">
-            <button id="submitBtn">Войти</button>
-            <div class="modal-switch" id="switchMode">
-                Нет аккаунта? <span>Зарегистрироваться</span>
-            </div>
-        </div>
-    </div>
-
-    <script src="auth.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
