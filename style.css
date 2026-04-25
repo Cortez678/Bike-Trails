@@ -368,4 +368,20 @@ body {
 .user-name {
     color: #4a90e2;
     font-weight: 600;
+}/* Кнопка "Помощь" */
+.btn-help {
+    background: rgba(74, 144, 226, 0.2);
+    border: 1px solid #4a90e2;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    color: #4a90e2;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 0.5rem;
+}
+
+.btn-help:hover {
+    background: #4a90e2;
+    color: white;
 }
