@@ -2,30 +2,70 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Долина гейзеров | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
+        .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .warning { background: rgba(255, 59, 48, 0.1); border-left: 4px solid #ff3b30; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+    </style>
 </head>
 <body>
-<div class="app-container">
-<div class="trail-page">
-<a href="index.html" class="back-link">← Назад к маршрутам</a>
-<h1>🌋 Долина гейзеров</h1>
-<div class="trail-meta">
-    <span>⚫ Сложный уровень</span>
-    <span>📏 18 км</span>
-    <span>⭐ 5.0</span>
-    <span>📍 Камчатский край</span>
-</div>
-<div class="gallery">
-    <img src="images/kamchatka-1.jpg" alt="Вулкан">
-    <img src="images/kamchatka-2.jpg" alt="Сопки">
-    <img src="images/kamchatka-3.jpg" alt="Долина">
-</div>
-<div class="trail-description-full">
-    <p>Экстремальный маршрут по Кроноцкому заповеднику к Долине гейзеров. Термальные источники, вулканы и дикая природа Камчатки.</p>
-</div>
-</div>
-</div>
+    <div class="app-container">
+        <div class="trail-page">
+            <a href="index.html" class="back-link">← Назад к маршрутам</a>
+            
+            <div class="trail-header">
+                <h1>🌋 Долина гейзеров</h1>
+                <div class="trail-meta">
+                    <span class="meta-item">⚫ Сложный уровень</span>
+                    <span class="meta-item">📏 18.0 км</span>
+                    <span class="meta-item">⛰️ 950 м подъём</span>
+                    <span class="meta-item">⭐ 5.0 / 5</span>
+                    <span class="meta-item">📍 Камчатский край</span>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <img src="images/kamchatka-1.jpg" alt="Вулкан Камчатки">
+                <img src="images/kamchatka-2.jpg" alt="Камчатские сопки">
+                <img src="images/kamchatka-3.jpg" alt="Долина гейзеров">
+            </div>
+
+            <div class="trail-description-full">
+                <h3>📖 О маршруте</h3>
+                <p>Маршрут проходит по Кроноцкому заповеднику — одному из самых труднодоступных мест планеты. Вы будете пробираться через высокогорные перевалы, пересекать термальные источники, пробираться по медвежьим тропам. Финал — Долина гейзеров, где из-под земли бьют десятки гейзеров, а земля парит. Это место называют "восьмым чудом света".</p>
+                
+                <div class="warning">
+                    ⚠️ <strong>Экстремальное предупреждение!</strong> Маршрут ТОЛЬКО для опытных экспедиционеров. Обязательно наличие спутниковой связи, гида-проводника и специального разрешения от Кроноцкого заповедника.
+                </div>
+
+                <div class="tip">
+                    💡 <strong>Совет райдера:</strong> Приготовьтесь к любым погодным условиям — на Камчатке они меняются каждые 20 минут. Термальные источники по пути — отличное место для отдыха, но не лезьте в слишком горячие.
+                </div>
+
+                <h3>📍 Особенности маршрута</h3>
+                <ul>
+                    <li>Один из самых труднодоступных треков на планете</li>
+                    <li>Уникальные пейзажи: гейзеры, вулканы, фумаролы</li>
+                    <li>Термальные источники вдоль всего пути</li>
+                    <li>Высокая вероятность встречи с медведями — нужен гид!</li>
+                    <li>Незабываемые виды на вулканы Камчатки</li>
+                </ul>
+
+                <div class="how-to-get">
+                    <h3>🚁 Как добраться</h3>
+                    <p><strong>Только на вертолёте:</strong> Из Елизово (Петропавловск-Камчатский) организуются вертолётные туры в Кроноцкий заповедник. Самостоятельно добраться невозможно.</p>
+                    <p><strong>Обязательно:</strong> Зарегистрироваться в Кроноцком заповеднике и оформить разрешение. Маршрут возможен только в составе группы с гидом и продовольственным обеспечением.</p><p><strong>Координаты старта:</strong> <span class="coordinates">54.1333° N, 159.9167° E</span></p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
+    </div>
 </body>
 </html>
