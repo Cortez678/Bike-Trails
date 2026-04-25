@@ -7,31 +7,31 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .how-to-get {
-            background: rgba(74, 144, 226, 0.1);
-            border-left: 4px solid #4a90e2;
-            padding: 1rem;
-            border-radius: 1rem;
-            margin-top: 1rem;
-        }
-        .coordinates {
-            font-family: monospace;
-            background: rgba(0,0,0,0.3);
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
+        .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
+        .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .favorite-btn {
+            background: linear-gradient(135deg, #ff3b30, #ff9500);
+            border: none;
+            padding: 0.8rem 1.5rem;
             border-radius: 2rem;
-            font-size: 0.85rem;
-        }
-        .trail-map {
-            margin-top: 2rem;
-            text-align: center;
-        }
-        .tip {
-            background: rgba(255, 193, 7, 0.1);
-            border-left: 4px solid #ffc107;
-            padding: 1rem;
-            border-radius: 1rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
             margin: 1rem 0;
+            transition: transform 0.2s;
+        }
+        .favorite-btn:hover {
+            transform: scale(1.02);
+        }
+        .favorite-btn-added {
+            background: linear-gradient(135deg, #4cd964, #34c759);
+        }
+        .trail-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
     </style>
 </head>
@@ -51,6 +51,10 @@
                 </div>
             </div>
 
+            <div class="trail-actions">
+                <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
+            </div>
+
             <div class="gallery">
                 <img src="images/vorobyovy-gory-1.jpg" alt="Панорама Воробьёвых гор">
                 <img src="images/vorobyovy-gory-2.jpg" alt="Набережная Москвы-реки">
@@ -62,7 +66,7 @@
                 <p>Маршрут начинается у смотровой площадки на Воробьёвых горах — одной из самых высоких точек Москвы. Отсюда открывается потрясающий вид на Лужники, МГУ и центр столицы. Далее трасса проходит по велодорожкам парка "Воробьёвы горы" и спускается к Москве-реке. Вы поедете по набережной до Андреевского моста, а затем вернётесь обратно через живописный лесопарк.</p>
                 
                 <div class="tip">
-                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — раннее утро выходного дня. Тогда будет меньше пешеходов, а вид на город при закате солнца особенно красив.
+                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — раннее утро выходного дня. Тогда будет меньше пешеходов, а вид на город при закате особенно красив.
                 </div>
 
                 <h3>📍 Особенности маршрута</h3>
@@ -76,16 +80,118 @@
                 </ul>
 
                 <div class="how-to-get">
-                    <h3>🚗 Как добраться</h3>
-                    <p><strong>На метро:</strong> Станция «Воробьёвы горы» (выход к смотровой площадке) или «Ленинский проспект».</p>
+                    <h3>🚗 Как добраться</h3><p><strong>На метро:</strong> Станция «Воробьёвы горы» (выход к смотровой площадке) или «Ленинский проспект».</p>
                     <p><strong>На автомобиле:</strong> Парковка у смотровой площадки (бесплатно в выходные дни).</p>
                     <p><strong>Координаты старта:</strong> <span class="coordinates">55.7106° N, 37.5436° E</span></p>
                     <p><strong>Навигатор:</strong> Воробьёвская набережная, смотровая площадка.</p>
                 </div>
-            </div></div>
+            </div>
+        </div>
         <footer class="footer">
             <p>© 2025 Bike Trails — веломаршруты по России</p>
         </footer>
     </div>
+
+    <script>
+        const CURRENT_USER_KEY = 'bike_trails_current_user';
+        const USERS_KEY = 'bike_trails_users';
+        const TRAIL_ID = 1;
+        
+        function getCurrentUser() {
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            return user ? JSON.parse(user) : null;
+        }
+        
+        function getUsers() {
+            const users = localStorage.getItem(USERS_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+        
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+        
+        function isFavorite(userId, trailId) {
+            const users = getUsers();
+            const user = users.find(u => u.id === userId);
+            return user ? user.favorites.includes(trailId) : false;
+        }
+        
+        function addToFavorites(userId, trailId) {
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === userId);
+            
+            if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
+                users[userIndex].favorites.push(trailId);
+                saveUsers(users);
+                
+                const current = getCurrentUser();
+                if (current && current.id === userId) {
+                    current.favorites = users[userIndex].favorites;
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(current));
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        function removeFromFavorites(userId, trailId) {
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === userId);
+            
+            if (userIndex !== -1) {
+                users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
+                saveUsers(users);
+                
+                const current = getCurrentUser();
+                if (current && current.id === userId) {
+                    current.favorites = users[userIndex].favorites;
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(current));
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        function updateFavoriteButton() {
+            const user = getCurrentUser();
+            const btn = document.getElementById('favoriteBtn');
+            
+            if (!user) {
+                btn.textContent = '🔒 Войдите, чтобы добавить в избранное';
+                btn.style.opacity = '0.7';
+                btn.disabled = true;
+                return;
+            }
+            
+            const isFav = isFavorite(user.id, TRAIL_ID);
+            if (isFav) {
+                btn.textContent = '✅ В избранном';
+                btn.classList.add('favorite-btn-added');
+            } else {
+                btn.textContent = '❤️ В избранное';
+                btn.classList.remove('favorite-btn-added');
+            }
+            btn.disabled = false;
+        }
+        
+        document.getElementById('favoriteBtn').addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
+                return;
+            }const isFav = isFavorite(user.id, TRAIL_ID);
+            if (isFav) {
+                removeFromFavorites(user.id, TRAIL_ID);
+                alert('Маршрут удалён из избранного');
+            } else {
+                addToFavorites(user.id, TRAIL_ID);
+                alert('Маршрут добавлен в избранное! ❤️');
+            }
+            updateFavoriteButton();
+        });
+        
+        updateFavoriteButton();
+    </script>
 </body>
 </html>
