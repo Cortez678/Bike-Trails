@@ -624,4 +624,50 @@ body {
     .trails-container {
         grid-template-columns: repeat(2, 1fr);
     }
+}/* ПРИНУДИТЕЛЬНОЕ ПРИЖАТИЕ ФУТЕРА ДЛЯ ТЕЛЕФОНОВ */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Для телефонов */
+}
+
+.trails-container {
+    flex: 1 0 auto;
+}
+
+.footer {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* Дополнительное прижатие для мобильных */
+@media (max-width: 768px) {
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .app-container {
+        min-height: 100vh;
+    }
+    
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
 }
