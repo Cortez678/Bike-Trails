@@ -69,4 +69,64 @@
     .social-links {
         align-items: center;
     }
+}/* Шапка с авторизацией */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4a90e2;
+}
+
+.btn-login {
+    background: rgba(74, 144, 226, 0.2);
+    border: 1px solid #4a90e2;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    color: #4a90e2;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-login:hover {
+    background: #4a90e2;
+    color: white;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-name {
+    color: #4a90e2;
+    font-weight: 600;
+}
+
+.btn-cabinet, .btn-logout {
+    background: rgba(74, 144, 226, 0.2);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    color: #c0d0e8;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cabinet:hover, .btn-logout:hover {
+    background: rgba(74, 144, 226, 0.4);
+}
+
+.btn-cabinet {
+    background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+    color: white;
 }
