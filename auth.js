@@ -1,20 +1,25 @@
+// Ключи для localStorage
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
 
+// Получить всех пользователей
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : [];
 }
 
+// Сохранить пользователей
 function saveUsers(users) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
+// Получить текущего пользователя
 function getCurrentUser() {
     const user = localStorage.getItem(CURRENT_USER_KEY);
     return user ? JSON.parse(user) : null;
 }
 
+// Сохранить текущего пользователя
 function setCurrentUser(user) {
     if (user) {
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
@@ -23,14 +28,18 @@ function setCurrentUser(user) {
     }
 }
 
+// Регистрация
 function register(username, password) {
     const users = getUsers();
+    
     if (users.find(u => u.username === username)) {
         return { success: false, error: 'Пользователь уже существует' };
     }
+    
     if (password.length < 4) {
         return { success: false, error: 'Пароль должен быть не менее 4 символов' };
     }
+    
     const newUser = {
         id: Date.now(),
         username: username,
@@ -38,50 +47,130 @@ function register(username, password) {
         favorites: [],
         createdAt: new Date().toISOString()
     };
+    
     users.push(newUser);
     saveUsers(users);
+    
     return { success: true };
 }
 
+// Вход
 function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
+    
     if (user) {
         setCurrentUser({ id: user.id, username: user.username, favorites: user.favorites });
         return { success: true };
     }
-    return { success: false, error: 'Неверное имя или пароль' };
+    
+    return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
+// Выход
 function logout() {
     setCurrentUser(null);
-    location.reload();
+    updateAuthUI(); // Обновляем интерфейс
+    location.reload(); // Перезагружаем страницу для сброса состояния
 }
 
-// Обновляем интерфейс после входа
+// Проверка авторизации для страницы кабинета
+function checkAuth() {
+    const user = getCurrentUser();
+    if (!user) {
+        window.location.href = 'index.html';
+        return null;
+    }
+    return user;
+}
+
+// Добавить в избранное
+function addToFavorites(userId, trailId) {
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex !== -1) {
+        if (!users[userIndex].favorites.includes(trailId)) {
+            users[userIndex].favorites.push(trailId);
+            saveUsers(users);
+            
+            // Обновляем текущего пользователя
+            const current = getCurrentUser();
+            if (current && current.id === userId) {
+                current.favorites = users[userIndex].favorites;
+                setCurrentUser(current);
+            }
+        }
+    }
+}
+
+// Удалить из избранного
+function removeFromFavorites(userId, trailId) {
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex !== -1) {
+        users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
+        saveUsers(users);
+        
+        const current = getCurrentUser();
+        if (current && current.id === userId) {
+            current.favorites = users[userIndex].favorites;
+            setCurrentUser(current);
+        }
+    }
+}
+
+// Проверить, в избранном ли маршрут
+function isFavorite(userId, trailId) {
+    const user = getUsers().find(u => u.id === userId);
+    return user ? user.favorites.includes(trailId) : false;
+}
+
+// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ПОСЛЕ ВХОДА ==========
+
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
     if (!container) return;
     
     if (user) {
+        // Показываем имя пользователя + кнопки
         container.innerHTML = `
             <div class="user-info">
-                <span class="user-name">👤 ${user.username}</span>
-                <button class="btn-cabinet" onclick="location.href='cabinet.html'">Личный кабинет</button>
-                <button class="btn-logout" id="logoutBtn">Выйти</button>
+                <span class="user-name">👤 ${user.username}</span><button class="btn-cabinet" id="cabinetBtn">👨‍💼 Личный кабинет</button>
+                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
             </div>
         `;
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+        
+        // Добавляем обработчики
+        const cabinetBtn = document.getElementById('cabinetBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        if (cabinetBtn) {
+            cabinetBtn.addEventListener('click', () => {
+                window.location.href = 'cabinet.html';
+            });
+        }
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
     } else {
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">Вход</button>`;
-        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
-            document.getElementById('authModal').classList.add('active');
-        });
+        // Показываем кнопку Вход
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
+        
+        const loginBtn = document.getElementById('openLoginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                const modal = document.getElementById('authModal');
+                if (modal) modal.classList.add('active');
+            });
+        }
     }
 }
 
-// Модальное окно
+// ========== МОДАЛЬНОЕ ОКНО ==========
+
 function initModal() {
     const modal = document.getElementById('authModal');
     const closeBtn = document.getElementById('closeModal');
@@ -91,35 +180,72 @@ function initModal() {
     const errorDiv = document.getElementById('errorMessage');
     let isLoginMode = true;
 
-    closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
-    modal?.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-    
-    switchBtn?.addEventListener('click', () => {
-        isLoginMode = !isLoginMode;
-        modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
-        submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-        switchBtn.innerHTML = isLoginMode ? 'Нет аккаунта? <span>Зарегистрироваться</span>' : 'Уже есть аккаунт? <span>Войти</span>';
-        errorDiv.innerText = '';
-    });
+    if (!modal) return;
 
-    submitBtn?.addEventListener('click', () => {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
-        if (!username || !password) {
-            errorDiv.innerText = 'Заполните все поля';
-            return;
-        }const result = isLoginMode ? login(username, password) : register(username, password);
-        if (result.success) {
-            modal.classList.remove('active');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            updateAuthUI();
-        } else {
-            errorDiv.innerText = result.error;
-        }
+    // Закрытие по крестику
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    }
+    
+    // Закрытие по клику вне окна
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
     });
+    
+    // Переключение режима Вход/Регистрация
+    if (switchBtn) {
+        switchBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
+            submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+            switchBtn.innerHTML = isLoginMode 
+                ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
+                : 'Уже есть аккаунт? <span>Войти</span>';
+            errorDiv.innerText = '';
+        });
+    }
+
+    // Обработка отправки формы
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                errorDiv.innerText = 'Заполните все поля';
+                return;
+            }
+            
+            const result = isLoginMode ? login(username, password) : register(username, password);
+            
+            if (result.success) {
+                // Закрываем модальное окно
+                modal.classList.remove('active');
+                
+                // Очищаем поля
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                errorDiv.innerText = '';
+                
+                // Обновляем интерфейс
+                updateAuthUI();
+                
+                // Если это была регистрация, входим автоматически
+                if (!isLoginMode) {
+                    login(username, password);
+                    updateAuthUI();
+                }
+                
+                // Показываем уведомление
+                alert(isLoginMode ? 'Добро пожаловать!' : 'Регистрация успешна! Добро пожаловать!');
+            } else {
+                errorDiv.innerText = result.error;
+            }
+        });
+    }
 }
 
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     initModal();
