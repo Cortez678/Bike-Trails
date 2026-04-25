@@ -82,7 +82,8 @@ function login(username, password) {
 function logout() {
     setCurrentUser(null);
     updateAuthUI();
-    location.reload();
+    // Перенаправляем на главную страницу
+    window.location.href = 'index.html';
 }
 
 // Проверка авторизации для страницы кабинета
@@ -141,9 +142,18 @@ function removeFromFavorites(userId, trailId) {
 
 // Проверить, в избранном ли маршрут
 function isFavorite(userId, trailId) {
-    const user = getUsers().find(u => u.id === userId);
-    return user ? user.favorites.includes(trailId) : false;
-}// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
+    const users = getUsers();
+    const user = users.find(u => u.id === userId);return user ? user.favorites.includes(trailId) : false;
+}
+
+// Получить избранные маршруты текущего пользователя
+function getUserFavorites() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    return user.favorites || [];
+}
+
+// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
 
 function updateAuthUI() {
     const user = getCurrentUser();
@@ -151,7 +161,7 @@ function updateAuthUI() {
     if (!container) return;
     
     if (user) {
-        // Пользователь авторизован — показываем имя, кнопки
+        // Пользователь авторизован — показываем имя и кнопки
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}</span>
@@ -240,14 +250,13 @@ function initModal() {
                 return;
             }
             
-            const result = isLoginMode ? login(username, password) : register(username, password);
-            
-            if (result.success) {
+            const result = isLoginMode ? login(username, password) : register(username, password);if (result.success) {
                 // Закрываем модальное окно
                 modal.classList.remove('active');
                 
                 // Очищаем поля
-                document.getElementById('username').value = '';document.getElementById('password').value = '';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
                 errorDiv.innerText = '';
                 
                 // Обновляем интерфейс
@@ -256,11 +265,8 @@ function initModal() {
                 // Показываем приветствие
                 alert(isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
                 
-                // Перезагружаем страницу для обновления состояния
-                if (!isLoginMode) {
-                    login(username, password);
-                    updateAuthUI();
-                }
+                // Перезагружаем страницу для синхронизации
+                location.reload();
             } else {
                 errorDiv.innerText = result.error;
             }
