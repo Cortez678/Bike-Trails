@@ -4,17 +4,31 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, #0a0f1a 0%, #0d1425 100%);
     color: #e8edf5;
     line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .app-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem 2rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.trails-container {
+    flex: 1;
 }
 
 /* Шапка с авторизацией */
@@ -33,62 +47,26 @@ body {
     color: #4a90e2;
 }
 
-.btn-login, .btn-cabinet, .btn-favorites, .btn-logout, .btn-help, .btn-premium {
+.btn-login {
     background: rgba(74, 144, 226, 0.2);
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.2rem;
     border-radius: 2rem;
     color: #c0d0e8;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    margin-left: 0.5rem;
 }
 
-.btn-login:hover, .btn-cabinet:hover, .btn-favorites:hover, .btn-logout:hover, .btn-help:hover {
+.btn-login:hover {
     background: rgba(74, 144, 226, 0.4);
     color: white;
-}
-
-.btn-cabinet {
-    background: rgba(74, 144, 226, 0.3);
-}
-
-.btn-favorites {
-    background: rgba(255, 59, 48, 0.2);
-    color: #ff6b6b;
-}
-
-.btn-favorites:hover {
-    background: #ff3b30;
-    color: white;
-}
-
-.btn-help {
-    background: rgba(76, 217, 100, 0.2);
-    color: #4cd964;
-}
-
-.btn-help:hover {
-    background: #4cd964;
-    color: #1a1a2e;
-}
-
-.btn-premium {
-    background: linear-gradient(135deg, #ffd700, #ff9500);
-    color: #1a1a2e;
-    font-weight: bold;
-}
-
-.btn-premium:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .user-name {
@@ -96,14 +74,66 @@ body {
     font-weight: 600;
 }
 
-.premium-badge-mini {
-    background: linear-gradient(135deg, #ffd700, #ff9500);
-    color: #1a1a2e;
-    font-size: 0.7rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 1rem;
-    margin-left: 0.3rem;
+/* Выпадающее меню (шестерёнка) */
+.dropdown {
+    position: relative;
     display: inline-block;
+}
+
+.dropdown-btn {
+    background: rgba(74, 144, 226, 0.2);
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 2rem;
+    color: #c0d0e8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dropdown-btn:hover {
+    background: rgba(74, 144, 226, 0.4);
+    transform: rotate(30deg);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: linear-gradient(135deg, #1a1f2e, #0f1420);
+    min-width: 190px;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    overflow: hidden;
+}
+
+.dropdown-content.show {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-content a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: #c0d0e8;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.dropdown-content a:hover {
+    background: rgba(74, 144, 226, 0.3);
+    color: white;
 }
 
 /* Hero секция */
@@ -187,8 +217,7 @@ body {
     text-align: center;
 }
 
-.filter-buttons {
-    display: flex;
+.filter-buttons {display: flex;
     justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
@@ -211,7 +240,9 @@ body {
     background: rgba(74, 144, 226, 0.3);
     color: white;
     transform: translateY(-2px);
-}.filter-btn.active {
+}
+
+.filter-btn.active {
     background: linear-gradient(135deg, #4a90e2, #7b3fe4);
     color: white;
     box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
@@ -404,14 +435,13 @@ body {
     margin: 3rem auto;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
+@keyframes spin {0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
 /* Footer */
 .footer {
-    margin-top: 3rem;
+    margin-top: auto;
     padding: 2rem 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -428,7 +458,8 @@ body {
 }
 
 .footer-section {
-    flex: 1;min-width: 180px;
+    flex: 1;
+    min-width: 180px;
 }
 
 .footer-section h3 {
@@ -486,14 +517,8 @@ body {
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(100px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .install-banner-content {
@@ -527,11 +552,6 @@ body {
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.install-btn:hover {
-    transform: translateY(-2px);
 }
 
 .close-banner {
@@ -540,11 +560,6 @@ body {
     color: #8a9bb5;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-banner:hover {
-    color: white;
 }
 
 /* Адаптивность */
@@ -588,45 +603,23 @@ body {
     }
     
     .user-info {
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-    
-    .btn-login, .btn-cabinet, .btn-favorites, .btn-logout, .btn-help, .btn-premium {
-        font-size: 0.7rem;
-        padding: 0.3rem 0.6rem;
+        gap: 0.5rem;
     }
     
     .user-name {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
     }
     
-    .install-banner {
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        padding: 0.8rem;
-    }
-    
-    .install-icon {
-        font-size: 1.5rem;
-    }
-    
-    .install-text strong {
-        font-size: 0.9rem;
-    }
-    
-    .install-text span {
-        font-size: 0.7rem;
-    }
-    
-    .install-btn {
-        padding: 0.3rem 0.8rem;
-        font-size: 0.8rem;
+    .dropdown-content {
+        position: fixed;
+        top: auto;
+        bottom: 70px;
+        right: 20px;
+        left: auto;
+        width: 200px;
     }
 }
 
-/* Адаптивность для планшетов */
 @media (min-width: 769px) and (max-width: 1024px) {
     .trails-container {
         grid-template-columns: repeat(2, 1fr);
