@@ -171,4 +171,36 @@ function setupFilters() {
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
-});
+});// Функция для добавления в избранное (вызывается на странице маршрута)
+function getCurrentUserForFav() {
+    const user = localStorage.getItem('bike_trails_current_user');
+    return user ? JSON.parse(user) : null;
+}
+
+// Добавить в избранное
+function addToFavoritesFromPage(trailId) {
+    const user = getCurrentUserForFav();
+    if (!user) {
+        alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
+        return false;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('bike_trails_users') || '[]');
+    const userIndex = users.findIndex(u => u.id === user.id);
+    
+    if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
+        users[userIndex].favorites.push(trailId);
+        localStorage.setItem('bike_trails_users', JSON.stringify(users));
+        
+        // Обновляем текущего пользователя
+        user.favorites = users[userIndex].favorites;
+        localStorage.setItem('bike_trails_current_user', JSON.stringify(user));
+        
+        alert('Маршрут добавлен в избранное!');
+        return true;
+    } else if (users[userIndex]?.favorites.includes(trailId)) {
+        alert('Маршрут уже в избранном');
+        return true;
+    }
+    return false;
+}
