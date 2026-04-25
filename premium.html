@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Премиум | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="premium.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="premium-container">
+            <div class="premium-header">
+                <a href="index.html" class="back-link">← На главную</a>
+                <h1>💎 Premium Bike Trails</h1>
+                <p>Получи максимум от велопутешествий с премиум-подпиской</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>🆓 Бесплатно</h3>
+                    <div class="price">0 ₽</div>
+                    <ul>
+                        <li>6 маршрутов по России</li>
+                        <li>Избранное и помощь</li>
+                        <li>Базовые карты</li>
+                    </ul>
+                    <button class="premium-btn" disabled style="opacity:0.5;">Текущий план</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">🔥 Популярный</div>
+                    <h3>📅 Месяц</h3>
+                    <div class="price">299 ₽<span>/мес</span></div>
+                    <ul>
+                        <li>15+ эксклюзивных маршрутов</li>
+                        <li>Детальные карты с офлайн-доступом</li>
+                        <li>Приоритетные ответы в помощи</li>
+                        <li>Без рекламы</li>
+                    </ul>
+                    <button class="premium-btn" id="monthlyBtn">Оформить за 299 ₽</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>🌟 Год</h3>
+                    <div class="price">2 990 ₽<span>/год</span></div>
+                    <div style="color:#4cd964;">экономия 2 месяца</div>
+                    <ul>
+                        <li>Все возможности месяца</li>
+                        <li>Приоритетная поддержка 24/7</li>
+                        <li>Расширенная статистика</li>
+                    </ul>
+                    <button class="premium-btn" id="yearlyBtn">Оформить за 2000 ₽</button>
+                </div>
+            </div>
+            <div class="premium-features">
+                <h3>Что вы получите с премиум-подпиской</h3>
+                <div class="features-grid">
+                    <div class="feature-item"><div class="feature-icon">🗺️</div><h4>Детальные карты</h4><p>Спутниковые снимки и офлайн-треки</p></div>
+                    <div class="feature-item"><div class="feature-icon">⭐</div><h4>Эксклюзивные маршруты</h4><p>Секретные тропы и скрытые жемчужины</p></div>
+                    <div class="feature-item"><div class="feature-icon">🚀</div><h4>Приоритетная помощь</h4><p>Ответы в первую очередь</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="premium.js"></script>
+    <script>
+        document.getElementById('monthlyBtn')?.addEventListener('click', () => {
+            if (confirm('Оформить премиум-подписку на месяц за 299₽?')) {
+                activatePremium('monthly');
+                alert('✅ Премиум-подписка активирована на 30 дней!');
+                location.reload();
+            }
+        });
+        document.getElementById('yearlyBtn')?.addEventListener('click', () => {
+            if (confirm('Оформить премиум-подписку на год за 2000₽?')) {
+                activatePremium('yearly');
+                alert('✅ Премиум-подписка активирована на 365 дней!');
+                location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
