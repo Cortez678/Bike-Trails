@@ -2,96 +2,97 @@ const trailsData = [
     {
         id: 1,
         name: "Воробьёвы горы",
-        description: "Легендарный маршрут по Москве-реке с панорамным видом на город.",
+        description: "Легендарный маршрут по Москве-реке с панорамным видом на город. Проходит через парк, набережную и смотровые площадки.",
         difficulty: "easy",
         distance: 15.5,
         elevation: 120,
         rating: 4.8,
         location: "Москва",
-        previewImage: "https://images.pexels.com/photos/2048733/pexels-photo-2048733.jpeg?auto=compress&cs=tinysrgb&w=600",
+        previewImage: "images/vorobyovy-gory-1.jpg",
         gallery: [
-            "https://images.pexels.com/photos/2048733/pexels-photo-2048733.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/1474111/pexels-photo-1474111.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/2078209/pexels-photo-2078209.jpeg?auto=compress&cs=tinysrgb&w=800"
+            "images/vorobyovy-gory-1.jpg",
+            "images/vorobyovy-gory-2.jpg",
+            "images/vorobyovy-gory-3.jpg"
         ]
     },
     {
         id: 2,
         name: "Куршская коса",
-        description: "Маршрут по нацпарку между морем и заливом. Песчаные дюны и сосновый лес.",
+        description: "Уникальный маршрут по национальному парку между морем и заливом. Песчаные дюны, сосновый лес и побережье Балтики.",
         difficulty: "medium",
         distance: 22.0,
         elevation: 180,
         rating: 4.9,
         location: "Калининградская область",
-        previewImage: "https://images.pexels.com/photos/189762/pexels-photo-189762.jpeg?auto=compress&cs=tinysrgb&w=600",
+        previewImage: "images/kurshskaya-kosa-1.jpg",
         gallery: [
-            "https://images.pexels.com/photos/189762/pexels-photo-189762.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/316518/pexels-photo-316518.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/1547882/pexels-photo-1547882.jpeg?auto=compress&cs=tinysrgb&w=800"
+            "images/kurshskaya-kosa-1.jpg",
+            "images/kurshskaya-kosa-2.jpg",
+            "images/kurshskaya-kosa-3.jpg"
         ]
     },
     {
         id: 3,
         name: "Лаго-Наки",
-        description: "Высокогорный маршрут по альпийским лугам Адыгеи. Горы и водопады.",
+        description: "Высокогорный маршрут по альпийским лугам Адыгеи. Горы, водопады и виды, которые захватывают дух.",
         difficulty: "hard",
         distance: 28.5,
         elevation: 850,
         rating: 5.0,
         location: "Адыгея",
-        previewImage: "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=600",
+        previewImage: "images/lago-naki-1.jpg",
         gallery: [
-            "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/3586966/pexels-photo-3586966.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/38136/pexels-photo-38136.jpeg?auto=compress&cs=tinysrgb&w=800"
+            "images/lago-naki-1.jpg",
+            "images/lago-naki-2.jpg",
+            "images/lago-naki-3.jpg"
         ]
     },
     {
         id: 4,
         name: "Алтайский Марс",
-        description: "Космические пейзажи Алтая: красные скалы и бирюзовые реки.",
+        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы в долине реки Чуя.",
         difficulty: "hard",
         distance: 32.0,
         elevation: 620,
         rating: 4.9,
         location: "Республика Алтай",
-        previewImage: "https://images.pexels.com/photos/1043814/pexels-photo-1043814.jpeg?auto=compress&cs=tinysrgb&w=600",
+        previewImage: "images/altai-mars-1.jpg",
         gallery: [
-            "https://images.pexels.com/photos/1043814/pexels-photo-1043814.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/5689667/pexels-photo-5689667.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/235722/pexels-photo-235722.jpeg?auto=compress&cs=tinysrgb&w=800"
+            "images/altai-mars-1.jpg",
+            "images/altai-mars-2.jpg",
+            "images/altai-mars-3.jpg"
         ]
     },
     {
         id: 5,
         name: "Байкальская петля",
-        description: "Кольцевой маршрут вдоль озера Байкал с заездом на пик Черского.",
+        description: "Кольцевой маршрут вдоль озера Байкал с заездом в пик Черского и живописные бухты.",
         difficulty: "medium",
         distance: 35.0,
         elevation: 540,
         rating: 4.8,
         location: "Иркутская область / Бурятия",
-        previewImage: "https://images.pexels.com/photos/3984354/pexels-photo-3984354.jpeg?auto=compress&cs=tinysrgb&w=600",
+        previewImage: "images/baikal-loop-1.jpg",
         gallery: [
-            "https://images.pexels.com/photos/3984354/pexels-photo-3984354.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/3788987/pexels-photo-3788987.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/1301308/pexels-photo-1301308.jpeg?auto=compress&cs=tinysrgb&w=800"
+            "images/baikal-loop-1.jpg",
+            "images/baikal-loop-2.jpg",
+            "images/baikal-loop-3.jpg"
         ]
     },
     {
         id: 6,
-        name: "Долина гейзеров",description: "Экстремальный маршрут Камчатки. Термальные источники и вулканы.",
+        name: "Долина гейзеров",
+        description: "Сложнейший маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы и дикая природа.",
         difficulty: "hard",
         distance: 18.0,
         elevation: 950,
         rating: 5.0,
         location: "Камчатский край",
-        previewImage: "https://images.pexels.com/photos/259568/pexels-photo-259568.jpeg?auto=compress&cs=tinysrgb&w=600",
+        previewImage: "images/kamchatka-1.jpg",
         gallery: [
-            "https://images.pexels.com/photos/259568/pexels-photo-259568.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/2942808/pexels-photo-2942808.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "https://images.pexels.com/photos/14055297/pexels-photo-14055297.jpeg?auto=compress&cs=tinysrgb&w=800"
+            "images/kamchatka-1.jpg",
+            "images/kamchatka-2.jpg",
+            "images/kamchatka-3.jpg"
         ]
     }
 ];
@@ -116,8 +117,7 @@ function getStarsHTML(rating) {
     return `<span class="stars">${starsHTML}</span> <span style="font-size:0.8rem; color:#8a9bb5;">${rating}</span>`;
 }
 
-function createTrailCard(trail) {
-    const diff = getDifficultyColor(trail.difficulty);
+function createTrailCard(trail) {const diff = getDifficultyColor(trail.difficulty);
     return `
         <div class="trail-card" data-difficulty="${trail.difficulty}" data-id="${trail.id}">
             <div class="card-image" style="background-image: url('${trail.previewImage}'); background-size: cover; background-position: center;">
