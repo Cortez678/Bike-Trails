@@ -1,0 +1,95 @@
+{
+  "name": "Bike Trails - Веломаршруты России",
+  "short_name": "Bike Trails",
+  "description": "Лучшие веломаршруты по России для райдеров любого уровня",
+  "start_url": "/Bike-Trails/",
+  "scope": "/Bike-Trails/",
+  "display": "standalone",
+  "theme_color": "#0a0f1a",
+  "background_color": "#0a0f1a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screenshot-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "android"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Маршруты",
+      "short_name": "Маршруты",
+      "description": "Список всех веломаршрутов",
+      "url": "/Bike-Trails/",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Избранное",
+      "short_name": "Избранное",
+      "description": "Избранные маршруты",
+      "url": "/Bike-Trails/favorites.html",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Трекер скорости",
+      "short_name": "Трекер",
+      "description": "Измерение скорости",
+      "url": "/Bike-Trails/speed-tracker.html",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "categories": ["sports", "travel", "lifestyle"],
+  "lang": "ru",
+  "dir": "ltr"
+}
