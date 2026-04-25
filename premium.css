@@ -1,0 +1,102 @@
+.premium-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+.premium-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.premium-header h1 {
+    font-size: 2.5rem;
+    color: #ffd700;
+}
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+.pricing-card {
+    background: rgba(20, 30, 45, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.pricing-card:hover {
+    transform: translateY(-10px);
+}
+.pricing-card.popular {
+    border: 2px solid #ffd700;
+    position: relative;
+}
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffd700;
+    color: #1a1a2e;
+    padding: 0.3rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+}
+.price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffd700;
+    margin: 1rem 0;
+}
+.pricing-card ul {
+    list-style: none;
+    text-align: left;
+    margin: 1.5rem 0;
+}
+.pricing-card li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.pricing-card li::before {
+    content: "✅";
+    color: #4cd964;
+}
+.premium-btn {
+    background: linear-gradient(135deg, #ffd700, #ff9500);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+.premium-btn:hover {
+    transform: scale(1.02);
+}
+.premium-features {
+    text-align: center;
+}
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+.feature-item {
+    background: rgba(255,215,0,0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+.feature-icon {
+    font-size: 2rem;
+}
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #4a90e2;
+    text-decoration: none;
+}
