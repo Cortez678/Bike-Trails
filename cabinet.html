@@ -6,101 +6,77 @@
     <title>Личный кабинет | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .cabinet-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        .cabinet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .favorites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        .favorite-card {
-            background: rgba(20,30,45,0.7);
-            border-radius: 1rem;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .favorite-card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-        }
-        .favorite-card .info {
-            padding: 1rem;
-        }
-        .empty-favorites {
-            text-align: center;
-            padding: 3rem;
-            color: #8a9bb5;
-        }
-        .btn-back {
-            background: rgba(74,144,226,0.2);
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 2rem;
-            color: white;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
-    <div class="cabinet-container">
-        <div class="cabinet-header">
+    <div class="app-container" style="max-width:1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h1>👤 Личный кабинет</h1>
-            <button class="btn-back" onclick="location.href='index.html'">← На главную</button>
+            <button onclick="location.href='index.html'" style="background:rgba(74,144,226,0.2); border:none; padding:0.5rem 1rem; border-radius:2rem; cursor:pointer;">← На главную</button>
         </div>
         
-        <div class="user-info-card">
-            <h3>📌 Информация</h3>
+        <div style="background:rgba(255,255,255,0.05); padding:1.5rem; border-radius:1rem; margin-bottom:2rem;">
             <p><strong>Имя пользователя:</strong> <span id="usernameDisplay"></span></p>
             <p><strong>Дата регистрации:</strong> <span id="regDateDisplay"></span></p>
-            <button id="logoutBtn" style="margin-top:1rem; background:#ff3b30; border:none; padding:0.5rem 1rem; border-radius:2rem; color:white; cursor:pointer;">Выйти</button>
+            <button id="logoutBtn" style="margin-top:1rem; background:#ff3b30; border:none; padding:0.5rem 1rem; border-radius:2rem; cursor:pointer;">Выйти</button>
         </div>
         
-        <h2 style="margin-top: 2rem;">⭐ Избранные маршруты</h2>
-        <div id="favoritesContainer" class="favorites-grid">
-            <div class="empty-favorites">У вас пока нет избранных маршрутов</div>
+        <h2>⭐ Избранные маршруты</h2>
+        <div id="favoritesContainer" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; margin-top:1rem;">
+            <div style="padding:2rem; text-align:center; color:#8a9bb5;">Загрузка...</div>
         </div>
     </div>
-    
-    <script src="auth.js"></script>
     <script>
-        const user = checkAuth();
-        if (user) {
+        const USERS_KEY = 'bike_trails_users';
+        const CURRENT_USER_KEY = 'bike_trails_current_user';
+        
+        function getCurrentUser() {
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            return user ? JSON.parse(user) : null;
+        }
+        
+        function getUsers() {
+            const users = localStorage.getItem(USERS_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+        
+        function logout() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            location.href = 'index.html';
+        }
+        
+        const user = getCurrentUser();
+        if (!user) {
+            location.href = 'index.html';
+        } else {
             document.getElementById('usernameDisplay').innerText = user.username;
+            const users = getUsers();
+            const fullUser = users.find(u => u.id === user.id);
+            if (fullUser && fullUser.createdAt) {
+                const date = new Date(fullUser.createdAt);
+                document.getElementById('regDateDisplay').innerText = date.toLocaleDateString('ru-RU');
+            } else {
+                document.getElementById('regDateDisplay').innerText = 'Неизвестно';
+            }
             
-            // Загружаем избранные маршруты
             const trails = [
                 { id: 1, name: "Воробьёвы горы", image: "images/vorobyovy-gory-1.jpg" },
                 { id: 2, name: "Куршская коса", image: "images/kurshskaya-kosa-1.jpg" },
-                { id: 3, name: "Лаго-Наки", image: "images/lago-naki-1.jpg" },
-                { id: 4, name: "Алтайский Марс", image: "images/altai-mars-1.jpg" },
-                { id: 5, name: "Байкальская петля", image: "images/baikal-loop-1.jpg" },
-                { id: 6, name: "Долина гейзеров", image: "images/kamchatka-1.jpg" }
+                { id: 3, name: "Лаго-Наки", image: "" },
+                { id: 4, name: "Алтайский Марс", image: "" },
+                { id: 5, name: "Байкальская петля", image: "" },
+                { id: 6, name: "Долина гейзеров", image: "" }
             ];
             
             const favorites = user.favorites || [];
             const container = document.getElementById('favoritesContainer');
             
             if (favorites.length === 0) {
-                container.innerHTML = '<div class="empty-favorites">⭐ У вас пока нет избранных маршрутов. Добавьте их на главной странице!</div>';
+                container.innerHTML = '<div style="padding:2rem; text-align:center; color:#8a9bb5;">⭐ У вас пока нет избранных маршрутов</div>';
             } else {
                 const favoriteTrails = trails.filter(t => favorites.includes(t.id));
-                container.innerHTML = favoriteTrails.map(trail => `<div class="favorite-card" onclick="location.href='trail-${trail.id}.html'">
-                        <img src="${trail.image}" alt="${trail.name}" onerror="this.src='https://picsum.photos/400/250'">
-                        <div class="info">
+                container.innerHTML = favoriteTrails.map(trail => `
+                    <div onclick="location.href='trail-${trail.id}.html'" style="background:rgba(20,30,45,0.7); border-radius:1rem; overflow:hidden; cursor:pointer;"><div style="height:150px; background:${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg,#2b2d42,#353b48)'}; background-size:cover; background-position:center;"></div>
+                        <div style="padding:1rem;">
                             <h3>${trail.name}</h3>
                         </div>
                     </div>
@@ -108,9 +84,7 @@
             }
         }
         
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            logout();
-        });
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     </script>
 </body>
 </html>
