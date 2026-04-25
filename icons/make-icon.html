@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head><title>Создать иконку</title></head>
+<body>
+    <canvas id="canvas" width="512" height="512"></canvas>
+    <br>
+    <button onclick="download()">Скачать иконку</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Фон
+        ctx.fillStyle = '#4a90e2';
+        ctx.fillRect(0, 0, 512, 512);
+        
+        // Круг (колесо)
+        ctx.beginPath();
+        ctx.arc(256, 256, 150, 0, Math.PI * 2);
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 20;
+        ctx.stroke();
+        
+        // Спицы
+        for(let i = 0; i < 8; i++) {
+            const angle = i * Math.PI * 2 / 8;
+            const x1 = 256 + 80 * Math.cos(angle);
+            const y1 = 256 + 80 * Math.sin(angle);
+            const x2 = 256 + 200 * Math.cos(angle);
+            const y2 = 256 + 200 * Math.sin(angle);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+        
+        // Велосипед (упрощённо)
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 180px Arial';
+        ctx.fillText('🚴', 180, 380);
+        
+        function download() {
+            const link = document.createElement('a');
+            link.download = 'icon-512.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
