@@ -167,6 +167,7 @@ function updateAuthUI() {
                 <span class="user-name">👤 ${user.username}</span>
                 <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Личный кабинет</button>
                 <button class="btn-favorites" id="favoritesBtn">❤️ Избранные</button>
+                <button class="btn-help" id="helpBtn">🆘 Помощь</button>
                 <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
             </div>
         `;
@@ -174,6 +175,7 @@ function updateAuthUI() {
         // Обработчики кнопок
         const cabinetBtn = document.getElementById('cabinetBtn');
         const favoritesBtn = document.getElementById('favoritesBtn');
+        const helpBtn = document.getElementById('helpBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         
         if (cabinetBtn) {
@@ -184,6 +186,11 @@ function updateAuthUI() {
         if (favoritesBtn) {
             favoritesBtn.addEventListener('click', () => {
                 window.location.href = 'favorites.html';
+            });
+        }
+        if (helpBtn) {
+            helpBtn.addEventListener('click', () => {
+                window.location.href = 'help.html';
             });
         }
         if (logoutBtn) {
@@ -243,14 +250,14 @@ function initModal() {
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            
-            if (!username || !password) {
+            const password = document.getElementById('password').value;if (!username || !password) {
                 errorDiv.innerText = 'Заполните все поля';
                 return;
             }
             
-            const result = isLoginMode ? login(username, password) : register(username, password);if (result.success) {
+            const result = isLoginMode ? login(username, password) : register(username, password);
+            
+            if (result.success) {
                 // Закрываем модальное окно
                 modal.classList.remove('active');
                 
