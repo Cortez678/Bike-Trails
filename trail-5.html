@@ -96,4 +96,100 @@
         const TRAIL_ID = 5;
         
         function getCurrentUser() {
-            const user = localStorage
+            const user = localStorage.getItem(CURRENT_USER_KEY);
+            return user ? JSON.parse(user) : null;
+        }
+        
+        function getUsers() {
+            const users = localStorage.getItem(USERS_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+        
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+        
+        function isFavorite(userId, trailId) {
+            const users = getUsers();
+            const user = users.find(u => u.id === userId);
+            return user ? user.favorites.includes(trailId) : false;
+        }
+        
+        function addToFavorites(userId, trailId) {
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === userId);
+            
+            if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
+                users[userIndex].favorites.push(trailId);
+                saveUsers(users);
+                
+                const current = getCurrentUser();
+                if (current && current.id === userId) {
+                    current.favorites = users[userIndex].favorites;
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(current));
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        function removeFromFavorites(userId, trailId) {
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === userId);
+            
+            if (userIndex !== -1) {
+                users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
+                saveUsers(users);
+                
+                const current = getCurrentUser();
+                if (current && current.id === userId) {
+                    current.favorites = users[userIndex].favorites;
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(current));
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        function updateFavoriteButton() {
+            const user = getCurrentUser();
+            const btn = document.getElementById('favoriteBtn');
+            
+            if (!user) {
+                btn.textContent = '🔒 Войдите, чтобы добавить в избранное';
+                btn.style.opacity = '0.7';
+                btn.disabled = true;
+                return;
+            }
+            
+            const isFav = isFavorite(user.id, TRAIL_ID);
+            if (isFav) {
+                btn.textContent = '✅ В избранном';
+                btn.classList.add('favorite-btn-added');
+            } else {
+                btn.textContent = '❤️ В избранное';
+                btn.classList.remove('favorite-btn-added');
+            }
+            btn.disabled = false;
+        }
+        
+        document.getElementById('favoriteBtn').addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
+                return;
+            }const isFav = isFavorite(user.id, TRAIL_ID);
+            if (isFav) {
+                removeFromFavorites(user.id, TRAIL_ID);
+                alert('Маршрут удалён из избранного');
+            } else {
+                addToFavorites(user.id, TRAIL_ID);
+                alert('Маршрут добавлен в избранное! ❤️');
+            }
+            updateFavoriteButton();
+        });
+        
+        updateFavoriteButton();
+    </script>
+</body>
+</html>
