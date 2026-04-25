@@ -2,30 +2,70 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Алтайский Марс | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
+        .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .warning { background: rgba(255, 59, 48, 0.1); border-left: 4px solid #ff3b30; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+    </style>
 </head>
 <body>
-<div class="app-container">
-<div class="trail-page">
-<a href="index.html" class="back-link">← Назад к маршрутам</a>
-<h1>🪨 Алтайский Марс</h1>
-<div class="trail-meta">
-    <span>⚫ Сложный уровень</span>
-    <span>📏 32 км</span>
-    <span>⭐ 4.9</span>
-    <span>📍 Республика Алтай</span>
-</div>
-<div class="gallery">
-    <img src="images/altai-mars-1.jpg" alt="Красные скалы">
-    <img src="images/altai-mars-2.jpg" alt="Река">
-    <img src="images/altai-mars-3.jpg" alt="Панорама">
-</div>
-<div class="trail-description-full">
-    <p>Уникальный маршрут по Чуйскому тракту к "Марсианским" горам. Красные скалы, бирюзовая река и полное ощущение другой планеты.</p>
-</div>
-</div>
-</div>
+    <div class="app-container">
+        <div class="trail-page">
+            <a href="index.html" class="back-link">← Назад к маршрутам</a>
+            
+            <div class="trail-header">
+                <h1>🪨 Алтайский Марс</h1>
+                <div class="trail-meta">
+                    <span class="meta-item">⚫ Сложный уровень</span>
+                    <span class="meta-item">📏 32.0 км</span>
+                    <span class="meta-item">⛰️ 620 м подъём</span>
+                    <span class="meta-item">⭐ 4.9 / 5</span>
+                    <span class="meta-item">📍 Республика Алтай</span>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <img src="images/altai-mars-1.jpg" alt="Красные скалы Алтая">
+                <img src="images/altai-mars-2.jpg" alt="Горная река">
+                <img src="images/altai-mars-3.jpg" alt="Панорама Марсианских гор">
+            </div>
+
+            <div class="trail-description-full">
+                <h3>📖 О маршруте</h3>
+                <p>Маршрут проходит по Чуйскому тракту в районе посёлка Кош-Агач. Уникальные красно-терракотовые скальные образования, напоминающие ландшафты Марса — отсюда и название. Трасса включает крутые подъёмы, каменистые грунтовки и живописные участки по горной степи. Это одно из самых фотографируемых мест на Алтае.</p>
+                
+                <div class="warning">
+                    ⚠️ <strong>Важно!</strong> Маршрут проходит в удалённой местности. Обязательно возьмите с собой запас воды (минимум 2 литра), аптечку, ремкомплект и заряженный телефон с GPS-навигатором.
+                </div>
+
+                <div class="tip">
+                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — июнь или сентябрь. В середине лета очень жарко, а в октябре уже холодно. Обязательно надевайте солнцезащитный крем и головной убор.
+                </div>
+
+                <h3>📍 Особенности маршрута</h3>
+                <ul>
+                    <li>Уникальный "марсианский" ландшафт</li>
+                    <li>Полная удалённость от цивилизации, настоящий backcountry</li>
+                    <li>Комбинированный маршрут: горная степь + каменистые участки</li>
+                    <li>Незабываемые фото на фоне красных скал</li>
+                    <li>Можно увидеть редких животных: архаров, манулов</li>
+                </ul>
+
+                <div class="how-to-get">
+                    <h3>🚗 Как добраться</h3>
+                    <p><strong>Из Горно-Алтайска:</strong> На автомобиле до села Кош-Агач (около 570 км по Чуйскому тракту). Рекомендуется делать ночёвку в пути — дорога долгая и утомительная.</p>
+                    <p><strong>Старт маршрута:</strong> Поворот на "Алтайский Марс" находится между сёлами Кош-Агач и Чаган-Узун.</p>
+                    <p><strong>Координаты старта:</strong> <span class="coordinates">49.9667° N, 88.9667° E</span></p>
+                </div>
+            </div>
+        </div><footer class="footer">
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
+    </div>
 </body>
 </html>
