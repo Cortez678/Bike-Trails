@@ -10,6 +10,29 @@
         .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
         .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
         .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .favorite-btn {
+            background: linear-gradient(135deg, #ff3b30, #ff9500);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 1rem 0;
+            transition: transform 0.2s;
+        }
+        .favorite-btn:hover {
+            transform: scale(1.02);
+        }
+        .favorite-btn-added {
+            background: linear-gradient(135deg, #4cd964, #34c759);
+        }
+        .trail-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 <body>
@@ -26,6 +49,10 @@
                     <span class="meta-item">⭐ 4.8 / 5</span>
                     <span class="meta-item">📍 Иркутская область / Бурятия</span>
                 </div>
+            </div>
+
+            <div class="trail-actions">
+                <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
             </div>
 
             <div class="gallery">
@@ -52,8 +79,7 @@
                 </ul>
 
                 <div class="how-to-get">
-                    <h3>🚗 Как добраться</h3>
-                    <p><strong>Из Иркутска:</strong> Автобус до Листвянки (около 70 км, рейсы каждый час). Маршрут хорошо маркирован, можно стартовать прямо от причала.</p>
+                    <h3>🚗 Как добраться</h3><p><strong>Из Иркутска:</strong> Автобус до Листвянки (около 70 км, рейсы каждый час). Маршрут хорошо маркирован, можно стартовать прямо от причала.</p>
                     <p><strong>На автомобиле:</strong> По Байкальскому тракту до Листвянки, затем по грунтовке до Большого Голоустного.</p>
                     <p><strong>Координаты старта:</strong> <span class="coordinates">51.8667° N, 104.8667° E</span></p>
                 </div>
@@ -63,5 +89,11 @@
             <p>© 2025 Bike Trails — веломаршруты по России</p>
         </footer>
     </div>
-</body>
-</html>
+
+    <script>
+        const CURRENT_USER_KEY = 'bike_trails_current_user';
+        const USERS_KEY = 'bike_trails_users';
+        const TRAIL_ID = 5;
+        
+        function getCurrentUser() {
+            const user = localStorage
