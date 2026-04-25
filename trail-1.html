@@ -2,30 +2,90 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Воробьёвы горы | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .how-to-get {
+            background: rgba(74, 144, 226, 0.1);
+            border-left: 4px solid #4a90e2;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+        }
+        .coordinates {
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+        }
+        .trail-map {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .tip {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
 </head>
 <body>
-<div class="app-container">
-<div class="trail-page">
-<a href="index.html" class="back-link">← Назад к маршрутам</a>
-<h1>🏙️ Воробьёвы горы</h1>
-<div class="trail-meta">
-    <span>🟢 Лёгкий уровень</span>
-    <span>📏 15.5 км</span>
-    <span>⭐ 4.8</span>
-    <span>📍 Москва</span>
-</div>
-<div class="gallery">
-    <img src="images/vorobyovy-gory-1.jpg" alt="Панорама">
-    <img src="images/vorobyovy-gory-2.jpg" alt="Набережная">
-    <img src="images/vorobyovy-gory-3.jpg" alt="Парк">
-</div>
-<div class="trail-description-full">
-    <p>Маршрут начинается у смотровой площадки на Воробьёвых горах, проходит по велодорожкам парка и спускается к Москве-реке. Идеально для начинающих и семейных поездок.</p>
-</div>
-</div>
-</div>
+    <div class="app-container">
+        <div class="trail-page">
+            <a href="index.html" class="back-link">← Назад к маршрутам</a>
+            
+            <div class="trail-header">
+                <h1>🏙️ Воробьёвы горы</h1>
+                <div class="trail-meta">
+                    <span class="meta-item">🟢 Лёгкий уровень</span>
+                    <span class="meta-item">📏 15.5 км</span>
+                    <span class="meta-item">⛰️ 120 м подъём</span>
+                    <span class="meta-item">⭐ 4.8 / 5</span>
+                    <span class="meta-item">📍 Москва</span>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <img src="images/vorobyovy-gory-1.jpg" alt="Панорама Воробьёвых гор">
+                <img src="images/vorobyovy-gory-2.jpg" alt="Набережная Москвы-реки">
+                <img src="images/vorobyovy-gory-3.jpg" alt="Велодорожка в парке">
+            </div>
+
+            <div class="trail-description-full">
+                <h3>📖 О маршруте</h3>
+                <p>Маршрут начинается у смотровой площадки на Воробьёвых горах — одной из самых высоких точек Москвы. Отсюда открывается потрясающий вид на Лужники, МГУ и центр столицы. Далее трасса проходит по велодорожкам парка "Воробьёвы горы" и спускается к Москве-реке. Вы поедете по набережной до Андреевского моста, а затем вернётесь обратно через живописный лесопарк.</p>
+                
+                <div class="tip">
+                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — раннее утро выходного дня. Тогда будет меньше пешеходов, а вид на город при закате солнца особенно красив.
+                </div>
+
+                <h3>📍 Особенности маршрута</h3>
+                <ul>
+                    <li>Идеально для начинающих и семейных поездок</li>
+                    <li>Выделенные велодорожки на всём протяжении</li>
+                    <li>Прокат велосипедов рядом с метро «Воробьёвы горы» и «Ленинский проспект»</li>
+                    <li>Плавные подъёмы, без резких перепадов высот</li>
+                    <li>Несколько смотровых площадок с видом на город</li>
+                    <li>По пути есть кафе и места для пикника</li>
+                </ul>
+
+                <div class="how-to-get">
+                    <h3>🚗 Как добраться</h3>
+                    <p><strong>На метро:</strong> Станция «Воробьёвы горы» (выход к смотровой площадке) или «Ленинский проспект».</p>
+                    <p><strong>На автомобиле:</strong> Парковка у смотровой площадки (бесплатно в выходные дни).</p>
+                    <p><strong>Координаты старта:</strong> <span class="coordinates">55.7106° N, 37.5436° E</span></p>
+                    <p><strong>Навигатор:</strong> Воробьёвская набережная, смотровая площадка.</p>
+                </div>
+            </div></div>
+        <footer class="footer">
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
+    </div>
 </body>
 </html>
