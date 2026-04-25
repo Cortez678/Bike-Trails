@@ -1,6 +1,8 @@
-// Ключи для localStorage
+// ========== КЛЮЧИ ДЛЯ ХРАНЕНИЯ ==========
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
+
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
 // Получить всех пользователей
 function getUsers() {
@@ -8,7 +10,7 @@ function getUsers() {
     return users ? JSON.parse(users) : [];
 }
 
-// Сохранить пользователей
+// Сохранить всех пользователей
 function saveUsers(users) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
@@ -28,18 +30,23 @@ function setCurrentUser(user) {
     }
 }
 
-// Регистрация
+// ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
+
+// Регистрация нового пользователя
 function register(username, password) {
     const users = getUsers();
     
+    // Проверка на существование
     if (users.find(u => u.username === username)) {
         return { success: false, error: 'Пользователь уже существует' };
     }
     
+    // Проверка длины пароля
     if (password.length < 4) {
         return { success: false, error: 'Пароль должен быть не менее 4 символов' };
     }
     
+    // Создаём нового пользователя
     const newUser = {
         id: Date.now(),
         username: username,
@@ -54,24 +61,28 @@ function register(username, password) {
     return { success: true };
 }
 
-// Вход
+// Вход пользователя
 function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
-        setCurrentUser({ id: user.id, username: user.username, favorites: user.favorites });
+        setCurrentUser({ 
+            id: user.id, 
+            username: user.username, 
+            favorites: user.favorites || [] 
+        });
         return { success: true };
     }
     
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
-// Выход
+// Выход из аккаунта
 function logout() {
     setCurrentUser(null);
-    updateAuthUI(); // Обновляем интерфейс
-    location.reload(); // Перезагружаем страницу для сброса состояния
+    updateAuthUI();
+    location.reload();
 }
 
 // Проверка авторизации для страницы кабинета
@@ -84,7 +95,9 @@ function checkAuth() {
     return user;
 }
 
-// Добавить в избранное
+// ========== РАБОТА С ИЗБРАННЫМ ==========
+
+// Добавить маршрут в избранное
 function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -100,11 +113,13 @@ function addToFavorites(userId, trailId) {
                 current.favorites = users[userIndex].favorites;
                 setCurrentUser(current);
             }
+            return true;
         }
     }
+    return false;
 }
 
-// Удалить из избранного
+// Удалить маршрут из избранного
 function removeFromFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -113,21 +128,22 @@ function removeFromFavorites(userId, trailId) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
         
+        // Обновляем текущего пользователя
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
             setCurrentUser(current);
         }
+        return true;
     }
+    return false;
 }
 
 // Проверить, в избранном ли маршрут
 function isFavorite(userId, trailId) {
     const user = getUsers().find(u => u.id === userId);
     return user ? user.favorites.includes(trailId) : false;
-}
-
-// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ПОСЛЕ ВХОДА ==========
+}// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
 
 function updateAuthUI() {
     const user = getCurrentUser();
@@ -135,16 +151,19 @@ function updateAuthUI() {
     if (!container) return;
     
     if (user) {
-        // Показываем имя пользователя + кнопки
+        // Пользователь авторизован — показываем имя, кнопки
         container.innerHTML = `
             <div class="user-info">
-                <span class="user-name">👤 ${user.username}</span><button class="btn-cabinet" id="cabinetBtn">👨‍💼 Личный кабинет</button>
+                <span class="user-name">👤 ${user.username}</span>
+                <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Личный кабинет</button>
+                <button class="btn-favorites" id="favoritesBtn">❤️ Избранные</button>
                 <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
             </div>
         `;
         
-        // Добавляем обработчики
+        // Обработчики кнопок
         const cabinetBtn = document.getElementById('cabinetBtn');
+        const favoritesBtn = document.getElementById('favoritesBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         
         if (cabinetBtn) {
@@ -152,11 +171,16 @@ function updateAuthUI() {
                 window.location.href = 'cabinet.html';
             });
         }
+        if (favoritesBtn) {
+            favoritesBtn.addEventListener('click', () => {
+                window.location.href = 'favorites.html';
+            });
+        }
         if (logoutBtn) {
             logoutBtn.addEventListener('click', logout);
         }
     } else {
-        // Показываем кнопку Вход
+        // Пользователь не авторизован — показываем кнопку входа
         container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
         
         const loginBtn = document.getElementById('openLoginBtn');
@@ -169,7 +193,7 @@ function updateAuthUI() {
     }
 }
 
-// ========== МОДАЛЬНОЕ ОКНО ==========
+// ========== МОДАЛЬНОЕ ОКНО ВХОДА/РЕГИСТРАЦИИ ==========
 
 function initModal() {
     const modal = document.getElementById('authModal');
@@ -223,21 +247,20 @@ function initModal() {
                 modal.classList.remove('active');
                 
                 // Очищаем поля
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
+                document.getElementById('username').value = '';document.getElementById('password').value = '';
                 errorDiv.innerText = '';
                 
                 // Обновляем интерфейс
                 updateAuthUI();
                 
-                // Если это была регистрация, входим автоматически
+                // Показываем приветствие
+                alert(isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
+                
+                // Перезагружаем страницу для обновления состояния
                 if (!isLoginMode) {
                     login(username, password);
                     updateAuthUI();
                 }
-                
-                // Показываем уведомление
-                alert(isLoginMode ? 'Добро пожаловать!' : 'Регистрация успешна! Добро пожаловать!');
             } else {
                 errorDiv.innerText = result.error;
             }
@@ -245,7 +268,8 @@ function initModal() {
     }
 }
 
-// Инициализация при загрузке страницы
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
+
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     initModal();
