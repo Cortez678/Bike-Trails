@@ -52,6 +52,8 @@ function register(username, password) {
         username: username,
         password: password,
         favorites: [],
+        isPremium: false,
+        premiumExpiry: null,
         createdAt: new Date().toISOString()
     };
     
@@ -67,10 +69,31 @@ function login(username, password) {
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
+        // Проверяем, не истекла ли премиум-подписка
+        let isPremiumValid = false;
+        if (user.premiumExpiry) {
+            const expiryDate = new Date(user.premiumExpiry);
+            const now = new Date();
+            if (expiryDate > now) {
+                isPremiumValid = true;
+            } else {
+                // Если истекла — обновляем в базе
+                user.isPremium = false;
+                user.premiumExpiry = null;
+                const userIndex = users.findIndex(u => u.id === user.id);
+                if (userIndex !== -1) {
+                    users[userIndex] = user;
+                    saveUsers(users);
+                }
+            }
+        }
+        
         setCurrentUser({ 
             id: user.id, 
             username: user.username, 
-            favorites: user.favorites || [] 
+            favorites: user.favorites || [],
+            isPremium: isPremiumValid,
+            premiumExpiry: user.premiumExpiry
         });
         return { success: true };
     }
@@ -81,8 +104,6 @@ function login(username, password) {
 // Выход из аккаунта
 function logout() {
     setCurrentUser(null);
-    updateAuthUI();
-    // Перенаправляем на главную страницу
     window.location.href = 'index.html';
 }
 
@@ -118,9 +139,7 @@ function addToFavorites(userId, trailId) {
         }
     }
     return false;
-}
-
-// Удалить маршрут из избранного
+}// Удалить маршрут из избранного
 function removeFromFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -143,7 +162,8 @@ function removeFromFavorites(userId, trailId) {
 // Проверить, в избранном ли маршрут
 function isFavorite(userId, trailId) {
     const users = getUsers();
-    const user = users.find(u => u.id === userId);return user ? user.favorites.includes(trailId) : false;
+    const user = users.find(u => u.id === userId);
+    return user ? user.favorites.includes(trailId) : false;
 }
 
 // Получить избранные маршруты текущего пользователя
@@ -151,6 +171,69 @@ function getUserFavorites() {
     const user = getCurrentUser();
     if (!user) return [];
     return user.favorites || [];
+}
+
+// ========== ПРЕМИУМ ФУНКЦИИ ==========
+
+// Проверить, есть ли премиум у пользователя
+function isUserPremium() {
+    const user = getCurrentUser();
+    if (!user) return false;
+    if (user.isPremium) return true;
+    
+    // Дополнительная проверка по дате
+    const users = getUsers();
+    const fullUser = users.find(u => u.id === user.id);
+    if (fullUser && fullUser.premiumExpiry) {
+        const expiryDate = new Date(fullUser.premiumExpiry);
+        const now = new Date();
+        if (expiryDate > now) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Активировать премиум для пользователя
+function activateUserPremium(userId, days = 30) {
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex !== -1) {
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + days);
+        
+        users[userIndex].isPremium = true;
+        users[userIndex].premiumExpiry = expiryDate.toISOString();
+        saveUsers(users);
+        
+        // Обновляем текущего пользователя
+        const current = getCurrentUser();
+        if (current && current.id === userId) {
+            current.isPremium = true;
+            current.premiumExpiry = expiryDate.toISOString();
+            setCurrentUser(current);
+        }
+        return true;
+    }
+    return false;
+}
+
+// Получить оставшиеся дни премиума
+function getPremiumDaysLeft() {
+    const user = getCurrentUser();
+    if (!user) return 0;
+    
+    const users = getUsers();
+    const fullUser = users.find(u => u.id === user.id);
+    if (fullUser && fullUser.premiumExpiry) {
+        const expiryDate = new Date(fullUser.premiumExpiry);
+        const now = new Date();
+        const diffTime = expiryDate - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays > 0 ? diffDays : 0;
+    }
+    return 0;
 }
 
 // ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
@@ -161,52 +244,37 @@ function updateAuthUI() {
     if (!container) return;
     
     if (user) {
-        // Пользователь авторизован — показываем имя и кнопки
+        const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
         container.innerHTML = `
             <div class="user-info">
-                <span class="user-name">👤 ${user.username}</span>
-                <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Личный кабинет</button>
+                <span class="user-name">👤 ${user.username}${premiumBadge}</span>
+                <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Кабинет</button>
                 <button class="btn-favorites" id="favoritesBtn">❤️ Избранные</button>
                 <button class="btn-help" id="helpBtn">🆘 Помощь</button>
+                <button class="btn-premium" id="premiumBtn">💎 Premium</button>
                 <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
             </div>
         `;
         
         // Обработчики кнопок
-        const cabinetBtn = document.getElementById('cabinetBtn');
-        const favoritesBtn = document.getElementById('favoritesBtn');
-        const helpBtn = document.getElementById('helpBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        
-        if (cabinetBtn) {
-            cabinetBtn.addEventListener('click', () => {
-                window.location.href = 'cabinet.html';
-            });
-        }
-        if (favoritesBtn) {
-            favoritesBtn.addEventListener('click', () => {
-                window.location.href = 'favorites.html';
-            });
-        }
-        if (helpBtn) {
-            helpBtn.addEventListener('click', () => {
-                window.location.href = 'help.html';
-            });
-        }
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', logout);
-        }
+        document.getElementById('cabinetBtn')?.addEventListener('click', () => {window.location.href = 'cabinet.html';
+        });
+        document.getElementById('favoritesBtn')?.addEventListener('click', () => {
+            window.location.href = 'favorites.html';
+        });
+        document.getElementById('helpBtn')?.addEventListener('click', () => {
+            window.location.href = 'help.html';
+        });
+        document.getElementById('premiumBtn')?.addEventListener('click', () => {
+            window.location.href = 'premium.html';
+        });
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     } else {
-        // Пользователь не авторизован — показываем кнопку входа
         container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
-        
-        const loginBtn = document.getElementById('openLoginBtn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => {
-                const modal = document.getElementById('authModal');
-                if (modal) modal.classList.add('active');
-            });
-        }
+        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
+            const modal = document.getElementById('authModal');
+            if (modal) modal.classList.add('active');
+        });
     }
 }
 
@@ -250,7 +318,9 @@ function initModal() {
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;if (!username || !password) {
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
                 errorDiv.innerText = 'Заполните все поля';
                 return;
             }
