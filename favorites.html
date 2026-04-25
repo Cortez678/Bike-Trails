@@ -123,11 +123,21 @@
     </div>
     
     <script>
-        // ========== КЛЮЧИ ДЛЯ ХРАНЕНИЯ ==========
+        // Ключи для localStorage
         const CURRENT_USER_KEY = 'bike_trails_current_user';
         const USERS_KEY = 'bike_trails_users';
         
-        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========function getCurrentUser() {
+        // Данные маршрутов
+        const trails = [{ id: 1, name: "Воробьёвы горы", location: "Москва", difficulty: "easy", difficultyText: "🟢 Лёгкий", image: "images/vorobyovy-gory-1.jpg" },
+            { id: 2, name: "Куршская коса", location: "Калининградская область", difficulty: "medium", difficultyText: "🔵 Средний", image: "images/kurshskaya-kosa-1.jpg" },
+            { id: 3, name: "Лаго-Наки", location: "Адыгея", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" },
+            { id: 4, name: "Алтайский Марс", location: "Республика Алтай", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" },
+            { id: 5, name: "Байкальская петля", location: "Иркутская область", difficulty: "medium", difficultyText: "🔵 Средний", image: "" },
+            { id: 6, name: "Долина гейзеров", location: "Камчатский край", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" }
+        ];
+        
+        // Функции работы с localStorage
+        function getCurrentUser() {
             const user = localStorage.getItem(CURRENT_USER_KEY);
             return user ? JSON.parse(user) : null;
         }
@@ -141,6 +151,7 @@
             localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
         
+        // Удаление из избранного
         function removeFromFavorites(trailId) {
             const user = getCurrentUser();
             if (!user) return;
@@ -149,79 +160,89 @@
             const userIndex = users.findIndex(u => u.id === user.id);
             
             if (userIndex !== -1) {
-                // Удаляем из избранного
+                // Удаляем ID маршрута из массива favorites
                 users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
                 saveUsers(users);
                 
-                // Обновляем текущего пользователя
+                // Обновляем текущего пользователя в localStorage
                 const updatedUser = { ...user, favorites: users[userIndex].favorites };
                 localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedUser));
                 
-                // Перезагружаем страницу для обновления списка
+                // Перезагружаем страницу, чтобы обновить список
                 location.reload();
             }
         }
         
-        // ========== ДАННЫЕ МАРШРУТОВ ==========
-        const trails = [
-            { id: 1, name: "Воробьёвы горы", location: "Москва", difficulty: "easy", difficultyText: "🟢 Лёгкий", image: "images/vorobyovy-gory-1.jpg" },
-            { id: 2, name: "Куршская коса", location: "Калининградская область", difficulty: "medium", difficultyText: "🔵 Средний", image: "images/kurshskaya-kosa-1.jpg" },
-            { id: 3, name: "Лаго-Наки", location: "Адыгея", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" },
-            { id: 4, name: "Алтайский Марс", location: "Республика Алтай", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" },
-            { id: 5, name: "Байкальская петля", location: "Иркутская область", difficulty: "medium", difficultyText: "🔵 Средний", image: "" },
-            { id: 6, name: "Долина гейзеров", location: "Камчатский край", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" }
-        ];
-        
-        // ========== ОСНОВНАЯ ЛОГИКА СТРАНИЦЫ ==========
-        
-        const user = getCurrentUser();
-        const container = document.getElementById('favoritesContainer');
-        
-        if (!user) {
-            // Пользователь не авторизован
-            container.innerHTML = `
-                <div class="empty-favorites">
-                    🔒 Войдите в аккаунт, чтобы просматривать избранные маршруты<br>
-                    <button onclick="location.href='index.html'">Перейти на главную</button>
-                </div>
-            `;
-        } else {
-            // Пользователь авторизован — показываем его избранное
-            const favorites = user.favorites || [];
-            const favoriteTrails = trails.filter(t => favorites.includes(t.id));
+        // Отображение избранного
+        function displayFavorites() {
+            const container = document.getElementById('favoritesContainer');
+            const user = getCurrentUser();
             
-            if (favoriteTrails.length === 0) {
+            // Проверка авторизации
+            if (!user) {
+                container.innerHTML = `
+                    <div class="empty-favorites">
+                        🔒 Войдите в аккаунт, чтобы просматривать избранные маршруты<br>
+                        <button onclick="location.href='index.html'">Перейти на главную</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Получаем массив ID избранных маршрутов
+            const favoritesIds = user.favorites || [];
+            console.log('Избранные ID:', favoritesIds); // Для отладки
+            
+            if (favoritesIds.length === 0) {
                 container.innerHTML = `
                     <div class="empty-favorites">
                         ⭐ У вас пока нет избранных маршрутов<br>
                         <button onclick="location.href='index.html'">Выбрать маршруты</button>
                     </div>
                 `;
-            } else {
-                container.innerHTML = favoriteTrails.map(trail => `
-                    <div class="favorite-card" data-id="${trail.id}">
-                        <div class="favorite-image" style="background-image: ${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg, #2b2d42, #353b48)'};">
-                            <button class="remove-fav" data-id="${trail.id}" title="Удалить из избранного">✕</button>
-                        </div>
-                        <div class="favorite-info" onclick="location.href='trail-${trail.id}.html'"><h3>${trail.name}</h3>
-                            <div class="trail-stats">
-                                <span class="stat-item">${trail.difficultyText}</span>
-                                <span class="stat-item">📍 ${trail.location}</span>
-                            </div>
+                return;
+            }
+            
+            // Фильтруем маршруты, которые есть в избранном
+            const favoriteTrails = trails.filter(trail => favoritesIds.includes(trail.id));
+            
+            if (favoriteTrails.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-favorites">
+                        ⭐ Маршруты не найдены<br>
+                        <button onclick="location.href='index.html'">На главную</button>
+                    </div>`;
+                return;
+            }
+            
+            // Отображаем карточки избранных маршрутов
+            container.innerHTML = favoriteTrails.map(trail => `
+                <div class="favorite-card" data-id="${trail.id}">
+                    <div class="favorite-image" style="background: ${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg, #2b2d42, #353b48)'}; background-size: cover; background-position: center;">
+                        <button class="remove-fav" data-id="${trail.id}" title="Удалить из избранного">✕</button>
+                    </div>
+                    <div class="favorite-info" onclick="location.href='trail-${trail.id}.html'">
+                        <h3>${trail.name}</h3>
+                        <div class="trail-stats">
+                            <span class="stat-item">${trail.difficultyText}</span>
+                            <span class="stat-item">📍 ${trail.location}</span>
                         </div>
                     </div>
-                `).join('');
-                
-                // Добавляем обработчики на кнопки удаления
-                document.querySelectorAll('.remove-fav').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Чтобы не переходить на страницу маршрута
-                        const id = parseInt(btn.getAttribute('data-id'));
-                        removeFromFavorites(id);
-                    });
+                </div>
+            `).join('');
+            
+            // Навешиваем обработчики на кнопки удаления
+            document.querySelectorAll('.remove-fav').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Чтобы не переходить на страницу маршрута
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    removeFromFavorites(id);
                 });
-            }
+            });
         }
+        
+        // Запускаем отображение при загрузке страницы
+        displayFavorites();
     </script>
 </body>
 </html>
