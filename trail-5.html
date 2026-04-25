@@ -2,30 +2,66 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Байкальская петля | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
+        .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+    </style>
 </head>
 <body>
-<div class="app-container">
-<div class="trail-page">
-<a href="index.html" class="back-link">← Назад к маршрутам</a>
-<h1>💧 Байкальская петля</h1>
-<div class="trail-meta">
-    <span>🔵 Средний уровень</span>
-    <span>📏 35 км</span>
-    <span>⭐ 4.8</span>
-    <span>📍 Иркутская область</span>
-</div>
-<div class="gallery">
-    <img src="images/baikal-loop-1.jpg" alt="Байкал">
-    <img src="images/baikal-loop-2.jpg" alt="Побережье">
-    <img src="images/baikal-loop-3.jpg" alt="Горы">
-</div>
-<div class="trail-description-full">
-    <p>Кольцевой маршрут вдоль Байкала от Листвянки до Большого Голоустного. Тайга, скалы, виды на озеро и пик Черского.</p>
-</div>
-</div>
-</div>
+    <div class="app-container">
+        <div class="trail-page">
+            <a href="index.html" class="back-link">← Назад к маршрутам</a>
+            
+            <div class="trail-header">
+                <h1>💧 Байкальская петля</h1>
+                <div class="trail-meta">
+                    <span class="meta-item">🔵 Средний уровень</span>
+                    <span class="meta-item">📏 35.0 км</span>
+                    <span class="meta-item">⛰️ 540 м подъём</span>
+                    <span class="meta-item">⭐ 4.8 / 5</span>
+                    <span class="meta-item">📍 Иркутская область / Бурятия</span>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <img src="images/baikal-loop-1.jpg" alt="Озеро Байкал панорама">
+                <img src="images/baikal-loop-2.jpg" alt="Побережье Байкала">
+                <img src="images/baikal-loop-3.jpg" alt="Горы вокруг Байкала">
+            </div>
+
+            <div class="trail-description-full">
+                <h3>📖 О маршруте</h3>
+                <p>Кольцевой маршрут от Листвянки до посёлка Большое Голоустное вдоль побережья Байкала — самого глубокого озера в мире. Трасса идёт по грунтовкам через тайгу, с заездом на пик Черского и спусками в живописные бухты Малого моря. В ясную погоду вода Байкала переливается всеми оттенками бирюзового и синего.</p>
+                
+                <div class="tip">
+                    💡 <strong>Совет райдера:</strong> Не забудьте попробовать байкальский омуль в Листвянке! Это местный деликатес, который стоит того. А если останетесь на ночёвку — найдите место для кемпинга прямо у воды.
+                </div>
+
+                <h3>📍 Особенности маршрута</h3>
+                <ul>
+                    <li>90% маршрута проходит с видом на Байкал</li>
+                    <li>Включает панорамную смотровую на пике Черского</li>
+                    <li>Чередование тайги, гор и береговой линии</li>
+                    <li>Много оборудованных мест для кемпинга и ночёвки</li>
+                    <li>Чистейший воздух и прозрачная вода</li>
+                </ul>
+
+                <div class="how-to-get">
+                    <h3>🚗 Как добраться</h3>
+                    <p><strong>Из Иркутска:</strong> Автобус до Листвянки (около 70 км, рейсы каждый час). Маршрут хорошо маркирован, можно стартовать прямо от причала.</p>
+                    <p><strong>На автомобиле:</strong> По Байкальскому тракту до Листвянки, затем по грунтовке до Большого Голоустного.</p>
+                    <p><strong>Координаты старта:</strong> <span class="coordinates">51.8667° N, 104.8667° E</span></p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
+    </div>
 </body>
 </html>
