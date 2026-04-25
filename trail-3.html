@@ -2,30 +2,71 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Лаго-Наки | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
+        .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .warning { background: rgba(255, 59, 48, 0.1); border-left: 4px solid #ff3b30; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+    </style>
 </head>
 <body>
-<div class="app-container">
-<div class="trail-page">
-<a href="index.html" class="back-link">← Назад к маршрутам</a>
-<h1>🏔️ Лаго-Наки</h1>
-<div class="trail-meta">
-    <span>⚫ Сложный уровень</span>
-    <span>📏 28.5 км</span>
-    <span>⭐ 5.0</span>
-    <span>📍 Адыгея</span>
-</div>
-<div class="gallery">
-    <img src="images/lago-naki-1.jpg" alt="Горы">
-    <img src="images/lago-naki-2.jpg" alt="Луга">
-    <img src="images/lago-naki-3.jpg" alt="Водопад">
-</div>
-<div class="trail-description-full">
-    <p>Высокогорный маршрут по альпийским лугам Лаго-Наки с видами на Главный Кавказский хребет. Подходит для подготовленных райдеров.</p>
-</div>
-</div>
-</div>
+    <div class="app-container">
+        <div class="trail-page">
+            <a href="index.html" class="back-link">← Назад к маршрутам</a>
+            
+            <div class="trail-header">
+                <h1>🏔️ Лаго-Наки</h1>
+                <div class="trail-meta">
+                    <span class="meta-item">⚫ Сложный уровень</span>
+                    <span class="meta-item">📏 28.5 км</span>
+                    <span class="meta-item">⛰️ 850 м подъём</span>
+                    <span class="meta-item">⭐ 5.0 / 5</span>
+                    <span class="meta-item">📍 Адыгея</span>
+                </div>
+            </div>
+
+            <div class="gallery">
+                <img src="images/lago-naki-1.jpg" alt="Альпийские луга Лаго-Наки">
+                <img src="images/lago-naki-2.jpg" alt="Горный водопад">
+                <img src="images/lago-naki-3.jpg" alt="Вид на Кавказские горы">
+            </div>
+
+            <div class="trail-description-full">
+                <h3>📖 О маршруте</h3>
+                <p>Маршрут начинается от турбазы "Лаго-Наки" и идёт в сторону хребта Уна-Коз. Вы проедете по горным грунтовкам через альпийские луга с видом на Главный Кавказский хребет. Финальная точка — водопад Молочный, один из самых высоких водопадов Адыгеи. Маршрут требует хорошей физической подготовки и опыта катания в горах.</p>
+                
+                <div class="warning">
+                    ⚠️ <strong>Важно!</strong> Маршрут проходит на высоте более 1500 метров. Возьмите с собой тёплую одежду, дождевик, запас воды и еды. Рекомендуется ехать с гидом, знакомым с местностью.
+                </div>
+
+                <div class="tip">
+                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — июль-август. Избегайте поездок после дождей — грунтовые дороги становятся скользкими.
+                </div>
+
+                <h3>📍 Особенности маршрута</h3>
+                <ul>
+                    <li>Высокогорный велотрейл (от 1500 до 2200 метров)</li>
+                    <li>Требуется хорошая физическая подготовка и опыт</li>
+                    <li>Панорамы на Эльбрус и вершины Кавказа</li>
+                    <li>По пути несколько горных водопадов</li>
+                    <li>Уникальные альпийские луга с редкими растениями</li>
+                </ul>
+
+                <div class="how-to-get">
+                    <h3>🚗 Как добраться</h3>
+                    <p><strong>Из Майкопа:</strong> На автомобиле до турбазы "Лаго-Наки" (около 110 км по трассе А-159). Дорога горная, требует осторожности.</p>
+                    <p><strong>Свои велосипеды:</strong> Лучше использовать велосипеды с прочной подвеской и широкими покрышками.</p>
+                    <p><strong>Прокат:</strong> Велосипеды можно арендовать в посёлке Каменномостский.</p>
+                    <p><strong>Координаты старта:</strong> <span class="coordinates">44.1333° N, 40.2000° E</span></p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer"><p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
+    </div>
 </body>
 </html>
