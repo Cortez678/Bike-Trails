@@ -1,6 +1,95 @@
-<p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Bike Trails | Веломаршруты России</title>
+    
+    <!-- PWA метатеги -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-512.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bike Trails">
+    <meta name="theme-color" content="#0a0f1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Bike Trails">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка -->
+        <div class="header-top">
+            <div class="logo">🚴‍♂️ Bike Trails</div>
+            <div class="auth-buttons" id="authButtons"></div>
+        </div>
+
+        <!-- Баннер установки PWA -->
+        <div id="installBanner" class="install-banner" style="display: none;">
+            <div class="install-banner-content">
+                <div class="install-icon">📱</div>
+                <div class="install-text">
+                    <strong>Установить приложение</strong>
+                    <span>Быстрый доступ с главного экрана</span>
+                </div>
+                <button id="installBtn" class="install-btn">Установить</button>
+                <button id="closeBannerBtn" class="close-banner">✕</button>
+            </div>
+        </div>
+
+        <!-- Hero секция -->
+        <header class="hero">
+            <div class="hero-badge">🚵‍♂️ RIDE RUSSIA</div>
+            <h1 class="hero-title">Bike <span class="gradient-text">Trails</span></h1>
+            <p class="hero-subtitle">Лучшие веломаршруты России</p>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Маршрутов</div></div>
+                <div class="stat-card"><div class="stat-value">6+</div><div class="stat-label">Регионов</div></div>
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Уровня</div></div>
+            </div>
+        </header>
+
+        <!-- Фильтры -->
+        <div class="filters-section">
+            <h2 class="section-title">Выбери свой маршрут</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-level="all">Все маршруты</button>
+                <button class="filter-btn" data-level="easy">🟢 Лёгкие</button>
+                <button class="filter-btn" data-level="medium">🔵 Средние</button>
+                <button class="filter-btn" data-level="hard">⚫ Сложные</button>
+            </div>
+        </div>
+
+        <!-- Список маршрутов -->
+        <div class="trails-container" id="trailsContainer">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- ФУТЕР (ПОДВАЛ) — ТЕКСТ КОПИРАЙТА ТОЛЬКО ЗДЕСЬ -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🚴‍♂️ Bike Trails</h3>
+                    <p>Веломаршруты по России для настоящих райдеров</p>
+                </div>
+                <div class="footer-section">
+                    <h3>📞 Контакты</h3>
+                    <div class="social-links">
+                        <a href="https://t.me/ogmark17" target="_blank" class="social-link">📱 Telegram: @ogmark17</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>📧 Сотрудничество</h3>
+                    <p>По вопросам сотрудничества<br>пишите в Telegram</p>
+                </div>
+            </div><div class="footer-bottom">
+                <p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
             </div>
         </footer>
+        <!-- КОНЕЦ ФУТЕРА -->
     </div>
 
     <!-- Модальное окно входа/регистрации -->
@@ -50,98 +139,13 @@
             });
         }
 
-        // Регистрация Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/Bike-Trails/sw.js')
-                    .then(reg => console.log('SW зарегистрирован:', reg))
+                    .then(reg => console.log('SW зарегистрирован'))
                     .catch(err => console.error('Ошибка SW:', err));
             });
         }
     </script>
 </body>
-</html><!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Bike Trails | Веломаршруты России</title>
-    
-    <!-- PWA метатеги для установки на телефон -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/icon-512.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Bike Trails">
-    <meta name="theme-color" content="#0a0f1a">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Bike Trails">
-    
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="auth.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Шапка с авторизацией -->
-        <div class="header-top">
-            <div class="logo">🚴‍♂️ Bike Trails</div>
-            <div class="auth-buttons" id="authButtons"></div>
-        </div>
-
-        <!-- Баннер установки PWA -->
-        <div id="installBanner" class="install-banner" style="display: none;">
-            <div class="install-banner-content">
-                <div class="install-icon">📱</div>
-                <div class="install-text">
-                    <strong>Установить приложение</strong>
-                    <span>Быстрый доступ с главного экрана</span>
-                </div>
-                <button id="installBtn" class="install-btn">Установить</button>
-                <button id="closeBannerBtn" class="close-banner">✕</button>
-            </div>
-        </div>
-
-        <header class="hero">
-            <div class="hero-badge">🚵‍♂️ RIDE RUSSIA</div>
-            <h1 class="hero-title">Bike <span class="gradient-text">Trails</span></h1>
-            <p class="hero-subtitle">Лучшие веломаршруты России</p>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Маршрутов</div></div>
-                <div class="stat-card"><div class="stat-value">6+</div><div class="stat-label">Регионов</div></div>
-                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Уровня</div></div>
-            </div>
-        </header>
-
-        <div class="filters-section">
-            <h2 class="section-title">Выбери свой маршрут</h2>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-level="all">Все маршруты</button>
-                <button class="filter-btn" data-level="easy">🟢 Лёгкие</button>
-                <button class="filter-btn" data-level="medium">🔵 Средние</button>
-                <button class="filter-btn" data-level="hard">⚫ Сложные</button>
-            </div>
-        </div>
-
-        <div class="trails-container" id="trailsContainer">
-            <div class="loading-spinner"></div>
-        </div>
-
-        <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🚴‍♂️ Bike Trails</h3>
-                    <p>Веломаршруты по России для настоящих райдеров</p>
-                </div>
-                <div class="footer-section">
-                    <h3>📞 Контакты</h3>
-                    <div class="social-links">
-                        <a href="https://t.me/ogmark17" target="_blank" class="social-link">📱 Telegram: @ogmark17</a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h3>📧 Сотрудничество</h3>
-                    <p>По вопросам сотрудничества<br>пишите в Telegram</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
+</html>
