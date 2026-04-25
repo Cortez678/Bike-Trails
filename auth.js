@@ -4,24 +4,20 @@ const CURRENT_USER_KEY = 'bike_trails_current_user';
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
-// Получить всех пользователей
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : [];
 }
 
-// Сохранить всех пользователей
 function saveUsers(users) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
-// Получить текущего пользователя
 function getCurrentUser() {
     const user = localStorage.getItem(CURRENT_USER_KEY);
     return user ? JSON.parse(user) : null;
 }
 
-// Сохранить текущего пользователя
 function setCurrentUser(user) {
     if (user) {
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
@@ -32,21 +28,17 @@ function setCurrentUser(user) {
 
 // ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
 
-// Регистрация нового пользователя
 function register(username, password) {
     const users = getUsers();
     
-    // Проверка на существование
     if (users.find(u => u.username === username)) {
         return { success: false, error: 'Пользователь уже существует' };
     }
     
-    // Проверка длины пароля
     if (password.length < 4) {
         return { success: false, error: 'Пароль должен быть не менее 4 символов' };
     }
     
-    // Создаём нового пользователя
     const newUser = {
         id: Date.now(),
         username: username,
@@ -63,13 +55,11 @@ function register(username, password) {
     return { success: true };
 }
 
-// Вход пользователя
 function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
-        // Проверяем, не истекла ли премиум-подписка
         let isPremiumValid = false;
         if (user.premiumExpiry) {
             const expiryDate = new Date(user.premiumExpiry);
@@ -77,7 +67,6 @@ function login(username, password) {
             if (expiryDate > now) {
                 isPremiumValid = true;
             } else {
-                // Если истекла — обновляем в базе
                 user.isPremium = false;
                 user.premiumExpiry = null;
                 const userIndex = users.findIndex(u => u.id === user.id);
@@ -101,13 +90,11 @@ function login(username, password) {
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
-// Выход из аккаунта
 function logout() {
     setCurrentUser(null);
     window.location.href = 'index.html';
 }
 
-// Проверка авторизации для страницы кабинета
 function checkAuth() {
     const user = getCurrentUser();
     if (!user) {
@@ -119,7 +106,6 @@ function checkAuth() {
 
 // ========== РАБОТА С ИЗБРАННЫМ ==========
 
-// Добавить маршрут в избранное
 function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -129,7 +115,6 @@ function addToFavorites(userId, trailId) {
             users[userIndex].favorites.push(trailId);
             saveUsers(users);
             
-            // Обновляем текущего пользователя
             const current = getCurrentUser();
             if (current && current.id === userId) {
                 current.favorites = users[userIndex].favorites;
@@ -139,7 +124,8 @@ function addToFavorites(userId, trailId) {
         }
     }
     return false;
-}// Удалить маршрут из избранного
+}
+
 function removeFromFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -148,7 +134,6 @@ function removeFromFavorites(userId, trailId) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
         
-        // Обновляем текущего пользователя
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
@@ -157,16 +142,12 @@ function removeFromFavorites(userId, trailId) {
         return true;
     }
     return false;
-}
-
-// Проверить, в избранном ли маршрут
-function isFavorite(userId, trailId) {
+}function isFavorite(userId, trailId) {
     const users = getUsers();
     const user = users.find(u => u.id === userId);
     return user ? user.favorites.includes(trailId) : false;
 }
 
-// Получить избранные маршруты текущего пользователя
 function getUserFavorites() {
     const user = getCurrentUser();
     if (!user) return [];
@@ -175,13 +156,11 @@ function getUserFavorites() {
 
 // ========== ПРЕМИУМ ФУНКЦИИ ==========
 
-// Проверить, есть ли премиум у пользователя
 function isUserPremium() {
     const user = getCurrentUser();
     if (!user) return false;
     if (user.isPremium) return true;
     
-    // Дополнительная проверка по дате
     const users = getUsers();
     const fullUser = users.find(u => u.id === user.id);
     if (fullUser && fullUser.premiumExpiry) {
@@ -194,7 +173,6 @@ function isUserPremium() {
     return false;
 }
 
-// Активировать премиум для пользователя
 function activateUserPremium(userId, days = 30) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -207,7 +185,6 @@ function activateUserPremium(userId, days = 30) {
         users[userIndex].premiumExpiry = expiryDate.toISOString();
         saveUsers(users);
         
-        // Обновляем текущего пользователя
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.isPremium = true;
@@ -219,7 +196,6 @@ function activateUserPremium(userId, days = 30) {
     return false;
 }
 
-// Получить оставшиеся дни премиума
 function getPremiumDaysLeft() {
     const user = getCurrentUser();
     if (!user) return 0;
@@ -248,33 +224,48 @@ function updateAuthUI() {
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
-                <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Кабинет</button>
-                <button class="btn-favorites" id="favoritesBtn">❤️ Избранные</button>
-                <button class="btn-help" id="helpBtn">🆘 Помощь</button>
-                <button class="btn-premium" id="premiumBtn">💎 Premium</button>
-                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <a href="cabinet.html">👨‍💼 Личный кабинет</a>
+                        <a href="favorites.html">❤️ Избранное</a>
+                        <a href="help.html">🆘 Помощь</a>
+                        <a href="premium.html">💎 Premium</a>
+                        <a href="#" id="logoutDropdown">🚪 Выйти</a>
+                    </div>
+                </div>
             </div>
         `;
         
-        // Обработчики кнопок
-        document.getElementById('cabinetBtn')?.addEventListener('click', () => {window.location.href = 'cabinet.html';
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const dropdownContent = document.getElementById('dropdownContent');
+        const logoutDropdown = document.getElementById('logoutDropdown');
+        
+        if (dropdownBtn) {
+            dropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+            });
+        }
+        
+        if (logoutDropdown) {
+            logoutDropdown.addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        }
+        
+        window.addEventListener('click', () => {
+            if (dropdownContent) dropdownContent.classList.remove('show');
         });
-        document.getElementById('favoritesBtn')?.addEventListener('click', () => {
-            window.location.href = 'favorites.html';
-        });
-        document.getElementById('helpBtn')?.addEventListener('click', () => {
-            window.location.href = 'help.html';
-        });
-        document.getElementById('premiumBtn')?.addEventListener('click', () => {
-            window.location.href = 'premium.html';
-        });
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     } else {
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
-        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
-            const modal = document.getElementById('authModal');
-            if (modal) modal.classList.add('active');
-        });
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;const loginBtn = document.getElementById('openLoginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                const modal = document.getElementById('authModal');
+                if (modal) modal.classList.add('active');
+            });
+        }
     }
 }
 
@@ -291,17 +282,14 @@ function initModal() {
 
     if (!modal) return;
 
-    // Закрытие по крестику
     if (closeBtn) {
         closeBtn.addEventListener('click', () => modal.classList.remove('active'));
     }
     
-    // Закрытие по клику вне окна
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
     
-    // Переключение режима Вход/Регистрация
     if (switchBtn) {
         switchBtn.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
@@ -314,7 +302,6 @@ function initModal() {
         });
     }
 
-    // Обработка отправки формы
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             const username = document.getElementById('username').value.trim();
@@ -328,21 +315,12 @@ function initModal() {
             const result = isLoginMode ? login(username, password) : register(username, password);
             
             if (result.success) {
-                // Закрываем модальное окно
                 modal.classList.remove('active');
-                
-                // Очищаем поля
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 errorDiv.innerText = '';
-                
-                // Обновляем интерфейс
                 updateAuthUI();
-                
-                // Показываем приветствие
                 alert(isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
-                
-                // Перезагружаем страницу для синхронизации
                 location.reload();
             } else {
                 errorDiv.innerText = result.error;
