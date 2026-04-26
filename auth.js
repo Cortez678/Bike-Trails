@@ -4,24 +4,20 @@ const CURRENT_USER_KEY = 'bike_trails_current_user';
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
-// Получить всех пользователей
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : [];
 }
 
-// Сохранить всех пользователей
 function saveUsers(users) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
-// Получить текущего пользователя
 function getCurrentUser() {
     const user = localStorage.getItem(CURRENT_USER_KEY);
     return user ? JSON.parse(user) : null;
 }
 
-// Сохранить текущего пользователя
 function setCurrentUser(user) {
     if (user) {
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
@@ -30,7 +26,6 @@ function setCurrentUser(user) {
     }
 }
 
-// Экспорт функции для получения пользователя
 window.getCurrentUserAuth = function() {
     return getCurrentUser();
 };
@@ -60,7 +55,6 @@ function register(username, password) {
     
     users.push(newUser);
     saveUsers(users);
-    
     return { success: true };
 }
 
@@ -95,7 +89,6 @@ function login(username, password) {
         });
         return { success: true };
     }
-    
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
@@ -123,7 +116,6 @@ function addToFavorites(userId, trailId) {
         if (!users[userIndex].favorites.includes(trailId)) {
             users[userIndex].favorites.push(trailId);
             saveUsers(users);
-            
             const current = getCurrentUser();
             if (current && current.id === userId) {
                 current.favorites = users[userIndex].favorites;
@@ -142,7 +134,6 @@ function removeFromFavorites(userId, trailId) {
     if (userIndex !== -1) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
-        
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
@@ -177,9 +168,7 @@ function isUserPremium() {
     if (fullUser && fullUser.premiumExpiry) {
         const expiryDate = new Date(fullUser.premiumExpiry);
         const now = new Date();
-        if (expiryDate > now) {
-            return true;
-        }
+        if (expiryDate > now) return true;
     }
     return false;
 }
@@ -191,11 +180,9 @@ function activateUserPremium(userId, days = 30) {
     if (userIndex !== -1) {
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + days);
-        
         users[userIndex].isPremium = true;
         users[userIndex].premiumExpiry = expiryDate.toISOString();
         saveUsers(users);
-        
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.isPremium = true;
@@ -216,8 +203,7 @@ function getPremiumDaysLeft() {
     if (fullUser && fullUser.premiumExpiry) {
         const expiryDate = new Date(fullUser.premiumExpiry);
         const now = new Date();
-        const diffTime = expiryDate - now;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
         return diffDays > 0 ? diffDays : 0;
     }
     return 0;
@@ -293,9 +279,13 @@ function updateAuthUI() {
         if (langToggle) {
             langToggle.addEventListener('click', (e) => {
                 e.preventDefault();
-                const newLang = currentLang === 'ru' ? 'en' : 'ru';
-                localStorage.setItem('language', newLang);
-                location.reload();
+                if (typeof window.toggleLanguage === 'function') {
+                    window.toggleLanguage();
+                } else {
+                    const newLang = currentLang === 'ru' ? 'en' : 'ru';
+                    localStorage.setItem('language', newLang);
+                    location.reload();
+                }
             });
         }
         
@@ -409,7 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     initModal();
     
-    // Применяем сохранённую тему
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
