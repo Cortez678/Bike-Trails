@@ -20,6 +20,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Частицы для фона -->
+    <div class="particles" id="particles"></div>
+    
     <div class="app-container">
         <!-- Шапка -->
         <div class="header-top">
@@ -27,16 +30,12 @@
             <div class="auth-buttons" id="authButtons"></div>
         </div>
 
-        <!-- Баннер установки PWA -->
-        <div id="installBanner" class="install-banner" style="display: none;">
-            <div class="install-banner-content">
-                <div class="install-icon">📱</div>
-                <div class="install-text">
-                    <strong>Установить приложение</strong>
-                    <span>Быстрый доступ с главного экрана</span>
-                </div>
-                <button id="installBtn" class="install-btn">Установить</button>
-                <button id="closeBannerBtn" class="close-banner">✕</button>
+        <!-- Приветственный блок -->
+        <div class="welcome-section" id="welcomeSection">
+            <div class="welcome-glasses">👓</div>
+            <div class="welcome-text" id="welcomeText">
+                <h2>Добро пожаловать! 👋</h2>
+                <p>Выбери свой идеальный веломаршрут и отправляйся в приключение!</p>
             </div>
         </div>
 
@@ -68,7 +67,7 @@
             <div class="loading-spinner"></div>
         </div>
 
-        <!-- ФУТЕР (ПОДВАЛ) — ТЕКСТ КОПИРАЙТА ТОЛЬКО ЗДЕСЬ -->
+        <!-- Футер -->
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-section">
@@ -85,11 +84,24 @@
                     <h3>📧 Сотрудничество</h3>
                     <p>По вопросам сотрудничества<br>пишите в Telegram</p>
                 </div>
-            </div><div class="footer-bottom">
+            </div>
+            <div class="footer-bottom">
                 <p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
             </div>
         </footer>
-        <!-- КОНЕЦ ФУТЕРА -->
+    </div><!-- Приветственное модальное окно (при первом посещении) -->
+    <div id="welcomeModal" class="welcome-modal" style="display: none;">
+        <div class="welcome-modal-content">
+            <div class="welcome-modal-icon">🎉</div>
+            <h2>Добро пожаловать в Bike Trails!</h2>
+            <p>Твой персональный гид по лучшим веломаршрутам России.</p>
+            <div class="welcome-features">
+                <div class="feature">🗺️ 6+ маршрутов</div>
+                <div class="feature">⭐ Избранное</div>
+                <div class="feature">🆘 Помощь 24/7</div>
+            </div>
+            <button id="closeWelcomeModal" class="welcome-btn">Начать путешествие 🚀</button>
+        </div>
     </div>
 
     <!-- Модальное окно входа/регистрации -->
@@ -109,43 +121,6 @@
 
     <script src="auth.js"></script>
     <script src="script.js"></script>
-    <script>
-        // PWA установка
-        let deferredPrompt;
-        const installBanner = document.getElementById('installBanner');
-        const installBtn = document.getElementById('installBtn');
-        const closeBannerBtn = document.getElementById('closeBannerBtn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (installBanner) installBanner.style.display = 'block';
-        });
-
-        if (installBtn) {
-            installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    await deferredPrompt.userChoice;
-                    deferredPrompt = null;
-                }
-                if (installBanner) installBanner.style.display = 'none';
-            });
-        }
-
-        if (closeBannerBtn) {
-            closeBannerBtn.addEventListener('click', () => {
-                if (installBanner) installBanner.style.display = 'none';
-            });
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/Bike-Trails/sw.js')
-                    .then(reg => console.log('SW зарегистрирован'))
-                    .catch(err => console.error('Ошибка SW:', err));
-            });
-        }
-    </script>
+    <script src="welcome.js"></script>
 </body>
 </html>
