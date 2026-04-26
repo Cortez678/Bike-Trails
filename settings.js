@@ -1,23 +1,32 @@
 // ========== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ==========
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.getElementById('themeIcon');
 let currentTheme = localStorage.getItem('theme') || 'dark';
 
 function applyTheme(theme) {
     if (theme === 'light') {
         document.body.classList.add('light-theme');
-        if (themeIcon) themeIcon.textContent = '🌙';
         localStorage.setItem('theme', 'light');
+        // Обновляем иконку в меню, если она есть
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.innerHTML = '🌙 <span>Сменить тему</span>';
+        }
     } else {
         document.body.classList.remove('light-theme');
-        if (themeIcon) themeIcon.textContent = '☀️';
         localStorage.setItem('theme', 'dark');
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.innerHTML = '☀️ <span>Сменить тему</span>';
+        }
     }
 }
 
 function toggleTheme() {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    applyTheme(currentTheme);
+    const isLight = document.body.classList.contains('light-theme');
+    if (isLight) {
+        applyTheme('dark');
+    } else {
+        applyTheme('light');
+    }
 }
 
 // ========== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ==========
@@ -27,17 +36,19 @@ function setLanguage(lang) {
     currentLang = lang;
     localStorage.setItem('language', lang);
     
-    // Обновляем кнопку языка
-    const langBtn = document.getElementById('langToggle');
-    if (langBtn) {
-        langBtn.innerHTML = currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский';
+    // Обновляем кнопку языка в меню
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.innerHTML = currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский';
     }
     
-    // Обновляем все тексты
-    updateAllTexts();
-    
-    // Обновляем меню настроек
-    updateSettingsMenuTexts();
+    // Обновляем все тексты на странице
+    if (typeof updateAllTexts === 'function') {
+        updateAllTexts();
+    } else {
+        console.log('updateAllTexts not found, reloading page');
+        location.reload();
+    }
 }
 
 function toggleLanguage() {
@@ -45,29 +56,41 @@ function toggleLanguage() {
     setLanguage(newLang);
 }
 
-// Обновление текстов в меню настроек
-function updateSettingsMenuTexts() {
-    const themeText = document.querySelector('#themeToggle span:not(#themeIcon)');
-    if (themeText) {
-        themeText.textContent = currentLang === 'ru' ? 'Сменить тему' : 'Change theme';
-    }
-    
-    const langText = document.querySelector('#langToggle span:not(#langIcon)');
-    if (langText) {
-        langText.textContent = currentLang === 'ru' ? 'Сменить язык' : 'Change language';
-    }
-}
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
+document.addEventListener('DOMContentLoaded', function() {
+    // Применяем тему
     applyTheme(currentTheme);
+    
+    // Устанавливаем язык
     setLanguage(currentLang);
     
-    // Обработчики кнопок
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
+    // Навешиваем обработчики на кнопки (ищем их по ID)
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const langToggleBtn = document.getElementById('langToggle');
+    
+    if (themeToggleBtn) {
+        // Убираем старые обработчики и добавляем новый
+        const newThemeBtn = themeToggleBtn.cloneNode(true);
+        themeToggleBtn.parentNode.replaceChild(newThemeBtn, themeToggleBtn);
+        newThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleTheme();
+        });
     }
-    if (langToggle) {
-        langToggle.addEventListener('click', toggleLanguage);
+    
+    if (langToggleBtn) {
+        // Убираем старые обработчики и добавляем новый
+        const newLangBtn = langToggleBtn.cloneNode(true);
+        langToggleBtn.parentNode.replaceChild(newLangBtn, langToggleBtn);
+        newLangBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleLanguage();
+        });
     }
 });
+
+// Экспортируем функции в глобальный объект window
+window.toggleTheme = toggleTheme;
+window.toggleLanguage = toggleLanguage;
+window.applyTheme = applyTheme;
+window.setLanguage = setLanguage;
