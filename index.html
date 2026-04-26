@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Частицы для фона -->
+    <!-- Анимированные частицы фона -->
     <div class="particles" id="particles"></div>
     
     <div class="app-container">
@@ -30,13 +30,10 @@
             <div class="auth-buttons" id="authButtons"></div>
         </div>
 
-        <!-- Приветственный блок -->
-        <div class="welcome-section" id="welcomeSection">
-            <div class="welcome-glasses">👓</div>
-            <div class="welcome-text" id="welcomeText">
-                <h2>Добро пожаловать! 👋</h2>
-                <p>Выбери свой идеальный веломаршрут и отправляйся в приключение!</p>
-            </div>
+        <!-- Приветствие в стиле Apple -->
+        <div class="welcome-section">
+            <div class="apple-greeting" id="appleGreeting">Добро пожаловать</div>
+            <div class="apple-subgreeting" id="appleSubgreeting">Выберите маршрут и отправляйтесь в путь</div>
         </div>
 
         <!-- Hero секция -->
@@ -89,16 +86,19 @@
                 <p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
             </div>
         </footer>
-    </div><!-- Приветственное модальное окно (при первом посещении) -->
+    </div>
+
+    <!-- Приветственное модальное окно (при первом посещении) -->
     <div id="welcomeModal" class="welcome-modal" style="display: none;">
         <div class="welcome-modal-content">
-            <div class="welcome-modal-icon">🎉</div>
+            <div class="welcome-modal-icon">🚴‍♂️</div>
             <h2>Добро пожаловать в Bike Trails!</h2>
             <p>Твой персональный гид по лучшим веломаршрутам России.</p>
             <div class="welcome-features">
                 <div class="feature">🗺️ 6+ маршрутов</div>
                 <div class="feature">⭐ Избранное</div>
                 <div class="feature">🆘 Помощь 24/7</div>
+                <div class="feature">📊 Трекер скорости</div>
             </div>
             <button id="closeWelcomeModal" class="welcome-btn">Начать путешествие 🚀</button>
         </div>
@@ -116,6 +116,19 @@
             <div class="modal-switch" id="switchMode">
                 Нет аккаунта? <span>Зарегистрироваться</span>
             </div>
+        </div>
+    </div>
+
+    <!-- Баннер установки PWA -->
+    <div id="installBanner" class="install-banner" style="display: none;">
+        <div class="install-banner-content">
+            <div class="install-icon">📱</div>
+            <div class="install-text">
+                <strong>Установить приложение</strong>
+                <span>Быстрый доступ с главного экрана</span>
+            </div>
+            <button id="installBtn" class="install-btn">Установить</button>
+            <button id="closeBannerBtn" class="close-banner">✕</button>
         </div>
     </div>
 
