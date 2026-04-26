@@ -155,6 +155,16 @@ function t(key) {
     return ru[key] || key;
 }
 
+// Получить название маршрута по ID
+function getTrailName(id) {
+    return t('trail' + id + '_name');
+}
+
+// Получить описание маршрута по ID
+function getTrailDesc(id) {
+    return t('trail' + id + '_desc');
+}
+
 // Обновить все тексты на странице
 function updateAllTexts() {
     // Логотип
@@ -193,9 +203,6 @@ function updateAllTexts() {
     const footerDesc = document.querySelector('.footer-section p');
     if (footerDesc) footerDesc.innerHTML = t('footer_desc');
     
-    const footerCollabText = document.querySelectorAll('.footer-section p')[2];
-    if (footerCollabText) footerCollabText.innerHTML = t('footer_collab_text');
-    
     const footerCopyright = document.querySelector('.footer-bottom p');
     if (footerCopyright) footerCopyright.innerHTML = t('footer_copyright');
     
@@ -220,18 +227,7 @@ function updateAllTexts() {
     
     if (appleGreeting) {
         if (user) {
-            const hour = new Date().getHours();
-            let timeMsg = '';
-            if (hour < 12) timeMsg = currentLang === 'ru' ? 'Доброе утро' : 'Good morning';
-            else if (hour < 18) timeMsg = currentLang === 'ru' ? 'Добрый день' : 'Good afternoon';
-            else timeMsg = currentLang === 'ru' ? 'Добрый вечер' : 'Good evening';
-            
-            if (currentLang === 'ru') {
-                appleGreeting.innerHTML = `${timeMsg}, ${user.username}! 👋`;
-            } else {
-                appleGreeting.innerHTML = `${timeMsg}, ${user.username}! 👋`;
-            }
-            appleSubgreeting.innerHTML = t('welcome_sub_user');
+            appleGreeting.innerHTML = t('welcome_sub_user');
         } else {
             appleGreeting.innerHTML = t('welcome_guest');
             appleSubgreeting.innerHTML = t('welcome_sub_guest');
@@ -257,7 +253,7 @@ function updateAllTexts() {
         if (passwordInput) passwordInput.placeholder = t('modal_password');
     }
     
-    // Обновляем карточки маршрутов
+    // Обновляем карточки маршрутов (перерисовываем)
     if (typeof window.refreshTrails === 'function') {
         window.refreshTrails();
     }
@@ -323,6 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.t = t;
+window.getTrailName = getTrailName;
+window.getTrailDesc = getTrailDesc;
 window.switchLanguage = switchLanguage;
 window.updateAllTexts = updateAllTexts;
 window.currentLang = currentLang;
