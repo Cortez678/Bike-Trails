@@ -1,24 +1,3 @@
-// ========== УПРАВЛЕНИЕ ЗАСТАВКОЙ ==========
-
-document.addEventListener('DOMContentLoaded', function() {
-    const splashScreen = document.getElementById('splashScreen');
-    
-    // Проверяем, показывали ли уже заставку при первом запуске
-    const hasSeenSplash = localStorage.getItem('hasSeenSplash');
-    
-    if (!hasSeenSplash && splashScreen) {
-        // Первый запуск — показываем заставку 2.5 секунды
-        setTimeout(function() {
-            splashScreen.classList.add('fade-out');
-            // Запоминаем, что заставку уже показывали
-            localStorage.setItem('hasSeenSplash', 'true');
-        }, 2500);
-    } else if (splashScreen) {
-        // При повторном запуске сразу скрываем заставку
-        splashScreen.style.display = 'none';
-    }
-});
-
 // ========== APPLE-ПРИВЕТСТВИЕ ==========
 
 // Функция для получения текущего пользователя
@@ -51,4 +30,70 @@ function updateAppleGreeting() {
         ];
         const randomGreeting = appleGreetings[Math.floor(Math.random() * appleGreetings.length)];
         greetingEl.innerHTML = randomGreeting;
-        subEl.innerHTML
+        subEl.innerHTML = 'Ваши избранные маршруты и персональные рекомендации ждут вас.';
+    } else {
+        const guestGreetings = [
+            'Приветствую, искатель приключений! 👋',
+            'Добро пожаловать в Bike Trails 🚴‍♂️',
+            'Здравствуйте, райдер! 🌟',
+            'С возвращением, друг! 🎉'
+        ];
+        const randomGreeting = guestGreetings[Math.floor(Math.random() * guestGreetings.length)];
+        greetingEl.innerHTML = randomGreeting;
+        subEl.innerHTML = 'Войдите в аккаунт, чтобы сохранять любимые маршруты.';
+    }
+}
+
+// ========== ЧАСТИЦЫ ДЛЯ ФОНА ==========
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        const size = Math.random() * 5 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.opacity = Math.random() * 0.4 + 0.1;
+        
+        container.appendChild(particle);
+    }
+}
+
+// ========== ПРИВЕТСТВЕННОЕ МОДАЛЬНОЕ ОКНО (ТОЛЬКО 1 РАЗ) ==========
+function initWelcomeModal() {
+    const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeApple');
+    
+    if (!hasSeenWelcome) {
+        const welcomeModal = document.getElementById('welcomeModal');
+        if (welcomeModal) {
+            welcomeModal.style.display = 'flex';
+            localStorage.setItem('hasSeenWelcomeApple', 'true');
+        }
+    }
+    
+    const closeBtn = document.getElementById('closeWelcomeModal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            const welcomeModal = document.getElementById('welcomeModal');
+            if (welcomeModal) welcomeModal.style.display = 'none';
+        });
+    }
+}
+
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
+document.addEventListener('DOMContentLoaded', () => {
+    updateAppleGreeting();
+    createParticles();
+    initWelcomeModal();
+});
+
+// Экспортируем функцию для обновления после входа
+window.updateAppleGreeting = updateAppleGreeting;
