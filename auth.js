@@ -218,6 +218,17 @@ function updateAuthUI() {
     
     const currentLang = localStorage.getItem('language') || 'ru';
     
+    // Тексты для меню в зависимости от языка
+    const menuTexts = {
+        cabinet: currentLang === 'ru' ? '👨‍💼 Личный кабинет' : '👨‍💼 Profile',
+        favorites: currentLang === 'ru' ? '❤️ Избранное' : '❤️ Favorites',
+        help: currentLang === 'ru' ? '🆘 Помощь' : '🆘 Help',
+        premium: '💎 Premium',
+        theme: currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme',
+        lang: currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский',
+        logout: currentLang === 'ru' ? '🚪 Выйти' : '🚪 Logout'
+    };
+    
     if (user) {
         const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
         
@@ -227,15 +238,15 @@ function updateAuthUI() {
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">${currentLang === 'ru' ? '👨‍💼 Личный кабинет' : '👨‍💼 Profile'}</a>
-                        <a href="favorites.html">${currentLang === 'ru' ? '❤️ Избранное' : '❤️ Favorites'}</a>
-                        <a href="help.html">${currentLang === 'ru' ? '🆘 Помощь' : '🆘 Help'}</a>
-                        <a href="premium.html">💎 Premium</a>
+                        <a href="cabinet.html">${menuTexts.cabinet}</a>
+                        <a href="favorites.html">${menuTexts.favorites}</a>
+                        <a href="help.html">${menuTexts.help}</a>
+                        <a href="premium.html">${menuTexts.premium}</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="themeToggle">${currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme'}</a>
-                        <a href="#" id="langToggle">${currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский'}</a>
+                        <a href="#" id="themeToggle">${menuTexts.theme}</a>
+                        <a href="#" id="langToggle">${menuTexts.lang}</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="logoutDropdown">${currentLang === 'ru' ? '🚪 Выйти' : '🚪 Logout'}</a>
+                        <a href="#" id="logoutDropdown">${menuTexts.logout}</a>
                     </div>
                 </div>
             </div>
@@ -279,8 +290,8 @@ function updateAuthUI() {
         if (langToggle) {
             langToggle.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (typeof window.toggleLanguage === 'function') {
-                    window.toggleLanguage();
+                if (typeof window.switchLanguage === 'function') {
+                    window.switchLanguage();
                 } else {
                     const newLang = currentLang === 'ru' ? 'en' : 'ru';
                     localStorage.setItem('language', newLang);
@@ -294,7 +305,8 @@ function updateAuthUI() {
         });
         
     } else {
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">${currentLang === 'ru' ? '🔑 Вход' : '🔑 Login'}</button>`;
+        const loginText = currentLang === 'ru' ? '🔑 Вход' : '🔑 Login';
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">${loginText}</button>`;
         const loginBtn = document.getElementById('openLoginBtn');
         if (loginBtn) {
             loginBtn.addEventListener('click', () => {
