@@ -41,17 +41,14 @@ window.getCurrentUserAuth = function() {
 function register(username, password) {
     const users = getUsers();
     
-    // Проверка на существование
     if (users.find(u => u.username === username)) {
         return { success: false, error: 'Пользователь уже существует' };
     }
     
-    // Проверка длины пароля
     if (password.length < 4) {
         return { success: false, error: 'Пароль должен быть не менее 4 символов' };
     }
     
-    // Создаём нового пользователя
     const newUser = {
         id: Date.now(),
         username: username,
@@ -74,7 +71,6 @@ function login(username, password) {
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
-        // Проверяем, не истекла ли премиум-подписка
         let isPremiumValid = false;
         if (user.premiumExpiry) {
             const expiryDate = new Date(user.premiumExpiry);
@@ -82,7 +78,6 @@ function login(username, password) {
             if (expiryDate > now) {
                 isPremiumValid = true;
             } else {
-                // Если истекла — обновляем в базе
                 user.isPremium = false;
                 user.premiumExpiry = null;
                 const userIndex = users.findIndex(u => u.id === user.id);
@@ -124,7 +119,6 @@ function checkAuth() {
 
 // ========== РАБОТА С ИЗБРАННЫМ ==========
 
-// Добавить маршрут в избранное
 function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -134,7 +128,6 @@ function addToFavorites(userId, trailId) {
             users[userIndex].favorites.push(trailId);
             saveUsers(users);
             
-            // Обновляем текущего пользователя
             const current = getCurrentUser();
             if (current && current.id === userId) {
                 current.favorites = users[userIndex].favorites;
@@ -146,7 +139,6 @@ function addToFavorites(userId, trailId) {
     return false;
 }
 
-// Удалить маршрут из избранного
 function removeFromFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -155,7 +147,6 @@ function removeFromFavorites(userId, trailId) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
         
-        // Обновляем текущего пользователя
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
@@ -166,14 +157,12 @@ function removeFromFavorites(userId, trailId) {
     return false;
 }
 
-// Проверить, в избранном ли маршрут
 function isFavorite(userId, trailId) {
     const users = getUsers();
     const user = users.find(u => u.id === userId);
     return user ? user.favorites.includes(trailId) : false;
 }
 
-// Получить избранные маршруты текущего пользователя
 function getUserFavorites() {
     const user = getCurrentUser();
     if (!user) return [];
@@ -182,7 +171,6 @@ function getUserFavorites() {
 
 // ========== ПРЕМИУМ ФУНКЦИИ ==========
 
-// Проверить, есть ли премиум у пользователя
 function isUserPremium() {
     const user = getCurrentUser();
     if (!user) return false;
@@ -200,7 +188,6 @@ function isUserPremium() {
     return false;
 }
 
-// Активировать премиум для пользователя
 function activateUserPremium(userId, days = 30) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -213,7 +200,6 @@ function activateUserPremium(userId, days = 30) {
         users[userIndex].premiumExpiry = expiryDate.toISOString();
         saveUsers(users);
         
-        // Обновляем текущего пользователя
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.isPremium = true;
@@ -225,7 +211,6 @@ function activateUserPremium(userId, days = 30) {
     return false;
 }
 
-// Получить оставшиеся дни премиума
 function getPremiumDaysLeft() {
     const user = getCurrentUser();
     if (!user) return 0;
@@ -257,11 +242,15 @@ function updateAuthUI() {
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">👨‍💼 Личный кабинет</a>
-                        <a href="favorites.html">❤️ Избранное</a>
-                        <a href="help.html">🆘 Помощь</a>
-                        <a href="premium.html">💎 Premium</a>
-                        <a href="#" id="logoutDropdown">🚪 Выйти</a>
+                        <a href="cabinet.html">👨‍💼 <span data-i18n="menu_cabinet">Личный кабинет</span></a>
+                        <a href="favorites.html">❤️ <span data-i18n="menu_favorites">Избранное</span></a>
+                        <a href="help.html">🆘 <span data-i18n="menu_help">Помощь</span></a>
+                        <a href="premium.html">💎 <span data-i18n="menu_premium">Premium</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="themeToggle">☀️ <span>Сменить тему</span></a>
+                        <a href="#" id="langToggle">🇷🇺 <span>Русский</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logoutDropdown">🚪 <span data-i18n="menu_logout">Выйти</span></a>
                     </div>
                 </div>
             </div>
@@ -290,6 +279,28 @@ function updateAuthUI() {
         window.addEventListener('click', () => {
             if (dropdownContent) dropdownContent.classList.remove('show');
         });
+        
+        // Инициализация кнопок темы и языка после создания DOM
+        setTimeout(() => {
+            const themeToggle = document.getElementById('themeToggle');
+            const langToggle = document.getElementById('langToggle');
+            
+            if (themeToggle && window.toggleTheme) {
+                themeToggle.removeEventListener('click', window.toggleTheme);
+                themeToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.toggleTheme) window.toggleTheme();
+                });
+            }
+            
+            if (langToggle && window.toggleLanguage) {
+                langToggle.removeEventListener('click', window.toggleLanguage);
+                langToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (window.toggleLanguage) window.toggleLanguage();
+                });
+            }
+        }, 100);
     } else {
         container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
         const loginBtn = document.getElementById('openLoginBtn');
@@ -315,63 +326,61 @@ function initModal() {
 
     if (!modal) return;
 
-    // Закрытие по крестику
     if (closeBtn) {
         closeBtn.addEventListener('click', () => modal.classList.remove('active'));
     }
     
-    // Закрытие по клику вне окна
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
     
-    // Переключение режима Вход/Регистрация
     if (switchBtn) {
         switchBtn.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
-            modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
-            submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-            switchBtn.innerHTML = isLoginMode 
-                ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
-                : 'Уже есть аккаунт? <span>Войти</span>';
+            if (window.currentLang === 'en') {
+                modalTitle.innerText = isLoginMode ? 'Login' : 'Register';
+                submitBtn.innerText = isLoginMode ? 'Login' : 'Register';
+                switchBtn.innerHTML = isLoginMode 
+                    ? "Don't have an account? <span>Register</span>" 
+                    : "Already have an account? <span>Login</span>";
+            } else {
+                modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
+                submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+                switchBtn.innerHTML = isLoginMode 
+                    ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
+                    : 'Уже есть аккаунт? <span>Войти</span>';
+            }
             errorDiv.innerText = '';
         });
     }
 
-    // Обработка отправки формы
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
             if (!username || !password) {
-                errorDiv.innerText = 'Заполните все поля';
+                errorDiv.innerText = (window.currentLang === 'en') ? 'Fill in all fields' : 'Заполните все поля';
                 return;
             }
             
             const result = isLoginMode ? login(username, password) : register(username, password);
             
             if (result.success) {
-                // Закрываем модальное окно
                 modal.classList.remove('active');
-                
-                // Очищаем поля
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
                 errorDiv.innerText = '';
-                
-                // Обновляем интерфейс
                 updateAuthUI();
                 
-                // Обновляем Apple-приветствие
                 if (window.updateAppleGreeting) {
                     window.updateAppleGreeting();
                 }
                 
-                // Показываем приветствие
-                alert(isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
-                
-                // Перезагружаем страницу для синхронизации
+                const successMsg = (window.currentLang === 'en') 
+                    ? (isLoginMode ? `Welcome back, ${username}!` : `Registration successful! Welcome, ${username}!`)
+                    : (isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
+                alert(successMsg);
                 location.reload();
             } else {
                 errorDiv.innerText = result.error;
