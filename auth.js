@@ -236,21 +236,35 @@ function updateAuthUI() {
     
     if (user) {
         const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
+        
+        // Определяем текущий язык для текста кнопок в меню
+        const currentLang = localStorage.getItem('language') || 'ru';
+        
+        const menuTexts = {
+            cabinet: currentLang === 'ru' ? '👨‍💼 Личный кабинет' : '👨‍💼 Profile',
+            favorites: currentLang === 'ru' ? '❤️ Избранное' : '❤️ Favorites',
+            help: currentLang === 'ru' ? '🆘 Помощь' : '🆘 Help',
+            premium: '💎 Premium',
+            theme: currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme',
+            lang: currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский',
+            logout: currentLang === 'ru' ? '🚪 Выйти' : '🚪 Logout'
+        };
+        
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">👨‍💼 <span data-i18n="menu_cabinet">Личный кабинет</span></a>
-                        <a href="favorites.html">❤️ <span data-i18n="menu_favorites">Избранное</span></a>
-                        <a href="help.html">🆘 <span data-i18n="menu_help">Помощь</span></a>
-                        <a href="premium.html">💎 <span data-i18n="menu_premium">Premium</span></a>
+                        <a href="cabinet.html">${menuTexts.cabinet}</a>
+                        <a href="favorites.html">${menuTexts.favorites}</a>
+                        <a href="help.html">${menuTexts.help}</a>
+                        <a href="premium.html">${menuTexts.premium}</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="themeToggle">☀️ <span>Сменить тему</span></a>
-                        <a href="#" id="langToggle">🇷🇺 <span>Русский</span></a>
+                        <a href="#" id="themeToggle">${menuTexts.theme}</a>
+                        <a href="#" id="langToggle">${menuTexts.lang}</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="logoutDropdown">🚪 <span data-i18n="menu_logout">Выйти</span></a>
+                        <a href="#" id="logoutDropdown">${menuTexts.logout}</a>
                     </div>
                 </div>
             </div>
@@ -280,29 +294,53 @@ function updateAuthUI() {
             if (dropdownContent) dropdownContent.classList.remove('show');
         });
         
-        // Инициализация кнопок темы и языка после создания DOM
+        // Инициализация кнопок темы и языка
         setTimeout(() => {
             const themeToggle = document.getElementById('themeToggle');
             const langToggle = document.getElementById('langToggle');
             
-            if (themeToggle && window.toggleTheme) {
-                themeToggle.removeEventListener('click', window.toggleTheme);
+            if (themeToggle) {
                 themeToggle.addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (window.toggleTheme) window.toggleTheme();
+                    if (typeof window.toggleTheme === 'function') {
+                        window.toggleTheme();
+                    } else {
+                        // Простое переключение темы
+                        if (document.body.classList.contains('light-theme')) {
+                            document.body.classList.remove('light-theme');
+                            localStorage.setItem('theme', 'dark');
+                        } else {
+                            document.body.classList.add('light-theme');
+                            localStorage.setItem('theme', 'light');
+                        }
+                        // Обновляем текст кнопки
+                        const isLight = document.body.classList.contains('light-theme');
+                        const currentLangBtn = localStorage.getItem('language') || 'ru';
+                        themeToggle.innerHTML = isLight 
+                            ? (currentLangBtn === 'ru' ? '🌙 Тёмная тема' : '🌙 Dark theme')
+                            : (currentLangBtn === 'ru' ? '☀️ Светлая тема' : '☀️ Light theme');
+                    }
                 });
             }
             
-            if (langToggle && window.toggleLanguage) {
-                langToggle.removeEventListener('click', window.toggleLanguage);
+            if (langToggle) {
                 langToggle.addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (window.toggleLanguage) window.toggleLanguage();
+                    if (typeof window.toggleLanguage === 'function') {
+                        window.toggleLanguage();
+                    } else {
+                        // Простое переключение языка
+                        const newLang = localStorage.getItem('language') === 'ru' ? 'en' : 'ru';
+                        localStorage.setItem('language', newLang);
+                        location.reload();
+                    }
                 });
             }
         }, 100);
     } else {
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
+        const currentLang = localStorage.getItem('language') || 'ru';
+        const loginText = currentLang === 'ru' ? '🔑 Вход' : '🔑 Login';
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">${loginText}</button>`;
         const loginBtn = document.getElementById('openLoginBtn');
         if (loginBtn) {
             loginBtn.addEventListener('click', () => {
@@ -334,22 +372,31 @@ function initModal() {
         if (e.target === modal) modal.classList.remove('active');
     });
     
+    function updateModalTexts() {
+        const currentLang = localStorage.getItem('language') || 'ru';
+        if (currentLang === 'en') {
+            modalTitle.innerText = isLoginMode ? 'Login' : 'Register';
+            submitBtn.innerText = isLoginMode ? 'Login' : 'Register';
+            switchBtn.innerHTML = isLoginMode 
+                ? "Don't have an account? <span>Register</span>" 
+                : "Already have an account? <span>Login</span>";
+            document.getElementById('username').placeholder = 'Username';
+            document.getElementById('password').placeholder = 'Password';
+        } else {
+            modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
+            submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+            switchBtn.innerHTML = isLoginMode 
+                ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
+                : 'Уже есть аккаунт? <span>Войти</span>';
+            document.getElementById('username').placeholder = 'Имя пользователя';
+            document.getElementById('password').placeholder = 'Пароль';
+        }
+    }
+    
     if (switchBtn) {
         switchBtn.addEventListener('click', () => {
             isLoginMode = !isLoginMode;
-            if (window.currentLang === 'en') {
-                modalTitle.innerText = isLoginMode ? 'Login' : 'Register';
-                submitBtn.innerText = isLoginMode ? 'Login' : 'Register';
-                switchBtn.innerHTML = isLoginMode 
-                    ? "Don't have an account? <span>Register</span>" 
-                    : "Already have an account? <span>Login</span>";
-            } else {
-                modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
-                submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-                switchBtn.innerHTML = isLoginMode 
-                    ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
-                    : 'Уже есть аккаунт? <span>Войти</span>';
-            }
+            updateModalTexts();
             errorDiv.innerText = '';
         });
     }
@@ -358,9 +405,10 @@ function initModal() {
         submitBtn.addEventListener('click', () => {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
+            const currentLang = localStorage.getItem('language') || 'ru';
             
             if (!username || !password) {
-                errorDiv.innerText = (window.currentLang === 'en') ? 'Fill in all fields' : 'Заполните все поля';
+                errorDiv.innerText = (currentLang === 'en') ? 'Fill in all fields' : 'Заполните все поля';
                 return;
             }
             
@@ -377,7 +425,7 @@ function initModal() {
                     window.updateAppleGreeting();
                 }
                 
-                const successMsg = (window.currentLang === 'en') 
+                const successMsg = (currentLang === 'en') 
                     ? (isLoginMode ? `Welcome back, ${username}!` : `Registration successful! Welcome, ${username}!`)
                     : (isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
                 alert(successMsg);
@@ -387,6 +435,8 @@ function initModal() {
             }
         });
     }
+    
+    updateModalTexts();
 }
 
 // ========== ИНИЦИАЛИЗАЦИЯ ==========
