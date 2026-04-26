@@ -9,7 +9,9 @@ const trailsData = [
         elevation: 120,
         rating: 4.8,
         location: "Москва",
-        previewImage: "images/vorobyovy-gory-1.jpg"
+        previewImage: "images/vorobyovy-gory-1.jpg",
+        nameKey: "trail1_name",
+        descKey: "trail1_desc"
     },
     {
         id: 2,
@@ -20,7 +22,9 @@ const trailsData = [
         elevation: 180,
         rating: 4.9,
         location: "Калининградская область",
-        previewImage: "images/kurshskaya-kosa-1.jpg"
+        previewImage: "images/kurshskaya-kosa-1.jpg",
+        nameKey: "trail2_name",
+        descKey: "trail2_desc"
     },
     {
         id: 3,
@@ -31,61 +35,50 @@ const trailsData = [
         elevation: 850,
         rating: 5.0,
         location: "Адыгея",
-        previewImage: ""
+        previewImage: "",
+        nameKey: "trail3_name",
+        descKey: "trail3_desc"
     },
     {
         id: 4,
         name: "Алтайский Марс",
-        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы в долине реки Чуя.",
+        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы.",
         difficulty: "hard",
         distance: 32.0,
         elevation: 620,
         rating: 4.9,
         location: "Республика Алтай",
-        previewImage: ""
+        previewImage: "",
+        nameKey: "trail4_name",
+        descKey: "trail4_desc"
     },
     {
         id: 5,
         name: "Байкальская петля",
-        description: "Кольцевой маршрут вдоль озера Байкал с заездом в пик Черского и живописные бухты.",
+        description: "Кольцевой маршрут вдоль озера Байкал с заездом на пик Черского.",
         difficulty: "medium",
         distance: 35.0,
         elevation: 540,
         rating: 4.8,
         location: "Иркутская область / Бурятия",
-        previewImage: ""
+        previewImage: "",
+        nameKey: "trail5_name",
+        descKey: "trail5_desc"
     },
     {
         id: 6,
         name: "Долина гейзеров",
-        description: "Сложнейший маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы и дикая природа.",
+        description: "Экстремальный маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы.",
         difficulty: "hard",
         distance: 18.0,
         elevation: 950,
         rating: 5.0,
         location: "Камчатский край",
-        previewImage: ""
+        previewImage: "",
+        nameKey: "trail6_name",
+        descKey: "trail6_desc"
     }
 ];
-
-// Переводы для маршрутов на английский
-const trailsTranslationEn = {
-    1: { name: "Vorobyovy Gory", description: "Legendary route along the Moscow River with panoramic views of the city. Passes through the park, embankment and observation platforms." },
-    2: { name: "Curonian Spit", description: "Unique route through the national park between the sea and the bay. Sand dunes, pine forest and Baltic coast." },
-    3: { name: "Lago-Naki", description: "High-altitude route through the alpine meadows of Adygea. Mountains, waterfalls and breathtaking views." },
-    4: { name: "Altai Mars", description: "Cosmic landscapes of Altai: red rocks, turquoise rivers and mountain trails in the Chuu River Valley." },
-    5: { name: "Baikal Loop", description: "Circular route along Lake Baikal with a visit to Chersky Peak and picturesque bays." },
-    6: { name: "Valley of Geysers", description: "Extreme route in Kamchatka. Thermal springs, volcanoes, bear trails and wild nature." }
-};
-
-// Функция для получения переведённого текста маршрута
-function getTranslatedTrailText(trail, field) {
-    const currentLang = localStorage.getItem('language') || 'ru';
-    if (currentLang === 'en' && trailsTranslationEn[trail.id]) {
-        return trailsTranslationEn[trail.id][field];
-    }
-    return trail[field];
-}
 
 function getDifficultyColor(difficulty) {
     switch(difficulty) {
@@ -107,10 +100,27 @@ function getStarsHTML(rating) {
     return `<span class="stars">${starsHTML}</span> <span style="font-size:0.8rem; color:#8a9bb5;">${rating}</span>`;
 }
 
+function getTranslatedText(key) {
+    if (typeof window.t === 'function') {
+        return window.t(key);
+    }
+    return '';
+}
+
 function createTrailCard(trail) {
     const diff = getDifficultyColor(trail.difficulty);
-    const trailName = getTranslatedTrailText(trail, 'name');
-    const trailDesc = getTranslatedTrailText(trail, 'description');
+    
+    // Получаем переведённые название и описание
+    let trailName = trail.name;
+    let trailDesc = trail.description;
+    
+    if (typeof window.t === 'function') {
+        const translatedName = window.t(trail.nameKey);
+        const translatedDesc = window.t(trail.descKey);
+        if (translatedName && translatedName !== trail.nameKey) trailName = translatedName;
+        if (translatedDesc && translatedDesc !== trail.descKey) trailDesc = translatedDesc;
+    }
+    
     const imageStyle = trail.previewImage ? `background-image: url('${trail.previewImage}');` : 'background: linear-gradient(135deg, #2b2d42, #353b48);';
     
     return `
@@ -163,8 +173,8 @@ function setupFilters() {
     });
 }
 
-// Функция для обновления языка на карточках (вызывается из translate.js)
-window.refreshTrailsLanguage = function() {
+// Функция для обновления карточек при смене языка
+window.refreshTrails = function() {
     const activeFilter = document.querySelector('.filter-btn.active');
     const level = activeFilter ? activeFilter.getAttribute('data-level') : 'all';
     filterTrails(level);
@@ -173,9 +183,4 @@ window.refreshTrailsLanguage = function() {
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
-});// Функция для обновления языка на карточках
-window.refreshTrailsLanguage = function() {
-    const activeFilter = document.querySelector('.filter-btn.active');
-    const level = activeFilter ? activeFilter.getAttribute('data-level') : 'all';
-    filterTrails(level);
-};
+});
