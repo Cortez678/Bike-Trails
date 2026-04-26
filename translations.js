@@ -1,7 +1,6 @@
 // ========== СИСТЕМА ПЕРЕВОДОВ ==========
 const translations = {
     ru: {
-        // Шапка
         hero_badge: "🚵‍♂️ RIDE RUSSIA",
         hero_subtitle: "Лучшие веломаршруты России",
         stats_routes: "Маршрутов",
@@ -23,10 +22,18 @@ const translations = {
         install_title: "Установить приложение",
         install_text: "Быстрый доступ с главного экрана",
         install_btn: "Установить",
-        login_btn: "🔑 Вход"
+        login_btn: "🔑 Вход",
+        // Данные маршрутов (для карточек)
+        trails: {
+            1: { name: "Воробьёвы горы", desc: "Легендарный маршрут по Москве-реке с панорамным видом на город." },
+            2: { name: "Куршская коса", desc: "Уникальный маршрут по национальному парку между морем и заливом." },
+            3: { name: "Лаго-Наки", desc: "Высокогорный маршрут по альпийским лугам Адыгеи." },
+            4: { name: "Алтайский Марс", desc: "Космические пейзажи Алтая: красные скалы и бирюзовые реки." },
+            5: { name: "Байкальская петля", desc: "Кольцевой маршрут вдоль озера Байкал." },
+            6: { name: "Долина гейзеров", desc: "Экстремальный маршрут Камчатки." }
+        }
     },
     en: {
-        // Header
         hero_badge: "🚵‍♂️ RIDE RUSSIA",
         hero_subtitle: "Best cycling routes in Russia",
         stats_routes: "Routes",
@@ -48,20 +55,29 @@ const translations = {
         install_title: "Install app",
         install_text: "Quick access from home screen",
         install_btn: "Install",
-        login_btn: "🔑 Login"
+        login_btn: "🔑 Login",
+        trails: {
+            1: { name: "Vorobyovy Gory", desc: "Legendary route along the Moscow River with panoramic views of the city." },
+            2: { name: "Curonian Spit", desc: "Unique route through the national park between the sea and the bay." },
+            3: { name: "Lago-Naki", desc: "High-altitude route through the alpine meadows of Adygea." },
+            4: { name: "Altai Mars", desc: "Cosmic landscapes of Altai: red rocks and turquoise rivers." },
+            5: { name: "Baikal Loop", desc: "Circular route along Lake Baikal." },
+            6: { name: "Valley of Geysers", desc: "Extreme route in Kamchatka." }
+        }
     }
 };
 
-// Текущий язык
 let currentLang = localStorage.getItem('language') || 'ru';
 
-// Функция перевода
 function translate(key) {
     return translations[currentLang][key] || translations['ru'][key] || key;
 }
 
-// Обновление всех текстов на странице
-function updatePageTranslation() {
+function translateTrail(id, field) {
+    return translations[currentLang].trails?.[id]?.[field] || translations['ru'].trails?.[id]?.[field] || '';
+}
+
+function updateAllTexts() {
     // Hero секция
     const heroBadge = document.querySelector('.hero-badge');
     if (heroBadge) heroBadge.innerHTML = translate('hero_badge');
@@ -100,14 +116,6 @@ function updatePageTranslation() {
     const footerCopyright = document.querySelector('.footer-bottom p');
     if (footerCopyright) footerCopyright.innerHTML = translate('footer_copyright');
     
-    // Приветствие (если не авторизован)
-    const appleGreeting = document.getElementById('appleGreeting');
-    const appleSubgreeting = document.getElementById('appleSubgreeting');
-    if (appleGreeting && !getCurrentUserAuth()) {
-        appleGreeting.innerHTML = translate('welcome_guest');
-        appleSubgreeting.innerHTML = translate('welcome_sub_guest');
-    }
-    
     // PWA баннер
     const installStrong = document.querySelector('.install-text strong');
     if (installStrong) installStrong.innerHTML = translate('install_title');
@@ -121,32 +129,41 @@ function updatePageTranslation() {
     // Кнопка входа (если не авторизован)
     const loginBtn = document.querySelector('.btn-login');
     if (loginBtn) loginBtn.innerHTML = translate('login_btn');
+    
+    // Приветствие (если не авторизован)
+    const user = getCurrentUserFromLocal();
+    const appleGreeting = document.getElementById('appleGreeting');
+    const appleSubgreeting = document.getElementById('appleSubgreeting');
+    if (appleGreeting && !user) {
+        appleGreeting.innerHTML = translate('welcome_guest');
+        appleSubgreeting.innerHTML = translate('welcome_sub_guest');
+    }
+    
+    // Обновляем карточки маршрутов (перерисовываем)
+    if (typeof window.filterTrails === 'function') {
+        const activeFilter = document.querySelector('.filter-btn.active');
+        const level = activeFilter ? activeFilter.getAttribute('data-level') : 'all';
+        window.filterTrails(level);
+    }
 }
 
-// Функция для получения текущего пользователя
-function getCurrentUserAuth() {
-    const user = localStorage.getItem('bike_trails_current_user');
+function getCurrentUserFromLocal() {
+    const user = localStorage.getItem(CURRENT_USER_KEY);
     return user ? JSON.parse(user) : null;
 }
 
-// Смена языка
 function changeLanguage(lang) {
     currentLang = lang;
     localStorage.setItem('language', lang);
-    updatePageTranslation();
+    updateAllTexts();
     
-    // Обновляем текст кнопки языка в меню
+    // Обновляем кнопку языка в меню
     const langToggle = document.getElementById('langToggle');
     if (langToggle) {
         langToggle.innerHTML = currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский';
     }
     
-    // Обновляем приветствие Apple
-    if (window.updateAppleGreeting) {
-        window.updateAppleGreeting();
-    }
-    
-    // Обновляем модальное окно, если открыто
+    // Обновляем модальное окно
     const modalTitle = document.getElementById('modalTitle');
     if (modalTitle && modalTitle.innerText) {
         const isLogin = modalTitle.innerText === 'Вход' || modalTitle.innerText === 'Login';
@@ -160,8 +177,8 @@ function changeLanguage(lang) {
                     ? "Don't have an account? <span>Register</span>" 
                     : "Already have an account? <span>Login</span>";
             }
-            document.getElementById('username').placeholder = 'Username';
-            document.getElementById('password').placeholder = 'Password';
+            if (document.getElementById('username')) document.getElementById('username').placeholder = 'Username';
+            if (document.getElementById('password')) document.getElementById('password').placeholder = 'Password';
         } else {
             modalTitle.innerText = isLogin ? 'Вход' : 'Регистрация';
             const submitBtn = document.getElementById('submitBtn');
@@ -172,24 +189,21 @@ function changeLanguage(lang) {
                     ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
                     : 'Уже есть аккаунт? <span>Войти</span>';
             }
-            document.getElementById('username').placeholder = 'Имя пользователя';
-            document.getElementById('password').placeholder = 'Пароль';
+            if (document.getElementById('username')) document.getElementById('username').placeholder = 'Имя пользователя';
+            if (document.getElementById('password')) document.getElementById('password').placeholder = 'Пароль';
         }
     }
 }
 
-// Переключение языка
 function toggleLanguage() {
     const newLang = currentLang === 'ru' ? 'en' : 'ru';
     changeLanguage(newLang);
 }
 
-// Запуск при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     currentLang = localStorage.getItem('language') || 'ru';
-    updatePageTranslation();
+    updateAllTexts();
     
-    // Навешиваем обработчик на кнопку языка
     setTimeout(() => {
         const langToggle = document.getElementById('langToggle');
         if (langToggle) {
@@ -201,9 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
 });
 
-// Экспортируем функции в глобальный объект
 window.translate = translate;
+window.translateTrail = translateTrail;
 window.changeLanguage = changeLanguage;
 window.toggleLanguage = toggleLanguage;
-window.updatePageTranslation = updatePageTranslation;
+window.updateAllTexts = updateAllTexts;
 window.currentLang = currentLang;
