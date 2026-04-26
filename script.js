@@ -1,90 +1,67 @@
-// Данные маршрутов (оригинальные на русском)
+// Данные маршрутов
 const trailsData = [
     {
         id: 1,
-        name: "Воробьёвы горы",
-        description: "Легендарный маршрут по Москве-реке с панорамным видом на город. Проходит через парк, набережную и смотровые площадки.",
         difficulty: "easy",
         distance: 15.5,
         elevation: 120,
         rating: 4.8,
         location: "Москва",
-        previewImage: "images/vorobyovy-gory-1.jpg",
-        nameKey: "trail1_name",
-        descKey: "trail1_desc"
+        previewImage: "images/vorobyovy-gory-1.jpg"
     },
     {
         id: 2,
-        name: "Куршская коса",
-        description: "Уникальный маршрут по национальному парку между морем и заливом. Песчаные дюны, сосновый лес и побережье Балтики.",
         difficulty: "medium",
         distance: 22.0,
         elevation: 180,
         rating: 4.9,
         location: "Калининградская область",
-        previewImage: "images/kurshskaya-kosa-1.jpg",
-        nameKey: "trail2_name",
-        descKey: "trail2_desc"
+        previewImage: "images/kurshskaya-kosa-1.jpg"
     },
     {
         id: 3,
-        name: "Лаго-Наки",
-        description: "Высокогорный маршрут по альпийским лугам Адыгеи. Горы, водопады и виды, которые захватывают дух.",
         difficulty: "hard",
         distance: 28.5,
         elevation: 850,
         rating: 5.0,
         location: "Адыгея",
-        previewImage: "",
-        nameKey: "trail3_name",
-        descKey: "trail3_desc"
+        previewImage: ""
     },
     {
         id: 4,
-        name: "Алтайский Марс",
-        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы.",
         difficulty: "hard",
         distance: 32.0,
         elevation: 620,
         rating: 4.9,
         location: "Республика Алтай",
-        previewImage: "",
-        nameKey: "trail4_name",
-        descKey: "trail4_desc"
+        previewImage: ""
     },
     {
         id: 5,
-        name: "Байкальская петля",
-        description: "Кольцевой маршрут вдоль озера Байкал с заездом на пик Черского.",
         difficulty: "medium",
         distance: 35.0,
         elevation: 540,
         rating: 4.8,
         location: "Иркутская область / Бурятия",
-        previewImage: "",
-        nameKey: "trail5_name",
-        descKey: "trail5_desc"
+        previewImage: ""
     },
     {
         id: 6,
-        name: "Долина гейзеров",
-        description: "Экстремальный маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы.",
         difficulty: "hard",
         distance: 18.0,
         elevation: 950,
         rating: 5.0,
         location: "Камчатский край",
-        previewImage: "",
-        nameKey: "trail6_name",
-        descKey: "trail6_desc"
+        previewImage: ""
     }
 ];
 
 function getDifficultyColor(difficulty) {
+    const currentLang = localStorage.getItem('language') || 'ru';
     switch(difficulty) {
-        case 'easy': return { class: 'difficulty-easy', text: '🟢 Лёгкий' };
-        case 'medium': return { class: 'difficulty-medium', text: '🔵 Средний' };
-        case 'hard': return { class: 'difficulty-hard', text: '⚫ Сложный' };
+        case 'easy': return { class: 'difficulty-easy', text: currentLang === 'ru' ? '🟢 Лёгкий' : '🟢 Easy' };
+        case 'medium': return { class: 'difficulty-medium', text: currentLang === 'ru' ? '🔵 Средний' : '🔵 Medium' };
+        case 'hard': return { class: 'difficulty-hard', text: currentLang === 'ru' ? '⚫ Сложный' : '⚫ Hard' };
         default: return { class: '', text: difficulty };
     }
 }
@@ -100,25 +77,22 @@ function getStarsHTML(rating) {
     return `<span class="stars">${starsHTML}</span> <span style="font-size:0.8rem; color:#8a9bb5;">${rating}</span>`;
 }
 
-function getTranslatedText(key) {
-    if (typeof window.t === 'function') {
-        return window.t(key);
-    }
-    return '';
-}
-
 function createTrailCard(trail) {
     const diff = getDifficultyColor(trail.difficulty);
     
-    // Получаем переведённые название и описание
-    let trailName = trail.name;
-    let trailDesc = trail.description;
+    // Получаем переведённые название и описание из language.js
+    let trailName = '';
+    let trailDesc = '';
     
-    if (typeof window.t === 'function') {
-        const translatedName = window.t(trail.nameKey);
-        const translatedDesc = window.t(trail.descKey);
-        if (translatedName && translatedName !== trail.nameKey) trailName = translatedName;
-        if (translatedDesc && translatedDesc !== trail.descKey) trailDesc = translatedDesc;
+    if (typeof window.getTrailName === 'function') {
+        trailName = window.getTrailName(trail.id);
+        trailDesc = window.getTrailDesc(trail.id);
+    }
+    
+    // Если перевод не загрузился, используем заглушку
+    if (!trailName) {
+        trailName = 'Маршрут ' + trail.id;
+        trailDesc = 'Описание маршрута';
     }
     
     const imageStyle = trail.previewImage ? `background-image: url('${trail.previewImage}');` : 'background: linear-gradient(135deg, #2b2d42, #353b48);';
@@ -148,7 +122,11 @@ function filterTrails(level) {
         : trailsData.filter(trail => trail.difficulty === level);
     const container = document.getElementById('trailsContainer');
     if (filteredTrails.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:3rem; color:#8a9bb5;">🚴 Нет маршрутов с таким уровнем сложности</div>';
+        const currentLang = localStorage.getItem('language') || 'ru';
+        const emptyText = currentLang === 'ru' 
+            ? '🚴 Нет маршрутов с таким уровнем сложности' 
+            : '🚴 No routes with this difficulty level';
+        container.innerHTML = `<div style="text-align:center; padding:3rem; color:#8a9bb5;">${emptyText}</div>`;
         return;
     }
     container.innerHTML = filteredTrails.map(trail => createTrailCard(trail)).join('');
