@@ -17,6 +17,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app-container {
@@ -76,6 +77,7 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    transition: all 0.3s ease;
 }
 
 /* ========== ПРИВЕТСТВИЕ В СТИЛЕ APPLE ========== */
@@ -447,6 +449,12 @@ body {
     color: white;
 }
 
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0.5rem 0;
+}
+
 /* ========== ЗАГРУЗКА ========== */
 .loading-spinner {
     width: 40px;
@@ -664,6 +672,131 @@ body {
     cursor: pointer;
 }
 
+/* ========== СВЕТЛАЯ ТЕМА ========== */
+body.light-theme {
+    background: radial-gradient(circle at 10% 20%, #f0f4f8 0%, #e2e8f0 100%);
+    color: #1a2a3a;
+}
+
+body.light-theme .hero,
+body.light-theme .trail-card,
+body.light-theme .stat-card,
+body.light-theme .welcome-section,
+body.light-theme .filters-section {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .hero-badge,
+body.light-theme .section-title,
+body.light-theme .footer-section h3,
+body.light-theme .logo {
+    color: #2c3e66;
+}
+
+body.light-theme .hero-subtitle,
+body.light-theme .stat-label,
+body.light-theme .trail-description,
+body.light-theme .footer-section p,
+body.light-theme .footer-bottom,
+body.light-theme .apple-subgreeting {
+    color: #4a5a72;
+}
+
+body.light-theme .apple-greeting {
+    background: linear-gradient(135deg, #2c3e66, #4a90e2);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+body.light-theme .filter-btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: #2c3e66;
+}
+
+body.light-theme .filter-btn.active {
+    background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+    color: white;
+}
+
+body.light-theme .user-name,
+body.light-theme .dropdown-btn,
+body.light-theme .btn-login {
+    background: rgba(0, 0, 0, 0.05);
+    color: #2c3e66;
+}
+
+body.light-theme .dropdown-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .dropdown-content a {
+    color: #2c3e66;
+}
+
+body.light-theme .dropdown-content a:hover {
+    background: rgba(74, 144, 226, 0.2);
+}
+
+body.light-theme .dropdown-divider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .particle {
+    background: radial-gradient(circle, rgba(74,144,226,0.3), rgba(123,63,228,0.1));
+}
+
+body.light-theme .welcome-modal-content {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .welcome-modal-content h2 {
+    color: #2c3e66;
+}
+
+body.light-theme .welcome-modal-content p {
+    color: #4a5a72;
+}
+
+body.light-theme .welcome-features .feature {
+    background: rgba(74, 144, 226, 0.1);
+    color: #2c3e66;
+}
+
+body.light-theme .modal-content {
+    background: white;
+}
+
+body.light-theme .modal-content h2 {
+    color: #2c3e66;
+}
+
+body.light-theme .modal-content input {
+    background: rgba(0, 0, 0, 0.05);
+    color: #1a2a3a;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .modal-content input::placeholder {
+    color: #8a9bb5;
+}
+
+body.light-theme .install-banner {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .install-text strong {
+    color: #2c3e66;
+}
+
+body.light-theme .install-text span {
+    color: #6e85a8;
+}
+
 /* ========== АДАПТИВНОСТЬ ========== */
 @media (max-width: 768px) {
     .app-container {
@@ -706,7 +839,7 @@ body {
         bottom: 70px;
         right: 10px;
         left: auto;
-        width: 180px;
+        width: 200px;
     }
     
     .footer-content {
