@@ -30,14 +30,13 @@ function setCurrentUser(user) {
     }
 }
 
-// Экспорт функции для получения пользователя (для welcome.js)
+// Экспорт функции для получения пользователя
 window.getCurrentUserAuth = function() {
     return getCurrentUser();
 };
 
 // ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
 
-// Регистрация нового пользователя
 function register(username, password) {
     const users = getUsers();
     
@@ -65,7 +64,6 @@ function register(username, password) {
     return { success: true };
 }
 
-// Вход пользователя
 function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
@@ -101,13 +99,11 @@ function login(username, password) {
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
-// Выход из аккаунта
 function logout() {
     setCurrentUser(null);
     window.location.href = 'index.html';
 }
 
-// Проверка авторизации для страницы кабинета
 function checkAuth() {
     const user = getCurrentUser();
     if (!user) {
@@ -234,21 +230,10 @@ function updateAuthUI() {
     const container = document.getElementById('authButtons');
     if (!container) return;
     
+    const currentLang = localStorage.getItem('language') || 'ru';
+    
     if (user) {
         const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
-        
-        // Определяем текущий язык для текста кнопок в меню
-        const currentLang = localStorage.getItem('language') || 'ru';
-        
-        const menuTexts = {
-            cabinet: currentLang === 'ru' ? '👨‍💼 Личный кабинет' : '👨‍💼 Profile',
-            favorites: currentLang === 'ru' ? '❤️ Избранное' : '❤️ Favorites',
-            help: currentLang === 'ru' ? '🆘 Помощь' : '🆘 Help',
-            premium: '💎 Premium',
-            theme: currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme',
-            lang: currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский',
-            logout: currentLang === 'ru' ? '🚪 Выйти' : '🚪 Logout'
-        };
         
         container.innerHTML = `
             <div class="user-info">
@@ -256,24 +241,25 @@ function updateAuthUI() {
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">${menuTexts.cabinet}</a>
-                        <a href="favorites.html">${menuTexts.favorites}</a>
-                        <a href="help.html">${menuTexts.help}</a>
-                        <a href="premium.html">${menuTexts.premium}</a>
+                        <a href="cabinet.html">${currentLang === 'ru' ? '👨‍💼 Личный кабинет' : '👨‍💼 Profile'}</a>
+                        <a href="favorites.html">${currentLang === 'ru' ? '❤️ Избранное' : '❤️ Favorites'}</a>
+                        <a href="help.html">${currentLang === 'ru' ? '🆘 Помощь' : '🆘 Help'}</a>
+                        <a href="premium.html">💎 Premium</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="themeToggle">${menuTexts.theme}</a>
-                        <a href="#" id="langToggle">${menuTexts.lang}</a>
+                        <a href="#" id="themeToggle">${currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme'}</a>
+                        <a href="#" id="langToggle">${currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский'}</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="logoutDropdown">${menuTexts.logout}</a>
+                        <a href="#" id="logoutDropdown">${currentLang === 'ru' ? '🚪 Выйти' : '🚪 Logout'}</a>
                     </div>
                 </div>
             </div>
         `;
         
-        // Обработчики для выпадающего меню
         const dropdownBtn = document.getElementById('dropdownBtn');
         const dropdownContent = document.getElementById('dropdownContent');
         const logoutDropdown = document.getElementById('logoutDropdown');
+        const themeToggle = document.getElementById('themeToggle');
+        const langToggle = document.getElementById('langToggle');
         
         if (dropdownBtn) {
             dropdownBtn.addEventListener('click', (e) => {
@@ -289,58 +275,36 @@ function updateAuthUI() {
             });
         }
         
-        // Закрытие меню при клике вне
+        if (themeToggle) {
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (document.body.classList.contains('light-theme')) {
+                    document.body.classList.remove('light-theme');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme';
+                } else {
+                    document.body.classList.add('light-theme');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = currentLang === 'ru' ? '🌙 Тёмная тема' : '🌙 Dark theme';
+                }
+            });
+        }
+        
+        if (langToggle) {
+            langToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const newLang = currentLang === 'ru' ? 'en' : 'ru';
+                localStorage.setItem('language', newLang);
+                location.reload();
+            });
+        }
+        
         window.addEventListener('click', () => {
             if (dropdownContent) dropdownContent.classList.remove('show');
         });
         
-        // Инициализация кнопок темы и языка
-        setTimeout(() => {
-            const themeToggle = document.getElementById('themeToggle');
-            const langToggle = document.getElementById('langToggle');
-            
-            if (themeToggle) {
-                themeToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (typeof window.toggleTheme === 'function') {
-                        window.toggleTheme();
-                    } else {
-                        // Простое переключение темы
-                        if (document.body.classList.contains('light-theme')) {
-                            document.body.classList.remove('light-theme');
-                            localStorage.setItem('theme', 'dark');
-                        } else {
-                            document.body.classList.add('light-theme');
-                            localStorage.setItem('theme', 'light');
-                        }
-                        // Обновляем текст кнопки
-                        const isLight = document.body.classList.contains('light-theme');
-                        const currentLangBtn = localStorage.getItem('language') || 'ru';
-                        themeToggle.innerHTML = isLight 
-                            ? (currentLangBtn === 'ru' ? '🌙 Тёмная тема' : '🌙 Dark theme')
-                            : (currentLangBtn === 'ru' ? '☀️ Светлая тема' : '☀️ Light theme');
-                    }
-                });
-            }
-            
-            if (langToggle) {
-                langToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (typeof window.toggleLanguage === 'function') {
-                        window.toggleLanguage();
-                    } else {
-                        // Простое переключение языка
-                        const newLang = localStorage.getItem('language') === 'ru' ? 'en' : 'ru';
-                        localStorage.setItem('language', newLang);
-                        location.reload();
-                    }
-                });
-            }
-        }, 100);
     } else {
-        const currentLang = localStorage.getItem('language') || 'ru';
-        const loginText = currentLang === 'ru' ? '🔑 Вход' : '🔑 Login';
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">${loginText}</button>`;
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">${currentLang === 'ru' ? '🔑 Вход' : '🔑 Login'}</button>`;
         const loginBtn = document.getElementById('openLoginBtn');
         if (loginBtn) {
             loginBtn.addEventListener('click', () => {
@@ -444,4 +408,10 @@ function initModal() {
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     initModal();
+    
+    // Применяем сохранённую тему
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+    }
 });
