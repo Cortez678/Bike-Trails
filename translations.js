@@ -1,248 +1,209 @@
-// ========== ПЕРЕВОДЫ ==========
+// ========== СИСТЕМА ПЕРЕВОДОВ ==========
 const translations = {
     ru: {
         // Шапка
-        logo: "🚴‍♂️ Bike Trails",
-        
-        // Приветствие
-        welcome_guest: "Приветствую, искатель приключений! 👋",
-        welcome_guest2: "Добро пожаловать в Bike Trails 🚴‍♂️",
-        welcome_guest3: "Здравствуйте, райдер! 🌟",
-        welcome_guest4: "С возвращением, друг! 🎉",
-        welcome_sub_guest: "Войдите в аккаунт, чтобы сохранять любимые маршруты.",
-        welcome_sub_user: "Ваши избранные маршруты и персональные рекомендации ждут вас.",
-        
-        // Hero секция
         hero_badge: "🚵‍♂️ RIDE RUSSIA",
-        hero_title: "Bike Trails",
         hero_subtitle: "Лучшие веломаршруты России",
         stats_routes: "Маршрутов",
         stats_regions: "Регионов",
         stats_levels: "Уровня",
-        
-        // Фильтры
         filter_title: "Выбери свой маршрут",
         filter_all: "Все маршруты",
         filter_easy: "🟢 Лёгкие",
         filter_medium: "🔵 Средние",
         filter_hard: "⚫ Сложные",
-        
-        // Футер
         footer_title: "🚴‍♂️ Bike Trails",
         footer_desc: "Веломаршруты по России для настоящих райдеров",
         footer_contacts: "📞 Контакты",
         footer_collab: "📧 Сотрудничество",
-        footer_collab_text: "По вопросам сотрудничества<br>пишите в Telegram",
+        footer_collab_text: "По вопросам сотрудничества пишите в Telegram",
         footer_copyright: "© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров",
-        
-        // Меню
-        menu_cabinet: "👨‍💼 Личный кабинет",
-        menu_favorites: "❤️ Избранное",
-        menu_help: "🆘 Помощь",
-        menu_premium: "💎 Premium",
-        menu_logout: "🚪 Выйти",
-        menu_settings: "⚙️ Настройки",
-        
-        // Кнопки
-        btn_login: "🔑 Вход",
-        btn_theme_dark: "🌙 Тёмная тема",
-        btn_theme_light: "☀️ Светлая тема",
-        btn_lang_ru: "🇷🇺 Русский",
-        btn_lang_en: "🇬🇧 English",
-        
-        // Модальное окно
-        modal_login: "Вход",
-        modal_register: "Регистрация",
-        modal_username: "Имя пользователя",
-        modal_password: "Пароль",
-        modal_submit_login: "Войти",
-        modal_submit_register: "Зарегистрироваться",
-        modal_switch_login: "Нет аккаунта? <span>Зарегистрироваться</span>",
-        modal_switch_register: "Уже есть аккаунт? <span>Войти</span>",
-        
-        // Приветственное окно
-        welcome_modal_title: "Добро пожаловать в Bike Trails!",
-        welcome_modal_text: "Твой персональный гид по лучшим веломаршрутам России.",
-        welcome_btn: "Начать путешествие 🚀",
-        
-        // Установка PWA
+        welcome_guest: "Приветствую, искатель приключений! 👋",
+        welcome_sub_guest: "Войдите, чтобы сохранять любимые маршруты",
         install_title: "Установить приложение",
         install_text: "Быстрый доступ с главного экрана",
-        install_btn: "Установить"
+        install_btn: "Установить",
+        login_btn: "🔑 Вход"
     },
     en: {
         // Header
-        logo: "🚴‍♂️ Bike Trails",
-        
-        // Greeting
-        welcome_guest: "Greetings, adventurer! 👋",
-        welcome_guest2: "Welcome to Bike Trails 🚴‍♂️",
-        welcome_guest3: "Hello, rider! 🌟",
-        welcome_guest4: "Welcome back, friend! 🎉",
-        welcome_sub_guest: "Log in to save your favorite routes.",
-        welcome_sub_user: "Your favorite routes and personal recommendations await you.",
-        
-        // Hero section
         hero_badge: "🚵‍♂️ RIDE RUSSIA",
-        hero_title: "Bike Trails",
         hero_subtitle: "Best cycling routes in Russia",
         stats_routes: "Routes",
         stats_regions: "Regions",
         stats_levels: "Levels",
-        
-        // Filters
         filter_title: "Choose your route",
         filter_all: "All routes",
         filter_easy: "🟢 Easy",
         filter_medium: "🔵 Medium",
         filter_hard: "⚫ Hard",
-        
-        // Footer
         footer_title: "🚴‍♂️ Bike Trails",
         footer_desc: "Cycling routes across Russia for real riders",
         footer_contacts: "📞 Contacts",
         footer_collab: "📧 Collaboration",
-        footer_collab_text: "For collaboration questions<br>write to Telegram",
+        footer_collab_text: "For collaboration questions write to Telegram",
         footer_copyright: "© 2025 Bike Trails — All routes created with ❤️ for riders",
-        
-        // Menu
-        menu_cabinet: "👨‍💼 Profile",
-        menu_favorites: "❤️ Favorites",
-        menu_help: "🆘 Help",
-        menu_premium: "💎 Premium",
-        menu_logout: "🚪 Logout",
-        menu_settings: "⚙️ Settings",
-        
-        // Buttons
-        btn_login: "🔑 Login",
-        btn_theme_dark: "🌙 Dark theme",
-        btn_theme_light: "☀️ Light theme",
-        btn_lang_ru: "🇷🇺 Russian",
-        btn_lang_en: "🇬🇧 English",
-        
-        // Modal
-        modal_login: "Login",
-        modal_register: "Register",
-        modal_username: "Username",
-        modal_password: "Password",
-        modal_submit_login: "Login",
-        modal_submit_register: "Register",
-        modal_switch_login: "Don't have an account? <span>Register</span>",
-        modal_switch_register: "Already have an account? <span>Login</span>",
-        
-        // Welcome modal
-        welcome_modal_title: "Welcome to Bike Trails!",
-        welcome_modal_text: "Your personal guide to the best cycling routes in Russia.",
-        welcome_btn: "Start journey 🚀",
-        
-        // PWA install
+        welcome_guest: "Greetings, adventurer! 👋",
+        welcome_sub_guest: "Log in to save your favorite routes",
         install_title: "Install app",
         install_text: "Quick access from home screen",
-        install_btn: "Install"
+        install_btn: "Install",
+        login_btn: "🔑 Login"
     }
 };
 
 // Текущий язык
 let currentLang = localStorage.getItem('language') || 'ru';
 
-// Функция для получения перевода
-function t(key) {
+// Функция перевода
+function translate(key) {
     return translations[currentLang][key] || translations['ru'][key] || key;
 }
 
-// Функция для смены языка
-function setLanguage(lang) {
-    currentLang = lang;
-    localStorage.setItem('language', lang);
-    updateAllTexts();
-}
-
 // Обновление всех текстов на странице
-function updateAllTexts() {
-    // Шапка
-    const logo = document.querySelector('.logo');
-    if (logo) logo.innerHTML = t('logo');
-    
-    // Приветствие
-    updateAppleGreeting();
-    
+function updatePageTranslation() {
     // Hero секция
     const heroBadge = document.querySelector('.hero-badge');
-    if (heroBadge) heroBadge.innerHTML = t('hero_badge');
-    
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) heroTitle.innerHTML = `Bike <span class="gradient-text">Trails</span>`;
+    if (heroBadge) heroBadge.innerHTML = translate('hero_badge');
     
     const heroSubtitle = document.querySelector('.hero-subtitle');
-    if (heroSubtitle) heroSubtitle.innerHTML = t('hero_subtitle');
+    if (heroSubtitle) heroSubtitle.innerHTML = translate('hero_subtitle');
     
     // Статистика
     const statLabels = document.querySelectorAll('.stat-label');
-    if (statLabels[0]) statLabels[0].innerHTML = t('stats_routes');
-    if (statLabels[1]) statLabels[1].innerHTML = t('stats_regions');
-    if (statLabels[2]) statLabels[2].innerHTML = t('stats_levels');
+    if (statLabels[0]) statLabels[0].innerHTML = translate('stats_routes');
+    if (statLabels[1]) statLabels[1].innerHTML = translate('stats_regions');
+    if (statLabels[2]) statLabels[2].innerHTML = translate('stats_levels');
     
     // Фильтры
     const filterTitle = document.querySelector('.section-title');
-    if (filterTitle) filterTitle.innerHTML = t('filter_title');
+    if (filterTitle) filterTitle.innerHTML = translate('filter_title');
     
     const filterBtns = document.querySelectorAll('.filter-btn');
-    if (filterBtns[0]) filterBtns[0].innerHTML = t('filter_all');
-    if (filterBtns[1]) filterBtns[1].innerHTML = t('filter_easy');
-    if (filterBtns[2]) filterBtns[2].innerHTML = t('filter_medium');
-    if (filterBtns[3]) filterBtns[3].innerHTML = t('filter_hard');
+    if (filterBtns[0]) filterBtns[0].innerHTML = translate('filter_all');
+    if (filterBtns[1]) filterBtns[1].innerHTML = translate('filter_easy');
+    if (filterBtns[2]) filterBtns[2].innerHTML = translate('filter_medium');
+    if (filterBtns[3]) filterBtns[3].innerHTML = translate('filter_hard');
     
     // Футер
     const footerTitles = document.querySelectorAll('.footer-section h3');
-    if (footerTitles[0]) footerTitles[0].innerHTML = t('footer_title');
-    if (footerTitles[1]) footerTitles[1].innerHTML = t('footer_contacts');
-    if (footerTitles[2]) footerTitles[2].innerHTML = t('footer_collab');
+    if (footerTitles[0]) footerTitles[0].innerHTML = translate('footer_title');
+    if (footerTitles[1]) footerTitles[1].innerHTML = translate('footer_contacts');
+    if (footerTitles[2]) footerTitles[2].innerHTML = translate('footer_collab');
     
     const footerDesc = document.querySelector('.footer-section p');
-    if (footerDesc) footerDesc.innerHTML = t('footer_desc');
+    if (footerDesc) footerDesc.innerHTML = translate('footer_desc');
     
     const footerCollabText = document.querySelectorAll('.footer-section p')[2];
-    if (footerCollabText) footerCollabText.innerHTML = t('footer_collab_text');
+    if (footerCollabText) footerCollabText.innerHTML = translate('footer_collab_text');
     
     const footerCopyright = document.querySelector('.footer-bottom p');
-    if (footerCopyright) footerCopyright.innerHTML = t('footer_copyright');
+    if (footerCopyright) footerCopyright.innerHTML = translate('footer_copyright');
     
-    // Модальное окно
-    const modalTitle = document.getElementById('modalTitle');
-    if (modalTitle) {
-        const isLogin = modalTitle.innerText === 'Вход' || modalTitle.innerText === 'Login';
-        modalTitle.innerText = isLogin ? t('modal_login') : t('modal_register');
-    }
-    
-    const usernameInput = document.getElementById('username');
-    if (usernameInput) usernameInput.placeholder = t('modal_username');
-    
-    const passwordInput = document.getElementById('password');
-    if (passwordInput) passwordInput.placeholder = t('modal_password');
-    
-    const submitBtn = document.getElementById('submitBtn');
-    if (submitBtn) {
-        const isLogin = submitBtn.innerText === 'Войти' || submitBtn.innerText === 'Login';
-        submitBtn.innerText = isLogin ? t('modal_submit_login') : t('modal_submit_register');
-    }
-    
-    const switchMode = document.getElementById('switchMode');
-    if (switchMode) {
-        const isLogin = switchMode.innerHTML.includes('Нет аккаунта') || switchMode.innerHTML.includes('account');
-        switchMode.innerHTML = isLogin ? t('modal_switch_login') : t('modal_switch_register');
+    // Приветствие (если не авторизован)
+    const appleGreeting = document.getElementById('appleGreeting');
+    const appleSubgreeting = document.getElementById('appleSubgreeting');
+    if (appleGreeting && !getCurrentUserAuth()) {
+        appleGreeting.innerHTML = translate('welcome_guest');
+        appleSubgreeting.innerHTML = translate('welcome_sub_guest');
     }
     
     // PWA баннер
-    const installTextStrong = document.querySelector('.install-text strong');
-    if (installTextStrong) installTextStrong.innerHTML = t('install_title');
+    const installStrong = document.querySelector('.install-text strong');
+    if (installStrong) installStrong.innerHTML = translate('install_title');
     
-    const installTextSpan = document.querySelector('.install-text span');
-    if (installTextSpan) installTextSpan.innerHTML = t('install_text');
+    const installSpan = document.querySelector('.install-text span');
+    if (installSpan) installSpan.innerHTML = translate('install_text');
     
     const installBtn = document.querySelector('.install-btn');
-    if (installBtn) installBtn.innerHTML = t('install_btn');
+    if (installBtn) installBtn.innerHTML = translate('install_btn');
     
-    // Кнопка входа
+    // Кнопка входа (если не авторизован)
     const loginBtn = document.querySelector('.btn-login');
-    if (loginBtn) loginBtn.innerHTML = t('btn_login');
+    if (loginBtn) loginBtn.innerHTML = translate('login_btn');
 }
+
+// Функция для получения текущего пользователя
+function getCurrentUserAuth() {
+    const user = localStorage.getItem('bike_trails_current_user');
+    return user ? JSON.parse(user) : null;
+}
+
+// Смена языка
+function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    updatePageTranslation();
+    
+    // Обновляем текст кнопки языка в меню
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.innerHTML = currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский';
+    }
+    
+    // Обновляем приветствие Apple
+    if (window.updateAppleGreeting) {
+        window.updateAppleGreeting();
+    }
+    
+    // Обновляем модальное окно, если открыто
+    const modalTitle = document.getElementById('modalTitle');
+    if (modalTitle && modalTitle.innerText) {
+        const isLogin = modalTitle.innerText === 'Вход' || modalTitle.innerText === 'Login';
+        if (currentLang === 'en') {
+            modalTitle.innerText = isLogin ? 'Login' : 'Register';
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) submitBtn.innerText = isLogin ? 'Login' : 'Register';
+            const switchMode = document.getElementById('switchMode');
+            if (switchMode) {
+                switchMode.innerHTML = isLogin 
+                    ? "Don't have an account? <span>Register</span>" 
+                    : "Already have an account? <span>Login</span>";
+            }
+            document.getElementById('username').placeholder = 'Username';
+            document.getElementById('password').placeholder = 'Password';
+        } else {
+            modalTitle.innerText = isLogin ? 'Вход' : 'Регистрация';
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) submitBtn.innerText = isLogin ? 'Войти' : 'Зарегистрироваться';
+            const switchMode = document.getElementById('switchMode');
+            if (switchMode) {
+                switchMode.innerHTML = isLogin 
+                    ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
+                    : 'Уже есть аккаунт? <span>Войти</span>';
+            }
+            document.getElementById('username').placeholder = 'Имя пользователя';
+            document.getElementById('password').placeholder = 'Пароль';
+        }
+    }
+}
+
+// Переключение языка
+function toggleLanguage() {
+    const newLang = currentLang === 'ru' ? 'en' : 'ru';
+    changeLanguage(newLang);
+}
+
+// Запуск при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    currentLang = localStorage.getItem('language') || 'ru';
+    updatePageTranslation();
+    
+    // Навешиваем обработчик на кнопку языка
+    setTimeout(() => {
+        const langToggle = document.getElementById('langToggle');
+        if (langToggle) {
+            langToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleLanguage();
+            });
+        }
+    }, 500);
+});
+
+// Экспортируем функции в глобальный объект
+window.translate = translate;
+window.changeLanguage = changeLanguage;
+window.toggleLanguage = toggleLanguage;
+window.updatePageTranslation = updatePageTranslation;
+window.currentLang = currentLang;
