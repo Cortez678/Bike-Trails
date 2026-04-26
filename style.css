@@ -4,14 +4,14 @@
     box-sizing: border-box;
 }
 
-/* ГАРАНТИРОВАННОЕ ПРИЖАТИЕ ФУТЕРА ВНИЗУ */
-html {
+/* Глобальный фон */
+html, body {
     height: 100%;
 }
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0a0f1a 0%, #0d1425 100%);
+    background: radial-gradient(circle at 10% 20%, rgba(10, 15, 26, 1) 0%, rgba(0, 0, 0, 0.95) 100%);
     color: #e8edf5;
     line-height: 1.5;
     min-height: 100vh;
@@ -33,135 +33,98 @@ body {
     flex: 1;
 }
 
-/* Шапка с авторизацией */
+/* ========== ЧАСТИЦЫ ДЛЯ ФОНА ========== */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background: radial-gradient(circle, rgba(74,144,226,0.4), rgba(123,63,228,0.2));
+    border-radius: 50%;
+    animation: float linear infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* ========== ШАПКА ========== */
 .header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
     margin-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     flex-wrap: wrap;
     gap: 0.5rem;
 }
 
 .logo {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    color: #4a90e2;
+    background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.btn-login {
-    background: rgba(74, 144, 226, 0.2);
-    border: none;
-    padding: 0.5rem 1.2rem;
-    border-radius: 2rem;
-    color: #c0d0e8;
+/* ========== ПРИВЕТСТВИЕ В СТИЛЕ APPLE ========== */
+.welcome-section {
+    margin: 1rem 0 2rem;
+    text-align: center;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.apple-greeting {
+    font-size: 3rem;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff, #9aaec5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 0.5rem;
 }
 
-.btn-login:hover {
-    background: rgba(74, 144, 226, 0.4);
-    color: white;
+.apple-subgreeting {
+    font-size: 1.1rem;
+    color: #8e9dbb;
+    font-weight: 400;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.user-name {
-    color: #4a90e2;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.premium-badge-mini {
-    background: linear-gradient(135deg, #ffd700, #ff9500);
-    color: #1a1a2e;
-    font-size: 0.7rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 1rem;
-    margin-left: 0.3rem;
-    display: inline-block;
-}
-
-/* ВЫПАДАЮЩЕЕ МЕНЮ (ШЕСТЕРЁНКА) */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-btn {
-    background: rgba(74, 144, 226, 0.2);
-    border: none;
-    padding: 0.5rem 0.8rem;
-    border-radius: 2rem;
-    color: #c0d0e8;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.dropdown-btn:hover {
-    background: rgba(74, 144, 226, 0.4);
-    transform: rotate(30deg);
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 45px;
-    background: linear-gradient(135deg, #1a1f2e, #0f1420);
-    min-width: 190px;
-    border-radius: 1rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    border: 1px solid rgba(74, 144, 226, 0.3);
-    overflow: hidden;
-}
-
-.dropdown-content.show {
-    display: block;
-    animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.dropdown-content a {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    padding: 0.8rem 1rem;
-    text-decoration: none;
-    color: #c0d0e8;
-    transition: all 0.2s;
-    font-size: 0.9rem;
-}
-
-.dropdown-content a:hover {
-    background: rgba(74, 144, 226, 0.3);
-    color: white;
-}
-
-/* Hero секция */
+/* ========== HERO СЕКЦИЯ ========== */
 .hero {
     text-align: center;
     margin-bottom: 2rem;
     padding: 2rem 1rem;
-    background: rgba(15, 25, 45, 0.6);
+    background: rgba(15, 25, 45, 0.4);
+    backdrop-filter: blur(20px);
     border-radius: 2rem;
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    animation: fadeInUp 0.6s ease-out backwards;
+    animation-delay: 0.1s;
 }
 
 .hero-badge {
@@ -205,8 +168,10 @@ body {
 
 .stat-card {
     background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
     padding: 0.8rem 1.5rem;
-    border-radius: 1.5rem;border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .stat-value {
@@ -221,9 +186,11 @@ body {
     margin-top: 0.3rem;
 }
 
-/* Фильтры */
+/* ========== ФИЛЬТРЫ ========== */
 .filters-section {
     margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-out backwards;
+    animation-delay: 0.2s;
 }
 
 .section-title {
@@ -241,74 +208,111 @@ body {
 }
 
 .filter-btn {
-    background: rgba(30, 40, 60, 0.8);
-    border: none;
-    padding: 0.5rem 1.2rem;
-    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    padding: 0.6rem 1.6rem;
     font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.85rem;
     color: #c0d0e8;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 .filter-btn:hover {
     background: rgba(74, 144, 226, 0.3);
-    color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
 .filter-btn.active {
     background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+    border: none;
     color: white;
-    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
 }
 
-/* Карточки маршрутов */
+/* ========== КАРТОЧКИ МАРШРУТОВ (СТЕКЛЯННЫЕ) ========== */
 .trails-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    gap: 1.8rem;
     margin: 1.5rem 0;
+    animation: fadeInUp 0.6s ease-out backwards;
+    animation-delay: 0.3s;
 }
 
 .trail-card {
-    background: rgba(20, 30, 45, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 1.2rem;
+    background: rgba(30, 40, 60, 0.35);
+    backdrop-filter: blur(16px);
+    border-radius: 2rem;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
+    animation: cardAppear 0.6s ease backwards;
 }
 
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.trail-card:nth-child(1) { animation-delay: 0.05s; }
+.trail-card:nth-child(2) { animation-delay: 0.1s; }
+.trail-card:nth-child(3) { animation-delay: 0.15s; }
+.trail-card:nth-child(4) { animation-delay: 0.2s; }
+.trail-card:nth-child(5) { animation-delay: 0.25s; }
+.trail-card:nth-child(6) { animation-delay: 0.3s; }
+
 .trail-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.5);
-    border-color: rgba(74, 144, 226, 0.3);
+    transform: translateY(-12px) scale(1.02);
+    background: rgba(40, 50, 70, 0.5);
+    border-color: rgba(74, 144, 226, 0.6);
+    box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.5);
 }
 
 .card-image {
-    height: 160px;
+    height: 180px;
     background-size: cover;
     background-position: center;
     position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    padding: 0.6rem;
+    transition: transform 0.5s ease;
+}
+
+.trail-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6) 100%);
 }
 
 .difficulty-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
     display: inline-block;
-    padding: 0.2rem 0.7rem;
+    padding: 0.3rem 0.9rem;
     border-radius: 100px;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    text-transform: uppercase;
     background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    z-index: 2;
 }
 
 .difficulty-easy { color: #4cd964; }
@@ -316,7 +320,7 @@ body {
 .difficulty-hard { color: #ff3b30; }
 
 .card-content {
-    padding: 1rem;
+    padding: 1.2rem;
 }
 
 .trail-title {
@@ -360,7 +364,113 @@ body {
     font-size: 0.85rem;
 }
 
-/* Загрузка */
+/* ========== КНОПКИ АВТОРИЗАЦИИ ========== */
+.btn-login {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 0.5rem 1.2rem;
+    color: #c0d0e8;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-login:hover {
+    background: rgba(74, 144, 226, 0.3);
+    color: white;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.user-name {
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.premium-badge-mini {
+    background: linear-gradient(135deg, #ffd700, #ff9500);
+    color: #1a1a2e;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 1rem;
+    margin-left: 0.3rem;
+}
+
+/* ========== ВЫПАДАЮЩЕЕ МЕНЮ ========== */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 0.4rem 0.8rem;
+    color: #c0d0e8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dropdown-btn:hover {
+    background: rgba(74, 144, 226, 0.3);
+    transform: rotate(15deg);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: rgba(26, 31, 46, 0.95);
+    backdrop-filter: blur(20px);
+    min-width: 190px;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.dropdown-content.show {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-content a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: #c0d0e8;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.dropdown-content a:hover {
+    background: rgba(74, 144, 226, 0.3);
+    color: white;
+}
+
+/* ========== ЗАГРУЗКА ========== */
 .loading-spinner {
     width: 40px;
     height: 40px;
@@ -376,7 +486,7 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* ФУТЕР — ГАРАНТИРОВАННО ВНИЗУ */
+/* ========== ФУТЕР ========== */
 .footer {
     margin-top: auto;
     padding: 1.5rem 1rem 1rem;
@@ -403,13 +513,11 @@ body {
     color: #4a90e2;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
-    font-weight: 600;
 }
 
 .footer-section p {
     font-size: 0.75rem;
     color: #8a9bb5;
-    line-height: 1.4;
 }
 
 .social-links {
@@ -419,7 +527,8 @@ body {
 }
 
 .social-link {
-    display: inline-flex;align-items: center;
+    display: inline-flex;
+    align-items: center;
     gap: 0.4rem;
     color: #c0d0e8;
     text-decoration: none;
@@ -437,24 +546,103 @@ body {
     color: #6e85a8;
 }
 
-/* PWA баннер установки */
+/* ========== ПРИВЕТСТВЕННОЕ МОДАЛЬНОЕ ОКНО ========== */
+.welcome-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(20px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.welcome-modal-content {
+    background: linear-gradient(135deg, #1a1f2e, #0f1420);
+    border-radius: 2rem;
+    padding: 2rem;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    animation: slideInScale 0.5s ease;
+}
+
+@keyframes slideInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.welcome-modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-modal-content h2 {
+    color: #4a90e2;
+    margin-bottom: 1rem;
+}
+
+.welcome-modal-content p {
+    color: #9aaec5;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-features {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-features .feature {
+    background: rgba(74, 144, 226, 0.15);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    color: #c0d0e8;
+}
+
+.welcome-btn {
+    background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.welcome-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ========== PWA БАННЕР ========== */
 .install-banner {
     position: fixed;
     bottom: 20px;
     left: 20px;
     right: 20px;
-    background: linear-gradient(135deg, #1a1f2e, #0f1420);
+    background: rgba(26, 31, 46, 0.95);
+    backdrop-filter: blur(20px);
     border-radius: 1rem;
     padding: 0.8rem;
     z-index: 1000;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(74, 144, 226, 0.3);
-    animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(100px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
 }
 
 .install-banner-content {
@@ -489,7 +677,6 @@ body {
     color: white;
     font-weight: bold;
     cursor: pointer;
-    font-size: 0.8rem;
 }
 
 .close-banner {
@@ -500,103 +687,22 @@ body {
     cursor: pointer;
 }
 
-/* Страница маршрута */
-.trail-page {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.back-link {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    color: #4a90e2;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.back-link:hover {
-    color: #7b3fe4;
-}
-
-.trail-header {
-    margin-bottom: 1.5rem;
-}
-
-.trail-header h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.trail-meta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-}
-
-.meta-item {
-    background: rgba(74, 144, 226, 0.15);
-    padding: 0.3rem 0.8rem;
-    border-radius: 100px;
-    font-size: 0.8rem;
-}
-
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.gallery img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 0.8rem;
-    transition: transform 0.3s;
-}
-
-.gallery img:hover {
-    transform: scale(1.02);
-}
-
-.trail-description-full {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1.2rem;
-    border-radius: 1rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-    font-size: 0.9rem;
-}
-
-.trail-description-full h3 {
-    margin-bottom: 0.8rem;
-    color: #4a90e2;
-    font-size: 1.1rem;
-}
-
-.trail-description-full ul {
-    margin-left: 1.2rem;
-    margin-top: 0.5rem;
-}
-
-.trail-description-full li {
-    margin-bottom: 0.3rem;
-}
-
-/* АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ */
+/* ========== АДАПТИВНОСТЬ ========== */
 @media (max-width: 768px) {
     .app-container {
         padding: 1rem;
     }
     
-    .hero-title {
-        font-size: 2rem;
+    .apple-greeting {
+        font-size: 1.8rem;
     }
     
-    .hero-subtitle {
-        font-size: 0.85rem;
+    .apple-subgreeting {
+        font-size: 0.9rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
     }
     
     .section-title {
@@ -613,20 +719,17 @@ body {
         font-size: 0.75rem;
     }
     
-    .stats-grid {
-        gap: 0.8rem;
+    .user-name {
+        font-size: 0.8rem;
     }
     
-    .stat-card {
-        padding: 0.5rem 1rem;
-    }
-    
-    .stat-value {
-        font-size: 1.3rem;
-    }
-    
-    .stat-label {
-        font-size: 0.7rem;
+    .dropdown-content {
+        position: fixed;
+        top: auto;
+        bottom: 70px;
+        right: 10px;
+        left: auto;
+        width: 180px;
     }
     
     .footer-content {
@@ -638,71 +741,8 @@ body {
     .social-links {
         align-items: center;
     }
-    
-    .user-info {
-        gap: 0.5rem;
-    }
-    
-    .user-name {
-        font-size: 0.8rem;
-    }
-    
-    .dropdown-content {
-        position: fixed;
-        top: auto;
-        bottom: 70px;
-        right: 10px;
-        left: auto;
-        width: 190px;
-    }
-    
-    .dropdown-btn {padding: 0.4rem 0.6rem;
-        font-size: 1rem;
-    }
-    
-    .trail-header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .meta-item {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.6rem;
-    }
-    
-    .gallery {
-        grid-template-columns: 1fr;
-    }
-    
-    .gallery img {
-        height: 140px;
-    }
-    
-    .install-banner {
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        padding: 0.6rem;
-    }
-    
-    .install-icon {
-        font-size: 1.2rem;
-    }
-    
-    .install-text strong {
-        font-size: 0.8rem;
-    }
-    
-    .install-text span {
-        font-size: 0.6rem;
-    }
-    
-    .install-btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.7rem;
-    }
 }
 
-/* Планшеты */
 @media (min-width: 769px) and (max-width: 1024px) {
     .trails-container {
         grid-template-columns: repeat(2, 1fr);
