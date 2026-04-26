@@ -1,3 +1,4 @@
+// Данные маршрутов (оригинальные на русском)
 const trailsData = [
     {
         id: 1,
@@ -8,12 +9,7 @@ const trailsData = [
         elevation: 120,
         rating: 4.8,
         location: "Москва",
-        previewImage: "images/vorobyovy-gory-1.jpg",
-        gallery: [
-            "images/vorobyovy-gory-1.jpg",
-            "images/vorobyovy-gory-2.jpg",
-            "images/vorobyovy-gory-3.jpg"
-        ]
+        previewImage: "images/vorobyovy-gory-1.jpg"
     },
     {
         id: 2,
@@ -24,12 +20,7 @@ const trailsData = [
         elevation: 180,
         rating: 4.9,
         location: "Калининградская область",
-        previewImage: "images/kurshskaya-kosa-1.jpg",
-        gallery: [
-            "images/kurshskaya-kosa-1.jpg",
-            "images/kurshskaya-kosa-2.jpg",
-            "images/kurshskaya-kosa-3.jpg"
-        ]
+        previewImage: "images/kurshskaya-kosa-1.jpg"
     },
     {
         id: 3,
@@ -40,12 +31,7 @@ const trailsData = [
         elevation: 850,
         rating: 5.0,
         location: "Адыгея",
-        previewImage: "images/lago-naki-1.jpg",
-        gallery: [
-            "images/lago-naki-1.jpg",
-            "images/lago-naki-2.jpg",
-            "images/lago-naki-3.jpg"
-        ]
+        previewImage: ""
     },
     {
         id: 4,
@@ -56,12 +42,7 @@ const trailsData = [
         elevation: 620,
         rating: 4.9,
         location: "Республика Алтай",
-        previewImage: "images/altai-mars-1.jpg",
-        gallery: [
-            "images/altai-mars-1.jpg",
-            "images/altai-mars-2.jpg",
-            "images/altai-mars-3.jpg"
-        ]
+        previewImage: ""
     },
     {
         id: 5,
@@ -72,12 +53,7 @@ const trailsData = [
         elevation: 540,
         rating: 4.8,
         location: "Иркутская область / Бурятия",
-        previewImage: "images/baikal-loop-1.jpg",
-        gallery: [
-            "images/baikal-loop-1.jpg",
-            "images/baikal-loop-2.jpg",
-            "images/baikal-loop-3.jpg"
-        ]
+        previewImage: ""
     },
     {
         id: 6,
@@ -88,14 +64,28 @@ const trailsData = [
         elevation: 950,
         rating: 5.0,
         location: "Камчатский край",
-        previewImage: "images/kamchatka-1.jpg",
-        gallery: [
-            "images/kamchatka-1.jpg",
-            "images/kamchatka-2.jpg",
-            "images/kamchatka-3.jpg"
-        ]
+        previewImage: ""
     }
 ];
+
+// Переводы для маршрутов на английский
+const trailsTranslationEn = {
+    1: { name: "Vorobyovy Gory", description: "Legendary route along the Moscow River with panoramic views of the city. Passes through the park, embankment and observation platforms." },
+    2: { name: "Curonian Spit", description: "Unique route through the national park between the sea and the bay. Sand dunes, pine forest and Baltic coast." },
+    3: { name: "Lago-Naki", description: "High-altitude route through the alpine meadows of Adygea. Mountains, waterfalls and breathtaking views." },
+    4: { name: "Altai Mars", description: "Cosmic landscapes of Altai: red rocks, turquoise rivers and mountain trails in the Chuu River Valley." },
+    5: { name: "Baikal Loop", description: "Circular route along Lake Baikal with a visit to Chersky Peak and picturesque bays." },
+    6: { name: "Valley of Geysers", description: "Extreme route in Kamchatka. Thermal springs, volcanoes, bear trails and wild nature." }
+};
+
+// Функция для получения переведённого текста маршрута
+function getTranslatedTrailText(trail, field) {
+    const currentLang = localStorage.getItem('language') || 'ru';
+    if (currentLang === 'en' && trailsTranslationEn[trail.id]) {
+        return trailsTranslationEn[trail.id][field];
+    }
+    return trail[field];
+}
 
 function getDifficultyColor(difficulty) {
     switch(difficulty) {
@@ -117,15 +107,20 @@ function getStarsHTML(rating) {
     return `<span class="stars">${starsHTML}</span> <span style="font-size:0.8rem; color:#8a9bb5;">${rating}</span>`;
 }
 
-function createTrailCard(trail) {const diff = getDifficultyColor(trail.difficulty);
+function createTrailCard(trail) {
+    const diff = getDifficultyColor(trail.difficulty);
+    const trailName = getTranslatedTrailText(trail, 'name');
+    const trailDesc = getTranslatedTrailText(trail, 'description');
+    const imageStyle = trail.previewImage ? `background-image: url('${trail.previewImage}');` : 'background: linear-gradient(135deg, #2b2d42, #353b48);';
+    
     return `
         <div class="trail-card" data-difficulty="${trail.difficulty}" data-id="${trail.id}">
-            <div class="card-image" style="background-image: url('${trail.previewImage}'); background-size: cover; background-position: center;">
+            <div class="card-image" style="${imageStyle} background-size: cover; background-position: center;">
                 <span class="difficulty-badge ${diff.class}">${diff.text}</span>
             </div>
             <div class="card-content">
-                <h3 class="trail-title">${trail.name}</h3>
-                <p class="trail-description">${trail.description}</p>
+                <h3 class="trail-title">${trailName}</h3>
+                <p class="trail-description">${trailDesc}</p>
                 <div class="trail-stats">
                     <span class="stat-item">📏 ${trail.distance} км</span>
                     <span class="stat-item">⛰️ ${trail.elevation} м</span>
@@ -168,39 +163,14 @@ function setupFilters() {
     });
 }
 
+// Функция для обновления языка на карточках (вызывается из translate.js)
+window.refreshTrailsLanguage = function() {
+    const activeFilter = document.querySelector('.filter-btn.active');
+    const level = activeFilter ? activeFilter.getAttribute('data-level') : 'all';
+    filterTrails(level);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
-});// Функция для добавления в избранное (вызывается на странице маршрута)
-function getCurrentUserForFav() {
-    const user = localStorage.getItem('bike_trails_current_user');
-    return user ? JSON.parse(user) : null;
-}
-
-// Добавить в избранное
-function addToFavoritesFromPage(trailId) {
-    const user = getCurrentUserForFav();
-    if (!user) {
-        alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
-        return false;
-    }
-    
-    const users = JSON.parse(localStorage.getItem('bike_trails_users') || '[]');
-    const userIndex = users.findIndex(u => u.id === user.id);
-    
-    if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
-        users[userIndex].favorites.push(trailId);
-        localStorage.setItem('bike_trails_users', JSON.stringify(users));
-        
-        // Обновляем текущего пользователя
-        user.favorites = users[userIndex].favorites;
-        localStorage.setItem('bike_trails_current_user', JSON.stringify(user));
-        
-        alert('Маршрут добавлен в избранное!');
-        return true;
-    } else if (users[userIndex]?.favorites.includes(trailId)) {
-        alert('Маршрут уже в избранном');
-        return true;
-    }
-    return false;
-}
+});
