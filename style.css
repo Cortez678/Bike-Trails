@@ -33,90 +33,6 @@ body {
     flex: 1;
 }
 
-/* ========== ПРИВЕТСТВЕННАЯ ЗАСТАВКА В СТИЛЕ IPHONE ========== */
-.splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, #0a0f1a 0%, #050810 100%);
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
-}
-
-.splash-screen.fade-out {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.splash-content {
-    text-align: center;
-    animation: splashBounce 1.2s ease-out;
-}
-
-@keyframes splashBounce {
-    0% {
-        opacity: 0;
-        transform: scale(0.7);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.05);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.splash-icon {
-    font-size: 80px;
-    margin-bottom: 20px;
-    animation: splashIconFloat 1.5s ease-in-out infinite;
-}
-
-@keyframes splashIconFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.splash-title {
-    font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #ffffff, #4a90e2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: -0.5px;
-    margin-bottom: 8px;
-}
-
-.splash-subtitle {
-    font-size: 16px;
-    color: #8a9bb5;
-    font-weight: 400;
-    margin-bottom: 30px;
-}
-
-.splash-loader {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto;
-    border: 3px solid rgba(74, 144, 226, 0.2);
-    border-top: 3px solid #4a90e2;
-    border-radius: 50%;
-    animation: splashSpin 0.8s linear infinite;
-}
-
-@keyframes splashSpin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 /* ========== ЧАСТИЦЫ ДЛЯ ФОНА ========== */
 .particles {
     position: fixed;
@@ -166,14 +82,14 @@ body {
 .welcome-section {
     margin: 1rem 0 2rem;
     text-align: center;
-    animation: fadeInUp 0.8s ease-out;
+    animation: fadeInUp 0.6s ease-out;
 }
 
 .apple-greeting {
-    font-size: 3rem;
+    font-size: 2.8rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #ffffff, #9aaec5);
+    background: linear-gradient(135deg, #ffffff, #4a90e2);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -182,7 +98,7 @@ body {
 }
 
 .apple-subgreeting {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #8e9dbb;
     font-weight: 400;
 }
@@ -190,7 +106,7 @@ body {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -335,29 +251,10 @@ body {
     transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
-    animation: cardAppear 0.6s ease backwards;
 }
-
-@keyframes cardAppear {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.trail-card:nth-child(1) { animation-delay: 0.05s; }
-.trail-card:nth-child(2) { animation-delay: 0.1s; }
-.trail-card:nth-child(3) { animation-delay: 0.15s; }
-.trail-card:nth-child(4) { animation-delay: 0.2s; }
-.trail-card:nth-child(5) { animation-delay: 0.25s; }
-.trail-card:nth-child(6) { animation-delay: 0.3s; }
 
 .trail-card:hover {
-    transform: translateY(-12px) scale(1.02);
+    transform: translateY(-8px);
     background: rgba(40, 50, 70, 0.5);
     border-color: rgba(74, 144, 226, 0.6);
     box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.5);
@@ -368,11 +265,6 @@ body {
     background-size: cover;
     background-position: center;
     position: relative;
-    transition: transform 0.5s ease;
-}
-
-.trail-card:hover .card-image {
-    transform: scale(1.05);
 }
 
 .card-image::after {
@@ -479,6 +371,7 @@ body {
     padding: 0.3rem 1rem;
     border-radius: 30px;
     backdrop-filter: blur(10px);
+    font-size: 0.9rem;
 }
 
 .premium-badge-mini {
@@ -643,7 +536,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 0.5s ease;
 }
 
 .welcome-modal-content {
@@ -654,13 +546,13 @@ body {
     max-width: 400px;
     width: 90%;
     border: 1px solid rgba(74, 144, 226, 0.3);
-    animation: slideInScale 0.5s ease;
+    animation: slideInScale 0.4s ease;
 }
 
 @keyframes slideInScale {
     from {
         opacity: 0;
-        transform: scale(0.9) translateY(30px);
+        transform: scale(0.9) translateY(20px);
     }
     to {
         opacity: 1;
@@ -676,6 +568,7 @@ body {
 .welcome-modal-content h2 {
     color: #4a90e2;
     margin-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
 .welcome-modal-content p {
@@ -777,22 +670,12 @@ body {
         padding: 1rem;
     }
     
-    .splash-icon {
-        font-size: 60px;
-    }
-    .splash-title {
-        font-size: 24px;
-    }
-    .splash-subtitle {
-        font-size: 14px;
-    }
-    
     .apple-greeting {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
     
     .apple-subgreeting {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .hero-title {
