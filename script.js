@@ -173,4 +173,9 @@ window.refreshTrailsLanguage = function() {
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
-});
+});// Функция для обновления языка на карточках
+window.refreshTrailsLanguage = function() {
+    const activeFilter = document.querySelector('.filter-btn.active');
+    const level = activeFilter ? activeFilter.getAttribute('data-level') : 'all';
+    filterTrails(level);
+};
