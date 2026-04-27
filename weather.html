@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогноз погоды | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="weather.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="weather-header">
+            <a href="index.html" class="back-link">← На главную</a>
+            <h1>🌤️ Прогноз погоды для велопоездок</h1>
+            <p>Выберите маршрут, чтобы узнать погоду на неделю</p>
+        </div>
+
+        <!-- Выбор маршрута -->
+        <div class="route-selector">
+            <label for="routeSelect">Выберите маршрут:</label>
+            <select id="routeSelect" class="route-select">
+                <option value="1">🏙️ Воробьёвы горы (Москва)</option>
+                <option value="2">🏖️ Куршская коса (Калининград)</option>
+                <option value="3">🏔️ Лаго-Наки (Адыгея)</option>
+                <option value="4">🪨 Алтайский Марс (Алтай)</option>
+                <option value="5">💧 Байкальская петля (Байкал)</option>
+                <option value="6">🌋 Долина гейзеров (Камчатка)</option>
+            </select>
+        </div>
+
+        <!-- Блок с погодой -->
+        <div id="weatherContainer" class="weather-container">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Советы по погоде -->
+        <div class="weather-tips">
+            <h3>💡 Советы для велопоездок в разную погоду</h3>
+            <div class="tips-grid">
+                <div class="weather-tip">
+                    <div class="tip-icon">☀️</div>
+                    <h4>Солнечно</h4>
+                    <p>Не забудьте солнцезащитный крем, головной убор и воду. Лучшее время для поездки — утро или вечер.</p>
+                </div>
+                <div class="weather-tip">
+                    <div class="tip-icon">🌧️</div>
+                    <h4>Дождь</h4>
+                    <p>Возьмите дождевик, водонепроницаемую сумку и проверьте тормоза. Избегайте глиняных трасс.</p>
+                </div>
+                <div class="weather-tip">
+                    <div class="tip-icon">💨</div>
+                    <h4>Сильный ветер</h4>
+                    <p>Снизьте скорость, держите руль двумя руками. Лучше выбрать маршрут в лесу или в низине.</p>
+                </div>
+                <div class="weather-tip">
+                    <div class="tip-icon">❄️</div>
+                    <h4>Холодно</h4>
+                    <p>Одевайтесь слоями, защитите руки и ноги. Возьмите горячий чай в термосе.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© 2025 Bike Trails — прогноз погоды для райдеров</p>
+        </footer>
+    </div>
+
+    <script src="weather.js"></script>
+</body>
+</html>
