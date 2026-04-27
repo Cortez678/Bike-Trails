@@ -1,0 +1,104 @@
+/* Страница карты */
+.map-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.map-header h1 {
+    font-size: 1.8rem;
+    color: #4a90e2;
+    margin-bottom: 0.3rem;
+}
+
+.map-header p {
+    color: #8a9bb5;
+    font-size: 0.85rem;
+}
+
+.map-container {
+    width: 100%;
+    height: 500px;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Легенда карты */
+.map-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.legend, .stats-info {
+    background: rgba(20, 30, 45, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 1rem;
+    flex: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend h3, .stats-info h3 {
+    color: #4a90e2;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+    color: #c0d0e8;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.stats-info p {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    color: #c0d0e8;
+}
+
+.stats-info span {
+    color: #4a90e2;
+    font-weight: bold;
+}
+
+/* Светлая тема для карты */
+body.light-theme .legend,
+body.light-theme .stats-info {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .legend-item,
+body.light-theme .stats-info p {
+    color: #1a1a2e;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .map-container {
+        height: 400px;
+    }
+    
+    .map-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .map-info {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+}
