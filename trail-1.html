@@ -36,7 +36,7 @@
 
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
-                <button class="gps-btn" id="navigateBtn" data-lat="55.7106" data-lon="37.5436">📍 Построить маршрут</button>
+                <button class="gps-btn" id="navigateBtn" data-id="1" data-lat="55.7106" data-lon="37.5436">📍 Построить маршрут</button>
             </div>
 
             <div class="gallery">
@@ -160,6 +160,21 @@
             btn.disabled = false;
         }
         
+        // Геймификация: начисление XP
+        function addFavoriteXP() {
+            const user = getCurrentUser();
+            if (user && typeof addFavoriteCount !== 'undefined') {
+                addFavoriteCount(user.id);
+            }
+        }
+        
+        function addRouteXP(routeId) {
+            const user = getCurrentUser();
+            if (user && typeof addRouteBuilt !== 'undefined') {
+                addRouteBuilt(user.id, routeId);
+            }
+        }
+        
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
@@ -174,6 +189,7 @@
             } else {
                 addToFavorites(user.id, TRAIL_ID);
                 alert('Маршрут добавлен в избранное! ❤️');
+                setTimeout(() => addFavoriteXP(), 500);
             }
             updateFavoriteButton();
         });
@@ -184,9 +200,9 @@
         document.getElementById('navigateBtn').addEventListener('click', () => {
             const lat = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lat'));
             const lon = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lon'));
+            const routeId = parseInt(document.getElementById('navigateBtn').getAttribute('data-id'));
             
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            
             let url = '';
             if (isIOS) {
                 url = `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d`;
@@ -194,7 +210,11 @@
                 url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
             }
             window.open(url, '_blank');
+            
+            // Начисляем XP за построение маршрута
+            setTimeout(() => addRouteXP(routeId), 1000);
         });
     </script>
+    <script src="gamification.js"></script>
 </body>
 </html>
