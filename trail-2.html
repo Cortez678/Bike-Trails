@@ -36,7 +36,7 @@
 
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
-                <button class="gps-btn" id="navigateBtn" data-lat="55.1833" data-lon="20.8500">📍 Построить маршрут</button>
+                <button class="gps-btn" id="navigateBtn" data-id="2" data-lat="55.1833" data-lon="20.8500">📍 Построить маршрут</button>
             </div>
 
             <div class="gallery">
@@ -47,10 +47,10 @@
 
             <div class="trail-description-full">
                 <h3>📖 О маршруте</h3>
-                <p>Маршрут проходит по территории национального парка "Куршская коса" — уникальной песчаной косе, разделяющей Балтийское море и Куршский залив. Трасса начинается от посёлка Морское и идёт до танцующего леса. Вы проедете по велополосе вдоль залива, затем углубитесь в сосновый лес и выйдете к огромным песчаным дюнам на побережье Балтики.</p>
+                <p>Маршрут проходит по территории национального парка "Куршская коса" — уникальной песчаной косе, разделяющей Балтийское море и Куршский залив. Трасса начинается от посёлка Морское и идёт до танцующего леса.</p>
                 
                 <div class="tip">
-                    💡 <strong>Совет райдера:</strong> Возьмите с собой купальные принадлежности! После поездки можно искупаться в Балтийском море. Лучшее время для поездки — с мая по сентябрь.
+                    💡 <strong>Совет райдера:</strong> Возьмите с собой купальные принадлежности! После поездки можно искупаться в Балтийском море.
                 </div>
 
                 <h3>📍 Особенности маршрута</h3>
@@ -59,14 +59,12 @@
                     <li>Развитая велосипедная инфраструктура, пункты проката</li>
                     <li>Обязательно посетите Дюну Эфа и Танцующий лес</li>
                     <li>По пути много оборудованных мест для отдыха</li>
-                    <li>Можно наблюдать редких птиц и животных</li>
                 </ul>
 
                 <div class="how-to-get">
                     <h3>🚗 Как добраться</h3>
                     <p><strong>Из Калининграда:</strong> Электричка до Зеленоградска, далее велотакси или трансфер до въезда в парк.</p>
-                    <p><strong>На автомобиле:</strong> Из Калининграда по трассе А-217 до Зеленоградска, затем по дороге на косу. Въезд на территорию парка платный.</p>
-                    <p><strong>Координаты старта:</strong> <span class="coordinates">55.1833° N, 20.8500° E</span> (пос. Морское)</p>
+                    <p><strong>Координаты старта:</strong> <span class="coordinates">55.1833° N, 20.8500° E</span></p>
                 </div>
             </div>
         </div>
@@ -103,11 +101,9 @@
         function addToFavorites(userId, trailId) {
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === userId);
-            
             if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
                 users[userIndex].favorites.push(trailId);
                 saveUsers(users);
-                
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
@@ -121,11 +117,9 @@
         function removeFromFavorites(userId, trailId) {
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === userId);
-            
             if (userIndex !== -1) {
                 users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
                 saveUsers(users);
-                
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
@@ -139,14 +133,12 @@
         function updateFavoriteButton() {
             const user = getCurrentUser();
             const btn = document.getElementById('favoriteBtn');
-            
             if (!user) {
                 btn.textContent = '🔒 Войдите, чтобы добавить в избранное';
                 btn.style.opacity = '0.7';
                 btn.disabled = true;
                 return;
             }
-            
             const isFav = isFavorite(user.id, TRAIL_ID);
             if (isFav) {
                 btn.textContent = '✅ В избранном';
@@ -158,13 +150,22 @@
             btn.disabled = false;
         }
         
+        function addFavoriteXP() {
+            const user = getCurrentUser();
+            if (user && typeof addFavoriteCount !== 'undefined') addFavoriteCount(user.id);
+        }
+        
+        function addRouteXP(routeId) {
+            const user = getCurrentUser();
+            if (user && typeof addRouteBuilt !== 'undefined') addRouteBuilt(user.id, routeId);
+        }
+        
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
-                alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
+                alert('Войдите в аккаунт');
                 return;
             }
-            
             const isFav = isFavorite(user.id, TRAIL_ID);
             if (isFav) {
                 removeFromFavorites(user.id, TRAIL_ID);
@@ -172,6 +173,7 @@
             } else {
                 addToFavorites(user.id, TRAIL_ID);
                 alert('Маршрут добавлен в избранное! ❤️');
+                setTimeout(() => addFavoriteXP(), 500);
             }
             updateFavoriteButton();
         });
@@ -181,10 +183,13 @@
         document.getElementById('navigateBtn').addEventListener('click', () => {
             const lat = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lat'));
             const lon = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lon'));
+            const routeId = parseInt(document.getElementById('navigateBtn').getAttribute('data-id'));
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const url = isIOS ? `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
             window.open(url, '_blank');
+            setTimeout(() => addRouteXP(routeId), 1000);
         });
     </script>
+    <script src="gamification.js"></script>
 </body>
 </html>
