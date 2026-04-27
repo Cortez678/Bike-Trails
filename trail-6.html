@@ -16,7 +16,10 @@
         .favorite-btn-added { background: linear-gradient(135deg, #4cd964, #34c759); }
         .gps-btn { background: linear-gradient(135deg, #4a90e2, #7b3fe4); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; font-weight: bold; cursor: pointer; margin: 1rem 0; transition: transform 0.2s; margin-left: 1rem; }
         .gps-btn:hover { transform: scale(1.02); }
+        .gpx-btn { background: linear-gradient(135deg, #2c3e50, #1a1a2e); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; font-weight: bold; cursor: pointer; margin: 1rem 0; transition: transform 0.2s; margin-left: 1rem; }
+        .gpx-btn:hover { transform: scale(1.02); }
         .trail-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .premium-badge { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 1rem; margin-left: 0.5rem; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -38,6 +41,7 @@
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
                 <button class="gps-btn" id="navigateBtn" data-id="6" data-lat="54.1333" data-lon="159.9167">📍 Построить маршрут</button>
+                <button class="gpx-btn" id="downloadGpxBtn" data-id="6">📥 Скачать GPX <span class="premium-badge">💎 Premium</span></button>
             </div>
 
             <div class="gallery">
@@ -51,7 +55,7 @@
                 <p>Маршрут проходит по Кроноцкому заповеднику — одному из самых труднодоступных мест планеты. Финал — Долина гейзеров, где из-под земли бьют десятки гейзеров.</p>
                 
                 <div class="warning">
-                    ⚠️ <strong>Экстремальное предупреждение!</strong> Маршрут ТОЛЬКО для опытных экспедиционеров. Обязательно наличие гида-проводника.
+                    ⚠️ <strong>Экстремальное предупреждение!</strong> Маршрут ТОЛЬКО для опытных экспедиционеров. Обязательно наличие гида-проводника и специального разрешения.
                 </div>
 
                 <div class="tip">
@@ -165,6 +169,42 @@
             if (user && typeof addRouteBuilt !== 'undefined') addRouteBuilt(user.id, routeId);
         }
         
+        function isPremium() {
+            const user = getCurrentUser();
+            if (!user) return false;
+            if (user.isPremium) return true;
+            const users = getUsers();
+            const fullUser = users.find(u => u.id === user.id);
+            if (fullUser && fullUser.premiumExpiry) {
+                const expiryDate = new Date(fullUser.premiumExpiry);
+                const now = new Date();
+                if (expiryDate > now) return true;
+            }
+            return false;
+        }
+        
+        function generateGPX() {
+            const routes = {
+                6: {
+                    name: "Valley of Geysers",
+                    points: [
+                        [54.1333, 159.9167, "Старт: Кроноцкий заповедник"],
+                        [54.1400, 159.9300, "Термальные источники"],
+                        [54.1500, 159.9500, "Медвежья тропа"],
+                        [54.1600, 159.9700, "Долина гейзеров"],
+                        [54.1333, 159.9167, "Финиш"]
+                    ]
+                }
+            };
+            const route = routes[TRAIL_ID];
+            let gpx = '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Bike Trails" xmlns="http://www.topografix.com/GPX/1/1">\n<trk>\n<name>' + route.name + '</name>\n<trkseg>\n';
+            route.points.forEach(p => {
+                gpx += `<trkpt lat="${p[0]}" lon="${p[1]}">\n<ele>700</ele>\n<name>${p[2]}</name>\n</trkpt>\n`;
+            });
+            gpx += '</trkseg>\n</trk>\n</gpx>';
+            return gpx;
+        }
+        
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
@@ -193,6 +233,29 @@
             const url = isIOS ? `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
             window.open(url, '_blank');
             setTimeout(() => addRouteXP(routeId), 1000);
+        });
+        
+        document.getElementById('downloadGpxBtn').addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user) {
+                alert('🔒 Войдите в аккаунт');
+                return;
+            }
+            if (!isPremium()) {
+                alert('💎 Скачивание GPX треков доступно только для премиум-подписчиков!\n\nОформите подписку в разделе Premium.');
+                return;
+            }
+            const gpxContent = generateGPX();
+            const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `trail-${TRAIL_ID}.gpx`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('✅ GPX трек скачан! Импортируйте его в ваш GPS-навигатор.');
         });
     </script>
     <script src="gamification.js"></script>
