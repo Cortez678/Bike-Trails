@@ -2,6 +2,20 @@
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
 
+// ========== ТЕМА ==========
+function initTheme() {
+    const savedTheme = localStorage.getItem('bike_trails_theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+    const isLight = document.body.classList.contains('light-theme');
+    localStorage.setItem('bike_trails_theme', isLight ? 'light' : 'dark');
+}
+
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
 function getUsers() {
@@ -95,15 +109,6 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-function checkAuth() {
-    const user = getCurrentUser();
-    if (!user) {
-        window.location.href = 'index.html';
-        return null;
-    }
-    return user;
-}
-
 // ========== РАБОТА С ИЗБРАННЫМ ==========
 
 function addToFavorites(userId, trailId) {
@@ -150,12 +155,6 @@ function isFavorite(userId, trailId) {
     return user ? user.favorites.includes(trailId) : false;
 }
 
-function getUserFavorites() {
-    const user = getCurrentUser();
-    if (!user) return [];
-    return user.favorites || [];
-}
-
 // ========== ПРЕМИУМ ФУНКЦИИ ==========
 
 function isUserPremium() {
@@ -171,29 +170,6 @@ function isUserPremium() {
         if (expiryDate > now) {
             return true;
         }
-    }
-    return false;
-}
-
-function activateUserPremium(userId, days = 30) {
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex !== -1) {
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + days);
-        
-        users[userIndex].isPremium = true;
-        users[userIndex].premiumExpiry = expiryDate.toISOString();
-        saveUsers(users);
-        
-        const current = getCurrentUser();
-        if (current && current.id === userId) {
-            current.isPremium = true;
-            current.premiumExpiry = expiryDate.toISOString();
-            setCurrentUser(current);
-        }
-        return true;
     }
     return false;
 }
@@ -226,6 +202,7 @@ function updateAuthUI() {
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
+                <button class="theme-btn" id="themeBtn" title="Сменить тему">🌓</button>
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
@@ -242,6 +219,11 @@ function updateAuthUI() {
         const dropdownBtn = document.getElementById('dropdownBtn');
         const dropdownContent = document.getElementById('dropdownContent');
         const logoutDropdown = document.getElementById('logoutDropdown');
+        const themeBtn = document.getElementById('themeBtn');
+        
+        if (themeBtn) {
+            themeBtn.addEventListener('click', toggleTheme);
+        }
         
         if (dropdownBtn) {
             dropdownBtn.addEventListener('click', (e) => {
@@ -257,12 +239,20 @@ function updateAuthUI() {
             });
         }
         
-        // Закрытие при клике вне меню
         window.addEventListener('click', () => {
             dropdownContent.classList.remove('show');
         });
     } else {
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
+        container.innerHTML = `
+            <div class="user-info">
+                <button class="theme-btn" id="themeBtn" title="Сменить тему">🌓</button>
+                <button class="btn-login" id="openLoginBtn">🔑 Вход</button>
+            </div>
+        `;
+        const themeBtn = document.getElementById('themeBtn');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', toggleTheme);
+        }
         const loginBtn = document.getElementById('openLoginBtn');
         if (loginBtn) {
             loginBtn.addEventListener('click', () => {
@@ -329,6 +319,7 @@ function initModal() {
 
 // ========== ЗАПУСК ==========
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     updateAuthUI();
     initModal();
 });
