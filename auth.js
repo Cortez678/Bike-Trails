@@ -17,7 +17,6 @@ function toggleTheme() {
 }
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
-
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : [];
@@ -40,19 +39,14 @@ function setCurrentUser(user) {
     }
 }
 
-// ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
-
 function register(username, password) {
     const users = getUsers();
-    
     if (users.find(u => u.username === username)) {
         return { success: false, error: 'Пользователь уже существует' };
     }
-    
     if (password.length < 4) {
         return { success: false, error: 'Пароль должен быть не менее 4 символов' };
     }
-    
     const newUser = {
         id: Date.now(),
         username: username,
@@ -62,45 +56,24 @@ function register(username, password) {
         premiumExpiry: null,
         createdAt: new Date().toISOString()
     };
-    
     users.push(newUser);
     saveUsers(users);
-    
     return { success: true };
 }
 
 function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
-    
     if (user) {
-        let isPremiumValid = false;
-        if (user.premiumExpiry) {
-            const expiryDate = new Date(user.premiumExpiry);
-            const now = new Date();
-            if (expiryDate > now) {
-                isPremiumValid = true;
-            } else {
-                user.isPremium = false;
-                user.premiumExpiry = null;
-                const userIndex = users.findIndex(u => u.id === user.id);
-                if (userIndex !== -1) {
-                    users[userIndex] = user;
-                    saveUsers(users);
-                }
-            }
-        }
-        
         setCurrentUser({ 
             id: user.id, 
             username: user.username, 
             favorites: user.favorites || [],
-            isPremium: isPremiumValid,
+            isPremium: user.isPremium || false,
             premiumExpiry: user.premiumExpiry
         });
         return { success: true };
     }
-    
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
@@ -109,89 +82,7 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-// ========== РАБОТА С ИЗБРАННЫМ ==========
-
-function addToFavorites(userId, trailId) {
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex !== -1) {
-        if (!users[userIndex].favorites.includes(trailId)) {
-            users[userIndex].favorites.push(trailId);
-            saveUsers(users);
-            
-            const current = getCurrentUser();
-            if (current && current.id === userId) {
-                current.favorites = users[userIndex].favorites;
-                setCurrentUser(current);
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-function removeFromFavorites(userId, trailId) {
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex !== -1) {
-        users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
-        saveUsers(users);
-        
-        const current = getCurrentUser();
-        if (current && current.id === userId) {
-            current.favorites = users[userIndex].favorites;
-            setCurrentUser(current);
-        }
-        return true;
-    }
-    return false;
-}
-
-function isFavorite(userId, trailId) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    return user ? user.favorites.includes(trailId) : false;
-}
-
-// ========== ПРЕМИУМ ФУНКЦИИ ==========
-
-function isUserPremium() {
-    const user = getCurrentUser();
-    if (!user) return false;
-    if (user.isPremium) return true;
-    
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        if (expiryDate > now) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function getPremiumDaysLeft() {
-    const user = getCurrentUser();
-    if (!user) return 0;
-    
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        const diffTime = expiryDate - now;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays > 0 ? diffDays : 0;
-    }
-    return 0;
-}
-
 // ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ==========
-
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
@@ -202,7 +93,7 @@ function updateAuthUI() {
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
-                <button class="theme-btn" id="themeBtn" title="Сменить тему">🌓</button>
+                <button class="theme-btn" id="themeBtn">🌓</button>
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
@@ -216,71 +107,54 @@ function updateAuthUI() {
             </div>
         `;
         
+        document.getElementById('themeBtn')?.addEventListener('click', toggleTheme);
+        
         const dropdownBtn = document.getElementById('dropdownBtn');
         const dropdownContent = document.getElementById('dropdownContent');
-        const logoutDropdown = document.getElementById('logoutDropdown');
-        const themeBtn = document.getElementById('themeBtn');
-        
-        if (themeBtn) {
-            themeBtn.addEventListener('click', toggleTheme);
-        }
-        
         if (dropdownBtn) {
             dropdownBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dropdownContent.classList.toggle('show');
             });
         }
-        
-        if (logoutDropdown) {
-            logoutDropdown.addEventListener('click', (e) => {
-                e.preventDefault();
-                logout();
-            });
-        }
-        
+        document.getElementById('logoutDropdown')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
         window.addEventListener('click', () => {
-            dropdownContent.classList.remove('show');
+            dropdownContent?.classList.remove('show');
         });
     } else {
         container.innerHTML = `
             <div class="user-info">
-                <button class="theme-btn" id="themeBtn" title="Сменить тему">🌓</button>
+                <button class="theme-btn" id="themeBtn">🌓</button>
                 <button class="btn-login" id="openLoginBtn">🔑 Вход</button>
             </div>
         `;
-        const themeBtn = document.getElementById('themeBtn');
-        if (themeBtn) {
-            themeBtn.addEventListener('click', toggleTheme);
-        }
-        const loginBtn = document.getElementById('openLoginBtn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => {
-                const modal = document.getElementById('authModal');
-                if (modal) modal.classList.add('active');
-            });
-        }
+        document.getElementById('themeBtn')?.addEventListener('click', toggleTheme);
+        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
+            document.getElementById('authModal')?.classList.add('active');
+        });
     }
 }
 
 // ========== МОДАЛЬНОЕ ОКНО ==========
-
 function initModal() {
     const modal = document.getElementById('authModal');
-    const closeBtn = document.getElementById('closeModal');
+    if (!modal) return;
+    
+    document.getElementById('closeModal')?.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+    
+    let isLoginMode = true;
     const switchBtn = document.getElementById('switchMode');
     const submitBtn = document.getElementById('submitBtn');
     const modalTitle = document.getElementById('modalTitle');
     const errorDiv = document.getElementById('errorMessage');
-    let isLoginMode = true;
-
-    if (!modal) return;
-
-    closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-    });
     
     switchBtn?.addEventListener('click', () => {
         isLoginMode = !isLoginMode;
@@ -291,18 +165,15 @@ function initModal() {
             : 'Уже есть аккаунт? <span>Войти</span>';
         errorDiv.innerText = '';
     });
-
+    
     submitBtn?.addEventListener('click', () => {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
-        
         if (!username || !password) {
             errorDiv.innerText = 'Заполните все поля';
             return;
         }
-        
         const result = isLoginMode ? login(username, password) : register(username, password);
-        
         if (result.success) {
             modal.classList.remove('active');
             document.getElementById('username').value = '';
