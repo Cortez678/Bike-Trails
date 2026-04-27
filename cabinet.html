@@ -6,25 +6,190 @@
     <title>Личный кабинет | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .cabinet-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .cabinet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .back-btn {
+            background: rgba(74, 144, 226, 0.2);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            color: white;
+        }
+        .user-info-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+        /* Геймификация */
+        .gamification-block {
+            background: rgba(20, 30, 45, 0.5);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .level-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .level-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            color: #1a1a2e;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .xp-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            height: 20px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        .xp-bar {
+            background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 1rem;
+        }
+        .xp-info {
+            font-size: 0.8rem;
+            color: #8a9bb5;
+        }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.8rem;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .achievement-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.8rem;
+            padding: 0.8rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .achievement-card.unlocked {
+            border: 1px solid #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .achievement-card.locked {
+            opacity: 0.5;
+        }
+        .achievement-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .achievement-name {
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .achievement-desc {
+            font-size: 0.65rem;
+            color: #8a9bb5;
+            margin-top: 0.2rem;
+        }
+        .xp-history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+        .xp-history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+        }
+        .xp-history-amount {
+            color: #4cd964;
+            font-weight: bold;
+        }
+        .xp-history-date {
+            font-size: 0.7rem;
+            color: #8a9bb5;
+        }
+        .logout-btn {
+            background: #ff3b30;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            color: white;
+            margin-top: 1rem;
+        }
+        /* Светлая тема */
+        body.light-theme .gamification-block {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        body.light-theme .xp-bar-container {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .achievement-card {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .xp-history-item {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+        @media (max-width: 768px) {
+            .cabinet-container { padding: 1rem; }
+            .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container" style="max-width:1000px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="cabinet-container">
+        <div class="cabinet-header">
             <h1>👤 Личный кабинет</h1>
-            <button onclick="location.href='index.html'" style="background:rgba(74,144,226,0.2); border:none; padding:0.5rem 1rem; border-radius:2rem; cursor:pointer;">← На главную</button>
+            <button class="back-btn" onclick="location.href='index.html'">← На главную</button>
         </div>
         
-        <div style="background:rgba(255,255,255,0.05); padding:1.5rem; border-radius:1rem; margin-bottom:2rem;">
+        <div class="user-info-card">
             <p><strong>Имя пользователя:</strong> <span id="usernameDisplay"></span></p>
             <p><strong>Дата регистрации:</strong> <span id="regDateDisplay"></span></p>
-            <button id="logoutBtn" style="margin-top:1rem; background:#ff3b30; border:none; padding:0.5rem 1rem; border-radius:2rem; cursor:pointer;">Выйти</button>
+            <button id="logoutBtn" class="logout-btn">Выйти</button>
         </div>
         
-        <h2>⭐ Избранные маршруты</h2>
-        <div id="favoritesContainer" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; margin-top:1rem;">
-            <div style="padding:2rem; text-align:center; color:#8a9bb5;">Загрузка...</div>
+        <!-- Блок геймификации -->
+        <div class="gamification-block">
+            <div class="level-section">
+                <div class="level-badge" id="levelBadge">🚲 Новичок</div>
+                <div class="xp-bar-container">
+                    <div class="xp-bar" id="xpBar" style="width: 0%"></div>
+                </div>
+                <div class="xp-info">
+                    <span id="currentXP">0</span> / <span id="nextXP">100</span> XP
+                </div>
+            </div>
+            
+            <h3>🏆 Достижения</h3>
+            <div id="achievementsList" class="achievements-grid"></div>
+            
+            <h3>📜 История опыта</h3>
+            <div id="xpHistoryList" class="xp-history-list"></div>
         </div>
     </div>
+
+    <script src="gamification.js"></script>
     <script>
         const CURRENT_USER_KEY = 'bike_trails_current_user';
         const USERS_KEY = 'bike_trails_users';
@@ -44,6 +209,7 @@
             location.href = 'index.html';
         }
         
+        // Отображение информации о пользователе
         const user = getCurrentUser();
         if (!user) {
             location.href = 'index.html';
@@ -57,55 +223,68 @@
             } else {
                 document.getElementById('regDateDisplay').innerText = 'Неизвестно';
             }
+        }
+        
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+        
+        // Отображение геймификации
+        function displayGamification() {
+            const user = getCurrentUser();
+            if (!user) return;
             
-            const trails = [
-                { id: 1, name: "Воробьёвы горы", image: "images/vorobyovy-gory-1.jpg" },
-                { id: 2, name: "Куршская коса", image: "images/kurshskaya-kosa-1.jpg" },
-                { id: 3, name: "Лаго-Наки", image: "" },
-                { id: 4, name: "Алтайский Марс", image: "" },
-                { id: 5, name: "Байкальская петля", image: "" },
-                { id: 6, name: "Долина гейзеров", image: "" }
-            ];
+            const userId = user.id;
             
-            const favorites = user.favorites || [];
-            const container = document.getElementById('favoritesContainer');
+            if (typeof getUserXP === 'undefined') {
+                document.getElementById('levelBadge').innerHTML = '🚲 Загрузка...';
+                return;
+            }
             
-            if (favorites.length === 0) {
-                container.innerHTML = '<div style="padding:2rem; text-align:center; color:#8a9bb5;">⭐ У вас пока нет избранных маршрутов</div>';
+            const xp = getUserXP(userId);
+            const level = getUserLevel(xp);
+            const xpToNext = getXPToNextLevel(xp);
+            const progress = getLevelProgress(xp);
+            
+            document.getElementById('levelBadge').innerHTML = `${level.name} (ур. ${level.level})`;
+            document.getElementById('xpBar').style.width = `${progress}%`;
+            document.getElementById('currentXP').innerText = xp;
+            document.getElementById('nextXP').innerText = xpToNext;
+            
+            const userAchievements = getUserAchievements(userId);
+            const achievementsContainer = document.getElementById('achievementsList');
+            achievementsContainer.innerHTML = achievements.map(ach => {
+                const isUnlocked = userAchievements.includes(ach.id);
+                return `
+                    <div class="achievement-card ${isUnlocked ? 'unlocked' : 'locked'}">
+                        <div class="achievement-icon">${ach.icon}</div>
+                        <div class="achievement-name">${ach.name}</div>
+                        <div class="achievement-desc">${ach.description}</div>
+                        ${isUnlocked ? '<small>✅ Получено</small>' : '<small>🔒 Не разблокировано</small>'}
+                    </div>
+                `;
+            }).join('');
+            
+            const history = getXPHistory(userId);
+            const historyContainer = document.getElementById('xpHistoryList');
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<div class="xp-history-item">Пока нет активных действий</div>';
             } else {
-                const favoriteTrails = trails.filter(t => favorites.includes(t.id));
-                container.innerHTML = favoriteTrails.map(trail => `
-                    <div onclick="location.href='trail-${trail.id}.html'" style="background:rgba(20,30,45,0.7); border-radius:1rem; overflow:hidden; cursor:pointer;"><div style="height:150px; background:${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg,#2b2d42,#353b48)'}; background-size:cover; background-position:center;"></div>
-                        <div style="padding:1rem;">
-                            <h3>${trail.name}</h3>
+                historyContainer.innerHTML = history.map(item => `
+                    <div class="xp-history-item">
+                        <span>${item.action}</span>
+                        <div>
+                            <span class="xp-history-amount">+${item.amount} XP</span>
+                            <span class="xp-history-date">${new Date(item.date).toLocaleDateString()}</span>
                         </div>
                     </div>
                 `).join('');
             }
         }
         
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+        setTimeout(() => {
+            if (typeof getUserXP !== 'undefined') {
+                displayGamification();
+            }
+        }, 500);
     </script>
 </body>
-</html><!-- Блок геймификации -->
-<div class="gamification-block">
-    <div class="level-section">
-        <div class="level-badge" id="levelBadge">🚲 Новичок</div>
-        <div class="xp-bar-container">
-            <div class="xp-bar" id="xpBar" style="width: 0%"></div>
-        </div>
-        <div class="xp-info">
-            <span id="currentXP">0</span> / <span id="nextXP">100</span> XP
-        </div>
-    </div>
-    
-    <div class="achievements-section">
-        <h3>🏆 Достижения</h3>
-        <div id="achievementsList" class="achievements-grid"></div>
-    </div>
-    
-    <div class="xp-history-section">
-        <h3>📜 История опыта</h3>
-        <div id="xpHistoryList" class="xp-history-list"></div>
-    </div>
-</div>
+</html>
