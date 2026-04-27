@@ -87,4 +87,25 @@
         document.getElementById('logoutBtn')?.addEventListener('click', logout);
     </script>
 </body>
-</html>
+</html><!-- Блок геймификации -->
+<div class="gamification-block">
+    <div class="level-section">
+        <div class="level-badge" id="levelBadge">🚲 Новичок</div>
+        <div class="xp-bar-container">
+            <div class="xp-bar" id="xpBar" style="width: 0%"></div>
+        </div>
+        <div class="xp-info">
+            <span id="currentXP">0</span> / <span id="nextXP">100</span> XP
+        </div>
+    </div>
+    
+    <div class="achievements-section">
+        <h3>🏆 Достижения</h3>
+        <div id="achievementsList" class="achievements-grid"></div>
+    </div>
+    
+    <div class="xp-history-section">
+        <h3>📜 История опыта</h3>
+        <div id="xpHistoryList" class="xp-history-list"></div>
+    </div>
+</div>
