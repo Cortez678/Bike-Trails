@@ -144,13 +144,50 @@ function setupFilters() {
     });
 }
 
+// ========== ГЕЙМИФИКАЦИЯ ==========
+function initGamification() {
+    // Обработчики для кнопок "В избранное"
+    const favoriteBtns = document.querySelectorAll('#favoriteBtn');
+    favoriteBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(() => {
+                const user = JSON.parse(localStorage.getItem('bike_trails_current_user'));
+                if (user && typeof addFavoriteCount !== 'undefined') {
+                    addFavoriteCount(user.id);
+                }
+            }, 500);
+        });
+    });
+    
+    // Обработчики для кнопок "Построить маршрут"
+    const navigateBtns = document.querySelectorAll('#navigateBtn');
+    navigateBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(() => {
+                const user = JSON.parse(localStorage.getItem('bike_trails_current_user'));
+                if (user && typeof addRouteBuilt !== 'undefined') {
+                    const routeId = parseInt(btn.getAttribute('data-id') || '1');
+                    addRouteBuilt(user.id, routeId);
+                }
+            }, 500);
+        });
+    });
+}
+
 // ========== ИНИЦИАЛИЗАЦИЯ ==========
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
     
-    // Загружаем gamification.js
-    const script = document.createElement('script');
-    script.src = 'gamification.js';
-    document.body.appendChild(script);
+    // Подключаем gamification.js
+    if (!document.querySelector('script[src="gamification.js"]')) {
+        const script = document.createElement('script');
+        script.src = 'gamification.js';
+        document.body.appendChild(script);
+        script.onload = () => {
+            setTimeout(initGamification, 500);
+        };
+    } else {
+        setTimeout(initGamification, 500);
+    }
 });
