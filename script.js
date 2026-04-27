@@ -3,7 +3,7 @@ const trailsData = [
     {
         id: 1,
         name: "Воробьёвы горы",
-        description: "Легендарный маршрут по Москве-реке с панорамным видом на город. Проходит через парк, набережную и смотровые площадки.",
+        description: "Легендарный маршрут по Москве-реке с панорамным видом на город.",
         difficulty: "easy",
         distance: 15.5,
         elevation: 120,
@@ -14,7 +14,7 @@ const trailsData = [
     {
         id: 2,
         name: "Куршская коса",
-        description: "Уникальный маршрут по национальному парку между морем и заливом. Песчаные дюны, сосновый лес и побережье Балтики.",
+        description: "Уникальный маршрут по национальному парку между морем и заливом.",
         difficulty: "medium",
         distance: 22.0,
         elevation: 180,
@@ -25,7 +25,7 @@ const trailsData = [
     {
         id: 3,
         name: "Лаго-Наки",
-        description: "Высокогорный маршрут по альпийским лугам Адыгеи. Горы, водопады и виды, которые захватывают дух.",
+        description: "Высокогорный маршрут по альпийским лугам Адыгеи.",
         difficulty: "hard",
         distance: 28.5,
         elevation: 850,
@@ -36,7 +36,7 @@ const trailsData = [
     {
         id: 4,
         name: "Алтайский Марс",
-        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы в долине реки Чуя.",
+        description: "Космические пейзажи Алтая: красные скалы и горные тропы.",
         difficulty: "hard",
         distance: 32.0,
         elevation: 620,
@@ -47,7 +47,7 @@ const trailsData = [
     {
         id: 5,
         name: "Байкальская петля",
-        description: "Кольцевой маршрут вдоль озера Байкал с заездом в пик Черского и живописные бухты.",
+        description: "Кольцевой маршрут вдоль озера Байкал.",
         difficulty: "medium",
         distance: 35.0,
         elevation: 540,
@@ -58,7 +58,7 @@ const trailsData = [
     {
         id: 6,
         name: "Долина гейзеров",
-        description: "Сложнейший маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы и дикая природа.",
+        description: "Экстремальный маршрут Камчатки.",
         difficulty: "hard",
         distance: 18.0,
         elevation: 950,
@@ -144,7 +144,13 @@ function setupFilters() {
     });
 }
 
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
+    
+    // Загружаем gamification.js
+    const script = document.createElement('script');
+    script.src = 'gamification.js';
+    document.body.appendChild(script);
 });
