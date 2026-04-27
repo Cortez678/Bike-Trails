@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта маршрутов | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="map.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS для карты -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="map-header">
+            <a href="index.html" class="back-link">← На главную</a>
+            <h1>🗺️ Карта веломаршрутов России</h1>
+            <p>Нажмите на маркер, чтобы посмотреть маршрут</p>
+        </div>
+
+        <div id="map" class="map-container"></div>
+
+        <div class="map-info">
+            <div class="legend">
+                <h3>Условные обозначения</h3>
+                <div class="legend-item"><span class="legend-color" style="background: #4cd964;"></span> 🟢 Лёгкий маршрут</div>
+                <div class="legend-item"><span class="legend-color" style="background: #ff9f0a;"></span> 🔵 Средний маршрут</div>
+                <div class="legend-item"><span class="legend-color" style="background: #ff3b30;"></span> ⚫ Сложный маршрут</div>
+                <div class="legend-item"><span class="legend-color" style="background: #4a90e2;"></span> 📍 Точка старта</div>
+            </div>
+            <div class="stats-info">
+                <h3>📊 Статистика</h3>
+                <p>Всего маршрутов: <span id="totalRoutes">6</span></p>
+                <p>Общая дистанция: <span id="totalDistance">0</span> км</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
+        </footer>
+    </div>
+
+    <script src="map.js"></script>
+</body>
+</html>
