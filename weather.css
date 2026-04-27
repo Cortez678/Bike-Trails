@@ -1,0 +1,202 @@
+/* Страница погоды */
+.weather-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.weather-header h1 {
+    font-size: 1.8rem;
+    color: #4a90e2;
+    margin-bottom: 0.3rem;
+}
+
+.weather-header p {
+    color: #8a9bb5;
+    font-size: 0.85rem;
+}
+
+/* Выбор маршрута */
+.route-selector {
+    background: rgba(20, 30, 45, 0.7);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.route-selector label {
+    font-weight: 600;
+    color: #4a90e2;
+}
+
+.route-select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.6rem 1rem;
+    border-radius: 0.8rem;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 200px;
+}
+
+.route-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+/* Контейнер погоды */
+.weather-container {
+    margin-bottom: 2rem;
+}
+
+/* Карточки погоды на день */
+.weather-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.weather-day {
+    background: rgba(20, 30, 45, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-day:hover {
+    transform: translateY(-3px);
+}
+
+.weather-date {
+    font-weight: 700;
+    color: #4a90e2;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.weather-icon {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+}
+
+.weather-temp {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.weather-temp-min {
+    font-size: 0.8rem;
+    color: #8a9bb5;
+}
+
+.weather-desc {
+    font-size: 0.7rem;
+    color: #b8c7e5;
+    margin-top: 0.5rem;
+}
+
+.weather-wind {
+    font-size: 0.65rem;
+    color: #8a9bb5;
+    margin-top: 0.3rem;
+}
+
+.weather-recommendation {
+    background: rgba(74, 144, 226, 0.15);
+    border-radius: 0.8rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Советы по погоде */
+.weather-tips {
+    background: rgba(20, 30, 45, 0.5);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.weather-tips h3 {
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #4a90e2;
+}
+
+.weather-tips .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.weather-tip {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.8rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.weather-tip .tip-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.weather-tip h4 {
+    margin-bottom: 0.5rem;
+    color: #4a90e2;
+    font-size: 0.9rem;
+}
+
+.weather-tip p {
+    font-size: 0.75rem;
+    color: #b8c7e5;
+    line-height: 1.4;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .weather-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .route-selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .weather-header h1 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Светлая тема */
+body.light-theme .route-selector,
+body.light-theme .weather-day,
+body.light-theme .weather-tips {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .route-select {
+    background: rgba(0, 0, 0, 0.05);
+    color: #1a1a2e;
+}
+
+body.light-theme .weather-tip {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .weather-recommendation {
+    background: rgba(74, 144, 226, 0.1);
+}
