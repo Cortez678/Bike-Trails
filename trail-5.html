@@ -36,7 +36,7 @@
 
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
-                <button class="gps-btn" id="navigateBtn" data-lat="51.8667" data-lon="104.8667">📍 Построить маршрут</button>
+                <button class="gps-btn" id="navigateBtn" data-id="5" data-lat="51.8667" data-lon="104.8667">📍 Построить маршрут</button>
             </div>
 
             <div class="gallery">
@@ -47,10 +47,10 @@
 
             <div class="trail-description-full">
                 <h3>📖 О маршруте</h3>
-                <p>Кольцевой маршрут от Листвянки до посёлка Большое Голоустное вдоль побережья Байкала — самого глубокого озера в мире. Трасса идёт по грунтовкам через тайгу, с заездом на пик Черского и спусками в живописные бухты Малого моря. В ясную погоду вода Байкала переливается всеми оттенками бирюзового и синего.</p>
+                <p>Кольцевой маршрут от Листвянки до посёлка Большое Голоустное вдоль побережья Байкала — самого глубокого озера в мире.</p>
                 
                 <div class="tip">
-                    💡 <strong>Совет райдера:</strong> Не забудьте попробовать байкальский омуль в Листвянке! Это местный деликатес, который стоит того. А если останетесь на ночёвку — найдите место для кемпинга прямо у воды.
+                    💡 <strong>Совет райдера:</strong> Не забудьте попробовать байкальский омуль в Листвянке!
                 </div>
 
                 <h3>📍 Особенности маршрута</h3>
@@ -59,13 +59,11 @@
                     <li>Включает панорамную смотровую на пике Черского</li>
                     <li>Чередование тайги, гор и береговой линии</li>
                     <li>Много оборудованных мест для кемпинга и ночёвки</li>
-                    <li>Чистейший воздух и прозрачная вода</li>
                 </ul>
 
                 <div class="how-to-get">
                     <h3>🚗 Как добраться</h3>
-                    <p><strong>Из Иркутска:</strong> Автобус до Листвянки (около 70 км, рейсы каждый час). Маршрут хорошо маркирован, можно стартовать прямо от причала.</p>
-                    <p><strong>На автомобиле:</strong> По Байкальскому тракту до Листвянки, затем по грунтовке до Большого Голоустного.</p>
+                    <p><strong>Из Иркутска:</strong> Автобус до Листвянки (около 70 км, рейсы каждый час).</p>
                     <p><strong>Координаты старта:</strong> <span class="coordinates">51.8667° N, 104.8667° E</span></p>
                 </div>
             </div>
@@ -103,11 +101,9 @@
         function addToFavorites(userId, trailId) {
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === userId);
-            
             if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
                 users[userIndex].favorites.push(trailId);
                 saveUsers(users);
-                
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
@@ -121,11 +117,9 @@
         function removeFromFavorites(userId, trailId) {
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === userId);
-            
             if (userIndex !== -1) {
                 users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
                 saveUsers(users);
-                
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
@@ -139,14 +133,12 @@
         function updateFavoriteButton() {
             const user = getCurrentUser();
             const btn = document.getElementById('favoriteBtn');
-            
             if (!user) {
                 btn.textContent = '🔒 Войдите, чтобы добавить в избранное';
                 btn.style.opacity = '0.7';
                 btn.disabled = true;
                 return;
             }
-            
             const isFav = isFavorite(user.id, TRAIL_ID);
             if (isFav) {
                 btn.textContent = '✅ В избранном';
@@ -158,13 +150,22 @@
             btn.disabled = false;
         }
         
+        function addFavoriteXP() {
+            const user = getCurrentUser();
+            if (user && typeof addFavoriteCount !== 'undefined') addFavoriteCount(user.id);
+        }
+        
+        function addRouteXP(routeId) {
+            const user = getCurrentUser();
+            if (user && typeof addRouteBuilt !== 'undefined') addRouteBuilt(user.id, routeId);
+        }
+        
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
-                alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
+                alert('Войдите в аккаунт');
                 return;
             }
-            
             const isFav = isFavorite(user.id, TRAIL_ID);
             if (isFav) {
                 removeFromFavorites(user.id, TRAIL_ID);
@@ -172,6 +173,7 @@
             } else {
                 addToFavorites(user.id, TRAIL_ID);
                 alert('Маршрут добавлен в избранное! ❤️');
+                setTimeout(() => addFavoriteXP(), 500);
             }
             updateFavoriteButton();
         });
@@ -181,10 +183,13 @@
         document.getElementById('navigateBtn').addEventListener('click', () => {
             const lat = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lat'));
             const lon = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lon'));
+            const routeId = parseInt(document.getElementById('navigateBtn').getAttribute('data-id'));
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const url = isIOS ? `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
             window.open(url, '_blank');
+            setTimeout(() => addRouteXP(routeId), 1000);
         });
     </script>
+    <script src="gamification.js"></script>
 </body>
 </html>
