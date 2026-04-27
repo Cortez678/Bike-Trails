@@ -37,7 +37,7 @@
 
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
-                <button class="gps-btn" id="navigateBtn" data-lat="44.1333" data-lon="40.2000">📍 Построить маршрут</button>
+                <button class="gps-btn" id="navigateBtn" data-id="3" data-lat="44.1333" data-lon="40.2000">📍 Построить маршрут</button>
             </div>
 
             <div class="gallery">
@@ -48,14 +48,14 @@
 
             <div class="trail-description-full">
                 <h3>📖 О маршруте</h3>
-                <p>Маршрут начинается от турбазы "Лаго-Наки" и идёт в сторону хребта Уна-Коз. Вы проедете по горным грунтовкам через альпийские луга с видом на Главный Кавказский хребет. Финальная точка — водопад Молочный, один из самых высоких водопадов Адыгеи. Маршрут требует хорошей физической подготовки и опыта катания в горах.</p>
+                <p>Маршрут начинается от турбазы "Лаго-Наки" и идёт в сторону хребта Уна-Коз. Вы проедете по горным грунтовкам через альпийские луга с видом на Главный Кавказский хребет.</p>
                 
                 <div class="warning">
-                    ⚠️ <strong>Важно!</strong> Маршрут проходит на высоте более 1500 метров. Возьмите с собой тёплую одежду, дождевик, запас воды и еды. Рекомендуется ехать с гидом, знакомым с местностью.
+                    ⚠️ <strong>Важно!</strong> Маршрут проходит на высоте более 1500 метров. Возьмите с собой тёплую одежду, дождевик, запас воды и еды.
                 </div>
 
                 <div class="tip">
-                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — июль-август. Избегайте поездок после дождей — грунтовые дороги становятся скользкими.
+                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — июль-август.
                 </div>
 
                 <h3>📍 Особенности маршрута</h3>
@@ -64,14 +64,11 @@
                     <li>Требуется хорошая физическая подготовка и опыт</li>
                     <li>Панорамы на Эльбрус и вершины Кавказа</li>
                     <li>По пути несколько горных водопадов</li>
-                    <li>Уникальные альпийские луга с редкими растениями</li>
                 </ul>
 
                 <div class="how-to-get">
                     <h3>🚗 Как добраться</h3>
-                    <p><strong>Из Майкопа:</strong> На автомобиле до турбазы "Лаго-Наки" (около 110 км по трассе А-159). Дорога горная, требует осторожности.</p>
-                    <p><strong>Свои велосипеды:</strong> Лучше использовать велосипеды с прочной подвеской и широкими покрышками.</p>
-                    <p><strong>Прокат:</strong> Велосипеды можно арендовать в посёлке Каменномостский.</p>
+                    <p><strong>Из Майкопа:</strong> На автомобиле до турбазы "Лаго-Наки" (около 110 км по трассе А-159).</p>
                     <p><strong>Координаты старта:</strong> <span class="coordinates">44.1333° N, 40.2000° E</span></p>
                 </div>
             </div>
@@ -109,11 +106,9 @@
         function addToFavorites(userId, trailId) {
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === userId);
-            
             if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
                 users[userIndex].favorites.push(trailId);
                 saveUsers(users);
-                
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
@@ -127,11 +122,9 @@
         function removeFromFavorites(userId, trailId) {
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === userId);
-            
             if (userIndex !== -1) {
                 users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
                 saveUsers(users);
-                
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
@@ -145,14 +138,12 @@
         function updateFavoriteButton() {
             const user = getCurrentUser();
             const btn = document.getElementById('favoriteBtn');
-            
             if (!user) {
                 btn.textContent = '🔒 Войдите, чтобы добавить в избранное';
                 btn.style.opacity = '0.7';
                 btn.disabled = true;
                 return;
             }
-            
             const isFav = isFavorite(user.id, TRAIL_ID);
             if (isFav) {
                 btn.textContent = '✅ В избранном';
@@ -164,13 +155,22 @@
             btn.disabled = false;
         }
         
+        function addFavoriteXP() {
+            const user = getCurrentUser();
+            if (user && typeof addFavoriteCount !== 'undefined') addFavoriteCount(user.id);
+        }
+        
+        function addRouteXP(routeId) {
+            const user = getCurrentUser();
+            if (user && typeof addRouteBuilt !== 'undefined') addRouteBuilt(user.id, routeId);
+        }
+        
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
-                alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
+                alert('Войдите в аккаунт');
                 return;
             }
-            
             const isFav = isFavorite(user.id, TRAIL_ID);
             if (isFav) {
                 removeFromFavorites(user.id, TRAIL_ID);
@@ -178,6 +178,7 @@
             } else {
                 addToFavorites(user.id, TRAIL_ID);
                 alert('Маршрут добавлен в избранное! ❤️');
+                setTimeout(() => addFavoriteXP(), 500);
             }
             updateFavoriteButton();
         });
@@ -187,10 +188,13 @@
         document.getElementById('navigateBtn').addEventListener('click', () => {
             const lat = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lat'));
             const lon = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lon'));
+            const routeId = parseInt(document.getElementById('navigateBtn').getAttribute('data-id'));
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const url = isIOS ? `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
             window.open(url, '_blank');
+            setTimeout(() => addRouteXP(routeId), 1000);
         });
     </script>
+    <script src="gamification.js"></script>
 </body>
 </html>
