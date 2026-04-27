@@ -209,6 +209,7 @@ function updateAuthUI() {
                         <a href="cabinet.html">👨‍💼 Личный кабинет</a>
                         <a href="favorites.html">❤️ Избранное</a>
                         <a href="map.html">🗺️ Карта маршрутов</a>
+                        <a href="weather.html">🌤️ Прогноз погоды</a>
                         <a href="help.html">🆘 Помощь</a>
                         <a href="premium.html">💎 Premium</a>
                         <a href="#" id="logoutDropdown">🚪 Выйти</a>
@@ -222,27 +223,21 @@ function updateAuthUI() {
         const dropdownContent = document.getElementById('dropdownContent');
         const logoutDropdown = document.getElementById('logoutDropdown');
         
-        if (themeBtn) {
-            themeBtn.addEventListener('click', toggleTheme);
-        }
-        
+        if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
         if (dropdownBtn) {
             dropdownBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dropdownContent.classList.toggle('show');
             });
         }
-        
         if (logoutDropdown) {
             logoutDropdown.addEventListener('click', (e) => {
                 e.preventDefault();
                 logout();
             });
         }
-        
-        // Закрытие меню при клике вне
         window.addEventListener('click', () => {
-            if (dropdownContent) dropdownContent.classList.remove('show');
+            dropdownContent?.classList.remove('show');
         });
     } else {
         container.innerHTML = `
@@ -252,19 +247,10 @@ function updateAuthUI() {
             </div>
         `;
         
-        const themeBtn = document.getElementById('themeBtn');
-        const loginBtn = document.getElementById('openLoginBtn');
-        
-        if (themeBtn) {
-            themeBtn.addEventListener('click', toggleTheme);
-        }
-        
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => {
-                const modal = document.getElementById('authModal');
-                if (modal) modal.classList.add('active');
-            });
-        }
+        document.getElementById('themeBtn')?.addEventListener('click', toggleTheme);
+        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
+            document.getElementById('authModal')?.classList.add('active');
+        });
     }
 }
 
@@ -282,7 +268,6 @@ function initModal() {
     if (!modal) return;
 
     closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
-    
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
