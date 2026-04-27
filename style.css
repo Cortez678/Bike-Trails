@@ -180,7 +180,6 @@ body {
     border-radius: 2rem;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: background 0.3s ease;
 }
 
 .hero-badge {
@@ -298,7 +297,7 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 1.2rem;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.06);
     cursor: pointer;
 }
@@ -396,7 +395,7 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* ФУТЕР — ГАРАНТИРОВАННО ВНИЗУ */
+/* ФУТЕР */
 .footer {
     margin-top: auto;
     padding: 1.5rem 1rem 1rem;
@@ -521,6 +520,95 @@ body {
     cursor: pointer;
 }
 
+/* ========== УВЕДОМЛЕНИЯ ДЛЯ ГЕЙМИФИКАЦИИ ========== */
+.achievement-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #1a1f2e, #0f1420);
+    border-left: 4px solid #ffd700;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 2000;
+    transform: translateX(150%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    max-width: 320px;
+}
+
+.achievement-notification.show {
+    transform: translateX(0);
+}
+
+.achievement-icon {
+    font-size: 2rem;
+}
+
+.achievement-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.achievement-text strong {
+    color: #ffd700;
+    font-size: 0.8rem;
+}
+
+.achievement-text span {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.achievement-text small {
+    font-size: 0.7rem;
+    color: #4cd964;
+}
+
+.levelup-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: linear-gradient(135deg, #ffd700, #ff9500);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    max-width: 350px;
+}
+
+.levelup-notification.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.levelup-icon {
+    font-size: 3rem;
+}
+
+.levelup-text {
+    display: flex;
+    flex-direction: column;
+    color: #1a1a2e;
+}
+
+.levelup-text strong {
+    font-size: 1rem;
+}
+
+.levelup-text span {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
 /* ========== СВЕТЛАЯ ТЕМА ========== */
 body.light-theme {
     background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
@@ -625,22 +713,6 @@ body.light-theme .modal-content input {
     color: #1a1a2e;
 }
 
-body.light-theme .trail-description-full {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-body.light-theme .how-to-get {
-    background: rgba(74, 144, 226, 0.08);
-}
-
-body.light-theme .tip {
-    background: rgba(255, 193, 7, 0.08);
-}
-
-body.light-theme .warning {
-    background: rgba(255, 59, 48, 0.08);
-}
-
 body.light-theme .install-banner {
     background: linear-gradient(135deg, #ffffff, #f0f2f5);
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -650,24 +722,15 @@ body.light-theme .install-text span {
     color: #718096;
 }
 
-body.light-theme .close-banner {
-    color: #718096;
+body.light-theme .achievement-notification {
+    background: linear-gradient(135deg, #ffffff, #f0f2f5);
 }
 
-body.light-theme .back-link {
-    color: #4a90e2;
+body.light-theme .levelup-notification {
+    background: linear-gradient(135deg, #ffd700, #ff9500);
 }
 
-body.light-theme .back-link:hover {
-    color: #7b3fe4;
-}
-
-body.light-theme .meta-item {
-    background: rgba(74, 144, 226, 0.1);
-    color: #1a1a2e;
-}
-
-/* АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ */
+/* АДАПТИВНОСТЬ */
 @media (max-width: 768px) {
     .app-container {
         padding: 1rem;
@@ -755,21 +818,16 @@ body.light-theme .meta-item {
         padding: 0.6rem;
     }
     
-    .install-icon {
-        font-size: 1.2rem;
+    .achievement-notification {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        max-width: calc(100% - 20px);
     }
     
-    .install-text strong {
-        font-size: 0.8rem;
-    }
-    
-    .install-text span {
-        font-size: 0.6rem;
-    }
-    
-    .install-btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.7rem;
+    .levelup-notification {
+        width: calc(100% - 20px);
+        max-width: 300px;
     }
 }
 
