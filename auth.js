@@ -26,10 +26,6 @@ function setCurrentUser(user) {
     }
 }
 
-window.getCurrentUserAuth = function() {
-    return getCurrentUser();
-};
-
 // ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
 
 function register(username, password) {
@@ -55,6 +51,7 @@ function register(username, password) {
     
     users.push(newUser);
     saveUsers(users);
+    
     return { success: true };
 }
 
@@ -89,21 +86,13 @@ function login(username, password) {
         });
         return { success: true };
     }
+    
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
 function logout() {
     setCurrentUser(null);
     window.location.href = 'index.html';
-}
-
-function checkAuth() {
-    const user = getCurrentUser();
-    if (!user) {
-        window.location.href = 'index.html';
-        return null;
-    }
-    return user;
 }
 
 // ========== РАБОТА С ИЗБРАННЫМ ==========
@@ -116,6 +105,7 @@ function addToFavorites(userId, trailId) {
         if (!users[userIndex].favorites.includes(trailId)) {
             users[userIndex].favorites.push(trailId);
             saveUsers(users);
+            
             const current = getCurrentUser();
             if (current && current.id === userId) {
                 current.favorites = users[userIndex].favorites;
@@ -134,6 +124,7 @@ function removeFromFavorites(userId, trailId) {
     if (userIndex !== -1) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
+        
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
@@ -150,12 +141,6 @@ function isFavorite(userId, trailId) {
     return user ? user.favorites.includes(trailId) : false;
 }
 
-function getUserFavorites() {
-    const user = getCurrentUser();
-    if (!user) return [];
-    return user.favorites || [];
-}
-
 // ========== ПРЕМИУМ ФУНКЦИИ ==========
 
 function isUserPremium() {
@@ -168,28 +153,9 @@ function isUserPremium() {
     if (fullUser && fullUser.premiumExpiry) {
         const expiryDate = new Date(fullUser.premiumExpiry);
         const now = new Date();
-        if (expiryDate > now) return true;
-    }
-    return false;
-}
-
-function activateUserPremium(userId, days = 30) {
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex !== -1) {
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + days);
-        users[userIndex].isPremium = true;
-        users[userIndex].premiumExpiry = expiryDate.toISOString();
-        saveUsers(users);
-        const current = getCurrentUser();
-        if (current && current.id === userId) {
-            current.isPremium = true;
-            current.premiumExpiry = expiryDate.toISOString();
-            setCurrentUser(current);
+        if (expiryDate > now) {
+            return true;
         }
-        return true;
     }
     return false;
 }
@@ -203,124 +169,60 @@ function getPremiumDaysLeft() {
     if (fullUser && fullUser.premiumExpiry) {
         const expiryDate = new Date(fullUser.premiumExpiry);
         const now = new Date();
-        const diffDays = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+        const diffTime = expiryDate - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays > 0 ? diffDays : 0;
     }
     return 0;
 }
 
-// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
+// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ==========
 
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
     if (!container) return;
     
-    const currentLang = localStorage.getItem('language') || 'ru';
-    
-    // Тексты для меню в зависимости от языка
-    const menuTexts = {
-        cabinet: currentLang === 'ru' ? '👨‍💼 Личный кабинет' : '👨‍💼 Profile',
-        favorites: currentLang === 'ru' ? '❤️ Избранное' : '❤️ Favorites',
-        help: currentLang === 'ru' ? '🆘 Помощь' : '🆘 Help',
-        premium: '💎 Premium',
-        theme: currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme',
-        lang: currentLang === 'ru' ? '🇬🇧 English' : '🇷🇺 Русский',
-        logout: currentLang === 'ru' ? '🚪 Выйти' : '🚪 Logout'
-    };
-    
     if (user) {
         const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
-        
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
-                <div class="dropdown">
-                    <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
-                    <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">${menuTexts.cabinet}</a>
-                        <a href="favorites.html">${menuTexts.favorites}</a>
-                        <a href="help.html">${menuTexts.help}</a>
-                        <a href="premium.html">${menuTexts.premium}</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" id="themeToggle">${menuTexts.theme}</a>
-                        <a href="#" id="langToggle">${menuTexts.lang}</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" id="logoutDropdown">${menuTexts.logout}</a>
-                    </div>
-                </div>
+                <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Кабинет</button>
+                <button class="btn-favorites" id="favoritesBtn">❤️ Избранное</button>
+                <button class="btn-help" id="helpBtn">🆘 Помощь</button>
+                <button class="btn-premium" id="premiumBtn">💎 Premium</button>
+                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
             </div>
         `;
         
-        const dropdownBtn = document.getElementById('dropdownBtn');
-        const dropdownContent = document.getElementById('dropdownContent');
-        const logoutDropdown = document.getElementById('logoutDropdown');
-        const themeToggle = document.getElementById('themeToggle');
-        const langToggle = document.getElementById('langToggle');
-        
-        if (dropdownBtn) {
-            dropdownBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdownContent.classList.toggle('show');
-            });
-        }
-        
-        if (logoutDropdown) {
-            logoutDropdown.addEventListener('click', (e) => {
-                e.preventDefault();
-                logout();
-            });
-        }
-        
-        if (themeToggle) {
-            themeToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (document.body.classList.contains('light-theme')) {
-                    document.body.classList.remove('light-theme');
-                    localStorage.setItem('theme', 'dark');
-                    themeToggle.innerHTML = currentLang === 'ru' ? '☀️ Сменить тему' : '☀️ Change theme';
-                } else {
-                    document.body.classList.add('light-theme');
-                    localStorage.setItem('theme', 'light');
-                    themeToggle.innerHTML = currentLang === 'ru' ? '🌙 Тёмная тема' : '🌙 Dark theme';
-                }
-            });
-        }
-        
-        if (langToggle) {
-            langToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (typeof window.switchLanguage === 'function') {
-                    window.switchLanguage();
-                } else {
-                    const newLang = currentLang === 'ru' ? 'en' : 'ru';
-                    localStorage.setItem('language', newLang);
-                    location.reload();
-                }
-            });
-        }
-        
-        window.addEventListener('click', () => {
-            if (dropdownContent) dropdownContent.classList.remove('show');
+        document.getElementById('cabinetBtn')?.addEventListener('click', () => {
+            window.location.href = 'cabinet.html';
         });
-        
+        document.getElementById('favoritesBtn')?.addEventListener('click', () => {
+            window.location.href = 'favorites.html';
+        });
+        document.getElementById('helpBtn')?.addEventListener('click', () => {
+            window.location.href = 'help.html';
+        });
+        document.getElementById('premiumBtn')?.addEventListener('click', () => {
+            window.location.href = 'premium.html';
+        });
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     } else {
-        const loginText = currentLang === 'ru' ? '🔑 Вход' : '🔑 Login';
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">${loginText}</button>`;
-        const loginBtn = document.getElementById('openLoginBtn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => {
-                const modal = document.getElementById('authModal');
-                if (modal) modal.classList.add('active');
-            });
-        }
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
+        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
+            document.getElementById('authModal')?.classList.add('active');
+        });
     }
 }
 
-// ========== МОДАЛЬНОЕ ОКНО ВХОДА/РЕГИСТРАЦИИ ==========
+// ========== МОДАЛЬНОЕ ОКНО ==========
 
 function initModal() {
     const modal = document.getElementById('authModal');
+    if (!modal) return;
+    
     const closeBtn = document.getElementById('closeModal');
     const switchBtn = document.getElementById('switchMode');
     const submitBtn = document.getElementById('submitBtn');
@@ -328,91 +230,49 @@ function initModal() {
     const errorDiv = document.getElementById('errorMessage');
     let isLoginMode = true;
 
-    if (!modal) return;
-
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-    }
+    closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
     
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
     
-    function updateModalTexts() {
-        const currentLang = localStorage.getItem('language') || 'ru';
-        if (currentLang === 'en') {
-            modalTitle.innerText = isLoginMode ? 'Login' : 'Register';
-            submitBtn.innerText = isLoginMode ? 'Login' : 'Register';
-            switchBtn.innerHTML = isLoginMode 
-                ? "Don't have an account? <span>Register</span>" 
-                : "Already have an account? <span>Login</span>";
-            document.getElementById('username').placeholder = 'Username';
-            document.getElementById('password').placeholder = 'Password';
-        } else {
-            modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
-            submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-            switchBtn.innerHTML = isLoginMode 
-                ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
-                : 'Уже есть аккаунт? <span>Войти</span>';
-            document.getElementById('username').placeholder = 'Имя пользователя';
-            document.getElementById('password').placeholder = 'Пароль';
-        }
-    }
-    
-    if (switchBtn) {
-        switchBtn.addEventListener('click', () => {
-            isLoginMode = !isLoginMode;
-            updateModalTexts();
-            errorDiv.innerText = '';
-        });
-    }
+    switchBtn?.addEventListener('click', () => {
+        isLoginMode = !isLoginMode;
+        modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
+        submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+        switchBtn.innerHTML = isLoginMode 
+            ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
+            : 'Уже есть аккаунт? <span>Войти</span>';
+        errorDiv.innerText = '';
+    });
 
-    if (submitBtn) {
-        submitBtn.addEventListener('click', () => {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const currentLang = localStorage.getItem('language') || 'ru';
-            
-            if (!username || !password) {
-                errorDiv.innerText = (currentLang === 'en') ? 'Fill in all fields' : 'Заполните все поля';
-                return;
-            }
-            
-            const result = isLoginMode ? login(username, password) : register(username, password);
-            
-            if (result.success) {
-                modal.classList.remove('active');
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                errorDiv.innerText = '';
-                updateAuthUI();
-                
-                if (window.updateAppleGreeting) {
-                    window.updateAppleGreeting();
-                }
-                
-                const successMsg = (currentLang === 'en') 
-                    ? (isLoginMode ? `Welcome back, ${username}!` : `Registration successful! Welcome, ${username}!`)
-                    : (isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
-                alert(successMsg);
-                location.reload();
-            } else {
-                errorDiv.innerText = result.error;
-            }
-        });
-    }
-    
-    updateModalTexts();
+    submitBtn?.addEventListener('click', () => {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        
+        if (!username || !password) {
+            errorDiv.innerText = 'Заполните все поля';
+            return;
+        }
+        
+        const result = isLoginMode ? login(username, password) : register(username, password);
+        
+        if (result.success) {
+            modal.classList.remove('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            errorDiv.innerText = '';
+            updateAuthUI();
+            alert(isLoginMode ? `Добро пожаловать, ${username}!` : `Регистрация успешна! Добро пожаловать, ${username}!`);
+            location.reload();
+        } else {
+            errorDiv.innerText = result.error;
+        }
+    });
 }
 
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
-
+// ========== ЗАПУСК ==========
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     initModal();
-    
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-    }
 });
