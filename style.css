@@ -608,4 +608,152 @@ body {
     .trails-container {
         grid-template-columns: repeat(2, 1fr);
     }
+}/* ========== КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ========== */
+.theme-btn {
+    background: rgba(74, 144, 226, 0.2);
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 2rem;
+    color: #c0d0e8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.theme-btn:hover {
+    background: rgba(74, 144, 226, 0.4);
+    transform: scale(1.05);
+}
+
+/* ========== СВЕТЛАЯ ТЕМА ========== */
+body.light-theme {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    color: #1a1a2e;
+}
+
+body.light-theme .hero {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .hero-badge {
+    background: rgba(74, 144, 226, 0.1);
+    color: #4a90e2;
+}
+
+body.light-theme .hero-subtitle {
+    color: #4a5568;
+}
+
+body.light-theme .stat-card {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .stat-label {
+    color: #4a5568;
+}
+
+body.light-theme .filter-btn {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+}
+
+body.light-theme .filter-btn:hover {
+    background: rgba(74, 144, 226, 0.2);
+}
+
+body.light-theme .trail-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .trail-description {
+    color: #4a5568;
+}
+
+body.light-theme .stat-item {
+    color: #4a5568;
+}
+
+body.light-theme .footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .footer-section p {
+    color: #4a5568;
+}
+
+body.light-theme .footer-bottom {
+    color: #718096;
+}
+
+body.light-theme .dropdown-content {
+    background: linear-gradient(135deg, #ffffff, #f0f2f5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .dropdown-content a {
+    color: #1a1a2e;
+}
+
+body.light-theme .dropdown-content a:hover {
+    background: rgba(74, 144, 226, 0.1);
+}
+
+body.light-theme .user-name {
+    color: #4a90e2;
+}
+
+body.light-theme .btn-login,
+body.light-theme .dropdown-btn,
+body.light-theme .theme-btn {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1a1a2e;
+}
+
+body.light-theme .btn-login:hover,
+body.light-theme .dropdown-btn:hover,
+body.light-theme .theme-btn:hover {
+    background: rgba(74, 144, 226, 0.2);
+}
+
+body.light-theme .modal-content {
+    background: linear-gradient(135deg, #ffffff, #f0f2f5);
+    color: #1a1a2e;
+}
+
+body.light-theme .modal-content input {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a2e;
+}
+
+body.light-theme .trail-description-full {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .how-to-get {
+    background: rgba(74, 144, 226, 0.08);
+}
+
+body.light-theme .tip {
+    background: rgba(255, 193, 7, 0.08);
+}
+
+body.light-theme .warning {
+    background: rgba(255, 59, 48, 0.08);
+}
+
+body.light-theme .install-banner {
+    background: linear-gradient(135deg, #ffffff, #f0f2f5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .install-text span {
+    color: #718096;
+}
+
+body.light-theme .close-banner {
+    color: #718096;
 }
