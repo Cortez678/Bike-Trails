@@ -17,6 +17,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app-container {
@@ -91,6 +92,23 @@ body {
     display: inline-block;
 }
 
+/* Кнопка переключения темы */
+.theme-btn {
+    background: rgba(74, 144, 226, 0.2);
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 2rem;
+    color: #c0d0e8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.theme-btn:hover {
+    background: rgba(74, 144, 226, 0.4);
+    transform: scale(1.05);
+}
+
 /* ВЫПАДАЮЩЕЕ МЕНЮ (ШЕСТЕРЁНКА) */
 .dropdown {
     position: relative;
@@ -162,6 +180,7 @@ body {
     border-radius: 2rem;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
 }
 
 .hero-badge {
@@ -279,7 +298,7 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 1.2rem;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.06);
     cursor: pointer;
 }
@@ -502,129 +521,6 @@ body {
     cursor: pointer;
 }
 
-/* АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ */
-@media (max-width: 768px) {
-    .app-container {
-        padding: 1rem;
-    }
-    
-    .hero-title {
-        font-size: 2rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 0.85rem;
-    }
-    
-    .section-title {
-        font-size: 1.2rem;
-    }
-    
-    .trails-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .filter-btn {
-        padding: 0.4rem 1rem;
-        font-size: 0.75rem;
-    }
-    
-    .stats-grid {
-        gap: 0.8rem;
-    }
-    
-    .stat-card {
-        padding: 0.5rem 1rem;
-    }
-    
-    .stat-value {
-        font-size: 1.3rem;
-    }
-    
-    .stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.8rem;
-    }
-    
-    .social-links {
-        align-items: center;
-    }
-    
-    .user-info {
-        gap: 0.5rem;
-    }
-    
-    .user-name {
-        font-size: 0.8rem;
-    }
-    
-    .dropdown-content {
-        position: fixed;
-        top: auto;
-        bottom: 70px;
-        right: 10px;
-        left: auto;
-        width: 190px;
-    }
-    
-    .dropdown-btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 1rem;
-    }
-    
-    .install-banner {
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        padding: 0.6rem;
-    }
-    
-    .install-icon {
-        font-size: 1.2rem;
-    }
-    
-    .install-text strong {
-        font-size: 0.8rem;
-    }
-    
-    .install-text span {
-        font-size: 0.6rem;
-    }
-    
-    .install-btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.7rem;
-    }
-}
-
-/* Планшеты */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .trails-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}/* ========== КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ========== */
-.theme-btn {
-    background: rgba(74, 144, 226, 0.2);
-    border: none;
-    padding: 0.5rem 0.8rem;
-    border-radius: 2rem;
-    color: #c0d0e8;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.theme-btn:hover {
-    background: rgba(74, 144, 226, 0.4);
-    transform: scale(1.05);
-}
-
 /* ========== СВЕТЛАЯ ТЕМА ========== */
 body.light-theme {
     background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
@@ -756,4 +652,130 @@ body.light-theme .install-text span {
 
 body.light-theme .close-banner {
     color: #718096;
+}
+
+body.light-theme .back-link {
+    color: #4a90e2;
+}
+
+body.light-theme .back-link:hover {
+    color: #7b3fe4;
+}
+
+body.light-theme .meta-item {
+    background: rgba(74, 144, 226, 0.1);
+    color: #1a1a2e;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+    
+    .trails-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .filter-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .stats-grid {
+        gap: 0.8rem;
+    }
+    
+    .stat-card {
+        padding: 0.5rem 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.3rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+    }
+    
+    .social-links {
+        align-items: center;
+    }
+    
+    .user-info {
+        gap: 0.5rem;
+    }
+    
+    .user-name {
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-content {
+        position: fixed;
+        top: auto;
+        bottom: 70px;
+        right: 10px;
+        left: auto;
+        width: 190px;
+    }
+    
+    .dropdown-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 1rem;
+    }
+    
+    .theme-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 1rem;
+    }
+    
+    .install-banner {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        padding: 0.6rem;
+    }
+    
+    .install-icon {
+        font-size: 1.2rem;
+    }
+    
+    .install-text strong {
+        font-size: 0.8rem;
+    }
+    
+    .install-text span {
+        font-size: 0.6rem;
+    }
+    
+    .install-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* Планшеты */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .trails-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
