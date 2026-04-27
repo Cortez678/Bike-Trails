@@ -5,143 +5,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Премиум | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="premium.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .premium-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .premium-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .premium-header h1 {
+            font-size: 2rem;
+            color: #ffd700;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .pricing-card {
+            background: rgba(20, 30, 45, 0.7);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .pricing-card.popular {
+            border: 2px solid #ffd700;
+            position: relative;
+        }
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700;
+            color: #1a1a2e;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+        }
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 1rem 0;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        .pricing-card li {
+            padding: 0.3rem 0;
+            text-align: left;
+        }
+        .premium-btn {
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        .status-box {
+            background: rgba(20, 30, 45, 0.7);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .premium-active {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+            .premium-container { padding: 1rem; }
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="premium-container">
-            <div class="premium-header">
-                <a href="index.html" class="back-link">← На главную</a>
-                <h1>💎 Premium Bike Trails</h1>
-                <p>Получи максимум от велопутешествий с премиум-подпиской</p>
+    <div class="premium-container">
+        <a href="index.html" class="back-link">← На главную</a>
+        
+        <div class="premium-header">
+            <h1>💎 Премиум подписка</h1>
+            <p>Больше возможностей для настоящих райдеров</p>
+        </div>
+
+        <!-- Статус подписки -->
+        <div id="statusBox" class="status-box"></div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>🆓 Бесплатно</h3>
+                <div class="price">0 ₽</div>
+                <ul>
+                    <li>✅ 6 маршрутов</li>
+                    <li>✅ Избранное</li>
+                    <li>✅ Помощь</li>
+                    <li>❌ GPX треки</li>
+                </ul>
+                <button class="premium-btn" disabled style="opacity:0.5;">Текущий план</button>
             </div>
 
-            <!-- Статус текущей подписки -->
-            <div id="subscriptionStatus" class="subscription-status"></div>
-
-            <!-- Карточки тарифов -->
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>🆓 Бесплатно</h3>
-                    <div class="price">0 ₽</div>
-                    <ul>
-                        <li>6 маршрутов по России</li>
-                        <li>Избранное и помощь</li>
-                        <li>Базовые карты</li>
-                    </ul>
-                    <button class="premium-btn" disabled style="opacity:0.5;">Текущий план</button>
-                </div>
-
-                <div class="pricing-card popular">
-                    <div class="popular-badge">🔥 Популярный</div>
-                    <h3>📅 Месяц</h3>
-                    <div class="price">299 ₽<span>/мес</span></div>
-                    <ul>
-                        <li>15+ эксклюзивных маршрутов</li>
-                        <li>Детальные карты с офлайн-доступом</li>
-                        <li>Приоритетные ответы в помощи</li>
-                        <li>Без рекламы</li>
-                        <li>📥 <strong>Скачивание GPX треков</strong></li>
-                    </ul>
-                    <button class="premium-btn" id="monthlyBtn">Оформить за 299 ₽</button>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>🌟 Год</h3>
-                    <div class="price">2 990 ₽<span>/год</span></div>
-                    <div style="color:#4cd964;">экономия 2 месяца</div>
-                    <ul>
-                        <li>Все возможности месячного плана</li>
-                        <li>📥 <strong>GPX треки всех маршрутов</strong></li>
-                        <li>Приоритетная поддержка 24/7</li>
-                        <li>Расширенная статистика</li>
-                    </ul>
-                    <button class="premium-btn" id="yearlyBtn">Оформить за 2 990 ₽</button>
-                </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">🔥 Популярный</div>
+                <h3>📅 Месяц</h3>
+                <div class="price">299 ₽</div>
+                <ul>
+                    <li>✅ 6 маршрутов</li>
+                    <li>✅ Избранное</li>
+                    <li>✅ Помощь</li>
+                    <li>✅ <strong>GPX треки</strong></li>
+                </ul>
+                <button class="premium-btn" id="monthlyBtn">Оформить за 299 ₽</button>
             </div>
 
-            <div class="premium-features">
-                <h3>Что вы получите с премиум-подпиской</h3>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon">📥</div>
-                        <h4>GPX треки</h4>
-                        <p>Скачивайте маршруты в формате GPX для любых GPS-навигаторов</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">🗺️</div>
-                        <h4>Детальные карты</h4>
-                        <p>Спутниковые снимки, рельеф местности, офлайн-треки</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">⭐</div>
-                        <h4>Эксклюзивные маршруты</h4>
-                        <p>Секретные тропы и скрытые жемчужины России</p>
-                    </div>
-                </div>
+            <div class="pricing-card">
+                <h3>🌟 Год</h3>
+                <div class="price">2 990 ₽</div>
+                <div style="font-size:0.8rem; color:#4cd964;">экономия 2 месяца</div>
+                <ul>
+                    <li>✅ Всё из месячного</li>
+                    <li>✅ Приоритетная поддержка</li>
+                </ul>
+                <button class="premium-btn" id="yearlyBtn">Оформить за 2 990 ₽</button>
             </div>
         </div>
     </div>
 
-    <script src="premium.js"></script>
     <script>
-        // Отображение статуса подписки
-        function displaySubscriptionStatus() {
-            const container = document.getElementById('subscriptionStatus');
-            if (!container) return;
-            
+        // Функции премиум
+        function isPremium() {
+            const expiry = localStorage.getItem('bike_trails_premium_expiry');
+            if (!expiry) return false;
+            const expiryDate = new Date(expiry);
+            const now = new Date();
+            return expiryDate > now;
+        }
+        
+        function getPremiumDaysLeft() {
+            const expiry = localStorage.getItem('bike_trails_premium_expiry');
+            if (!expiry) return 0;
+            const expiryDate = new Date(expiry);
+            const now = new Date();
+            const diffDays = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+            return diffDays > 0 ? diffDays : 0;
+        }
+        
+        function activatePremium(days) {
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + days);
+            localStorage.setItem('bike_trails_premium_expiry', expiryDate.toISOString());
+            return true;
+        }
+        
+        function showStatus() {
+            const container = document.getElementById('statusBox');
             if (isPremium()) {
                 const daysLeft = getPremiumDaysLeft();
-                const info = getPremiumActivationInfo();
                 container.innerHTML = `
                     <div class="premium-active">
-                        <div class="premium-active-icon">💎</div>
-                        <div class="premium-active-text">
-                            <strong>У вас активна премиум-подписка!</strong><br>
-                            План: ${info?.planName || 'Премиум'} • Осталось дней: ${daysLeft}<br>
-                            📥 Вам доступно скачивание GPX треков маршрутов!
-                        </div>
+                        🎉 <strong>Премиум активен!</strong> Осталось дней: ${daysLeft}<br>
+                        📥 Вам доступно скачивание GPX треков
                     </div>
                 `;
+                container.style.background = 'rgba(255, 215, 0, 0.2)';
+                container.style.border = '1px solid #ffd700';
             } else {
                 container.innerHTML = `
-                    <div class="premium-inactive">
-                        <div class="premium-inactive-icon">🔓</div>
-                        <div class="premium-inactive-text">
-                            <strong>У вас нет активной подписки</strong><br>
-                            Оформите премиум, чтобы получить доступ к GPX трекам и другим функциям.
-                        </div>
+                    <div>
+                        🔓 <strong>Премиум не активен</strong><br>
+                        Оформите подписку, чтобы скачивать GPX треки
                     </div>
                 `;
+                container.style.background = 'rgba(20, 30, 45, 0.7)';
+                container.style.border = '1px solid rgba(255,255,255,0.1)';
             }
         }
         
-        // Обработчик оплаты (демо-режим)
-        function processPayment(plan, price, planName) {
-            if (confirm(`💎 Оформление премиум-подписки\n\nПлан: ${planName}\nСтоимость: ${price} ₽\n\nВ демо-режиме оплата не списывается.\nАктивировать подписку?`)) {
-                const result = activatePremium(plan);
-                if (result.success) {
-                    alert(`✅ Премиум-подписка активирована!\n\nПлан: ${result.planName}\nДней: ${result.days}\n\nТеперь вам доступно скачивание GPX треков! 🚴‍♂️`);
-                    displaySubscriptionStatus();
-                    location.reload();
-                } else {
-                    alert('❌ Ошибка активации. Попробуйте позже.');
-                }
-            }
-        }
-        
-        // Навешиваем обработчики
         document.getElementById('monthlyBtn')?.addEventListener('click', () => {
-            processPayment('monthly', 299, 'Месячная');
+            if (confirm('Оформить премиум на месяц за 299₽?')) {
+                activatePremium(30);
+                alert('✅ Премиум активирован на 30 дней!');
+                showStatus();
+                location.reload();
+            }
         });
         
         document.getElementById('yearlyBtn')?.addEventListener('click', () => {
-            processPayment('yearly', 2990, 'Годовая');
+            if (confirm('Оформить премиум на год за 2990₽?')) {
+                activatePremium(365);
+                alert('✅ Премиум активирован на 365 дней!');
+                showStatus();
+                location.reload();
+            }
         });
         
-        // Показываем статус подписки
-        displaySubscriptionStatus();
+        showStatus();
     </script>
 </body>
 </html>
