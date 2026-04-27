@@ -5,8 +5,10 @@ const USER_ACHIEVEMENTS_KEY = 'bike_trails_achievements';
 // ========== ДОСТИЖЕНИЯ ==========
 const achievements = [
     { id: "first_favorite", name: "🌟 Первый маршрут", description: "Добавьте первый маршрут в избранное", icon: "🌟", xpReward: 10 },
-    { id: "favorite_collector", name: "📚 Коллекционер", description: "Добавьте 5 маршрутов в избранное", icon: "📚", xpReward: 25 },
+    { id: "favorite_collector", name: "📚 Коллекционер", description: "Добавьте 3 маршрута в избранное", icon: "📚", xpReward: 25 },
+    { id: "favorite_master", name: "🏆 Мастер избранного", description: "Добавьте 6 маршрутов в избранное", icon: "🏆", xpReward: 50 },
     { id: "first_route", name: "🗺️ Первый маршрут", description: "Постройте маршрут", icon: "🗺️", xpReward: 25 },
+    { id: "route_master", name: "🚴‍♂️ Исследователь", description: "Постройте 3 разных маршрута", icon: "🚴‍♂️", xpReward: 100 },
     { id: "premium_user", name: "💎 Премиум райдер", description: "Оформите премиум-подписку", icon: "💎", xpReward: 100 }
 ];
 
@@ -33,10 +35,13 @@ function saveUserXP(userId, xp) {
 
 // Добавить XP
 function addXP(userId, amount, action) {
+    if (!userId) return;
+    
     let currentXP = getUserXP(userId);
     let newXP = currentXP + amount;
     saveUserXP(userId, newXP);
     
+    // Проверка повышения уровня
     const currentLevel = getUserLevel(currentXP);
     const newLevel = getUserLevel(newXP);
     
@@ -44,7 +49,10 @@ function addXP(userId, amount, action) {
         showLevelUpNotification(newLevel);
     }
     
+    // Сохраняем в историю
     addXPHistory(userId, amount, action, newXP);
+    
+    console.log(`[XP] +${amount} XP за "${action}". Всего: ${newXP} XP`);
     return newXP;
 }
 
@@ -77,6 +85,7 @@ function getLevelProgress(xp) {
     const nextRequired = nextLevel.xpRequired;
     const currentXP = xp - prevRequired;
     const neededXP = nextRequired - prevRequired;
+    if (neededXP <= 0) return 100;
     return Math.min(100, Math.floor((currentXP / neededXP) * 100));
 }
 
@@ -94,6 +103,8 @@ function saveUserAchievements(userId, achievements) {
 
 // Разблокировать достижение
 function unlockAchievement(userId, achievementId) {
+    if (!userId) return false;
+    
     const userAchievements = getUserAchievements(userId);
     if (userAchievements.includes(achievementId)) return false;
     
@@ -126,6 +137,45 @@ function getXPHistory(userId) {
     return JSON.parse(localStorage.getItem(key)) || [];
 }
 
+// Счётчики для достижений
+let favoritesCount = JSON.parse(localStorage.getItem('bike_trails_favorites_count') || '{}');
+let routesBuilt = JSON.parse(localStorage.getItem('bike_trails_routes_built') || '{}');
+
+function addFavoriteCount(userId) {
+    if (!userId) return;
+    
+    favoritesCount[userId] = (favoritesCount[userId] || 0) + 1;
+    localStorage.setItem('bike_trails_favorites_count', JSON.stringify(favoritesCount));
+    
+    const count = favoritesCount[userId];
+    console.log(`[XP] Избранное: ${count} маршрутов`);
+    
+    addXP(userId, 10, `Добавлен маршрут в избранное (#${count})`);
+    
+    if (count >= 1) unlockAchievement(userId, "first_favorite");
+    if (count >= 3) unlockAchievement(userId, "favorite_collector");
+    if (count >= 6) unlockAchievement(userId, "favorite_master");
+}
+
+function addRouteBuilt(userId, routeId) {
+    if (!userId) return;
+    
+    const key = `routes_built_${userId}`;
+    const routes = JSON.parse(localStorage.getItem(key)) || [];
+    
+    if (!routes.includes(routeId)) {
+        routes.push(routeId);
+        localStorage.setItem(key, JSON.stringify(routes));
+        
+        const count = routes.length;
+        console.log(`[XP] Построен маршрут ${routeId}. Всего: ${count} маршрутов`);
+        
+        addXP(userId, 25, `Построен маршрут #${routeId}`);
+        if (count >= 1) unlockAchievement(userId, "first_route");
+        if (count >= 3) unlockAchievement(userId, "route_master");
+    }
+}
+
 // Уведомления
 function showAchievementNotification(achievement) {
     const notification = document.createElement('div');
@@ -133,7 +183,7 @@ function showAchievementNotification(achievement) {
     notification.innerHTML = `
         <div class="achievement-icon">${achievement.icon}</div>
         <div class="achievement-text">
-            <strong>Достижение разблокировано!</strong>
+            <strong>🎉 Достижение разблокировано!</strong>
             <span>${achievement.name}</span>
             <small>+${achievement.xpReward} XP</small>
         </div>
@@ -142,7 +192,7 @@ function showAchievementNotification(achievement) {
     setTimeout(() => notification.classList.add('show'), 100);
     setTimeout(() => {
         notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 500);
+        setTimeout(() => notification.remove(), 4000);
     }, 4000);
 }
 
@@ -161,28 +211,8 @@ function showLevelUpNotification(level) {
     setTimeout(() => notification.classList.add('show'), 100);
     setTimeout(() => {
         notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 500);
+        setTimeout(() => notification.remove(), 4000);
     }, 4000);
 }
 
-// Подсчёт избранного для достижений
-let favoritesCount = JSON.parse(localStorage.getItem('bike_trails_favorites_count') || '{}');
-
-function addFavoriteCount(userId) {
-    favoritesCount[userId] = (favoritesCount[userId] || 0) + 1;
-    localStorage.setItem('bike_trails_favorites_count', JSON.stringify(favoritesCount));
-    
-    if (favoritesCount[userId] >= 1) unlockAchievement(userId, "first_favorite");
-    if (favoritesCount[userId] >= 5) unlockAchievement(userId, "favorite_collector");
-}
-
-function addRouteBuilt(userId, routeId) {
-    const key = `routes_built_${userId}`;
-    const routes = JSON.parse(localStorage.getItem(key)) || [];
-    if (!routes.includes(routeId)) {
-        routes.push(routeId);
-        localStorage.setItem(key, JSON.stringify(routes));
-        addXP(userId, 25, `Построен маршрут "${routeId}"`);
-        if (routes.length >= 1) unlockAchievement(userId, "first_route");
-    }
-}
+console.log('[Gamification] Загружена, версия 2.0');
