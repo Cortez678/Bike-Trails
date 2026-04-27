@@ -95,6 +95,15 @@ function logout() {
     window.location.href = 'index.html';
 }
 
+function checkAuth() {
+    const user = getCurrentUser();
+    if (!user) {
+        window.location.href = 'index.html';
+        return null;
+    }
+    return user;
+}
+
 // ========== РАБОТА С ИЗБРАННЫМ ==========
 
 function addToFavorites(userId, trailId) {
@@ -141,6 +150,12 @@ function isFavorite(userId, trailId) {
     return user ? user.favorites.includes(trailId) : false;
 }
 
+function getUserFavorites() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    return user.favorites || [];
+}
+
 // ========== ПРЕМИУМ ФУНКЦИИ ==========
 
 function isUserPremium() {
@@ -156,6 +171,29 @@ function isUserPremium() {
         if (expiryDate > now) {
             return true;
         }
+    }
+    return false;
+}
+
+function activateUserPremium(userId, days = 30) {
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex !== -1) {
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + days);
+        
+        users[userIndex].isPremium = true;
+        users[userIndex].premiumExpiry = expiryDate.toISOString();
+        saveUsers(users);
+        
+        const current = getCurrentUser();
+        if (current && current.id === userId) {
+            current.isPremium = true;
+            current.premiumExpiry = expiryDate.toISOString();
+            setCurrentUser(current);
+        }
+        return true;
     }
     return false;
 }
@@ -188,32 +226,50 @@ function updateAuthUI() {
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
-                <button class="btn-cabinet" id="cabinetBtn">👨‍💼 Кабинет</button>
-                <button class="btn-favorites" id="favoritesBtn">❤️ Избранное</button>
-                <button class="btn-help" id="helpBtn">🆘 Помощь</button>
-                <button class="btn-premium" id="premiumBtn">💎 Premium</button>
-                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <a href="cabinet.html">👨‍💼 Личный кабинет</a>
+                        <a href="favorites.html">❤️ Избранное</a>
+                        <a href="help.html">🆘 Помощь</a>
+                        <a href="premium.html">💎 Premium</a>
+                        <a href="#" id="logoutDropdown">🚪 Выйти</a>
+                    </div>
+                </div>
             </div>
         `;
         
-        document.getElementById('cabinetBtn')?.addEventListener('click', () => {
-            window.location.href = 'cabinet.html';
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const dropdownContent = document.getElementById('dropdownContent');
+        const logoutDropdown = document.getElementById('logoutDropdown');
+        
+        if (dropdownBtn) {
+            dropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+            });
+        }
+        
+        if (logoutDropdown) {
+            logoutDropdown.addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        }
+        
+        // Закрытие при клике вне меню
+        window.addEventListener('click', () => {
+            dropdownContent.classList.remove('show');
         });
-        document.getElementById('favoritesBtn')?.addEventListener('click', () => {
-            window.location.href = 'favorites.html';
-        });
-        document.getElementById('helpBtn')?.addEventListener('click', () => {
-            window.location.href = 'help.html';
-        });
-        document.getElementById('premiumBtn')?.addEventListener('click', () => {
-            window.location.href = 'premium.html';
-        });
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     } else {
         container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
-        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
-            document.getElementById('authModal')?.classList.add('active');
-        });
+        const loginBtn = document.getElementById('openLoginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                const modal = document.getElementById('authModal');
+                if (modal) modal.classList.add('active');
+            });
+        }
     }
 }
 
@@ -221,14 +277,14 @@ function updateAuthUI() {
 
 function initModal() {
     const modal = document.getElementById('authModal');
-    if (!modal) return;
-    
     const closeBtn = document.getElementById('closeModal');
     const switchBtn = document.getElementById('switchMode');
     const submitBtn = document.getElementById('submitBtn');
     const modalTitle = document.getElementById('modalTitle');
     const errorDiv = document.getElementById('errorMessage');
     let isLoginMode = true;
+
+    if (!modal) return;
 
     closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
     
