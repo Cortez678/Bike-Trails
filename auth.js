@@ -2,6 +2,22 @@
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
 
+// ========== ПРЕМИУМ ФУНКЦИИ ==========
+function isPremium() {
+    const expiry = localStorage.getItem('bike_trails_premium_expiry');
+    if (!expiry) return false;
+    const expiryDate = new Date(expiry);
+    const now = new Date();
+    return expiryDate > now;
+}
+
+function getPremiumBadge() {
+    if (isPremium()) {
+        return '<span class="premium-gold-badge">💎</span>';
+    }
+    return '';
+}
+
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
@@ -68,7 +84,7 @@ function login(username, password) {
         });
         return { success: true };
     }
-    return { success: false, error: 'Неверное имя пользователя или пароль' };
+    return { success: false, error: 'Неверное имя или пароль' };
 }
 
 function logout() {
@@ -76,20 +92,7 @@ function logout() {
     location.reload();
 }
 
-function isPremium() {
-    const user = getCurrentUser();
-    if (!user) return false;
-    if (user.isPremium) return true;
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        if (expiryDate > now) return true;
-    }
-    return false;
-}
-
+// ========== ИЗБРАННОЕ ==========
 function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -122,27 +125,55 @@ function removeFromFavorites(userId, trailId) {
     return false;
 }
 
-function isFavorite(userId, trailId) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    return user ? user.favorites.includes(trailId) : false;
-}
-
-// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ==========
+// ========== ОБНОВЛЕНИЕ ШАПКИ (С ШЕСТЕРЁНКОЙ) ==========
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
     if (!container) return;
     
     if (user) {
-        const premiumBadge = isPremium() ? '<span style="background:linear-gradient(135deg,#ffd700,#ff9500); color:#1a1a2e; font-size:0.7rem; padding:0.1rem 0.4rem; border-radius:1rem; margin-left:0.3rem;">💎</span>' : '';
+        const premiumBadge = getPremiumBadge();
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
-                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <a href="cabinet.html">👨‍💼 Личный кабинет</a>
+                        <a href="favorites.html">❤️ Избранное</a>
+                        <a href="planner.html">📅 Планировщик</a>
+                        <a href="map.html">🗺️ Карта маршрутов</a>
+                        <a href="weather.html">🌤️ Прогноз погоды</a>
+                        <a href="help.html">🆘 Помощь</a>
+                        <a href="premium.html">💎 Premium</a>
+                        <a href="download.html">📱 Скачать приложение</a>
+                        <a href="#" id="logoutDropdown">🚪 Выйти</a>
+                    </div>
+                </div>
             </div>
         `;
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+        
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const dropdownContent = document.getElementById('dropdownContent');
+        const logoutDropdown = document.getElementById('logoutDropdown');
+        
+        if (dropdownBtn) {
+            dropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+            });
+        }
+        
+        if (logoutDropdown) {
+            logoutDropdown.addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        }
+        
+        window.addEventListener('click', () => {
+            dropdownContent?.classList.remove('show');
+        });
     } else {
         container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
         
@@ -163,7 +194,6 @@ function initModal() {
     const modal = document.getElementById('authModal');
     if (!modal) return;
     
-    // Закрытие
     document.getElementById('closeModal')?.addEventListener('click', () => {
         modal.style.display = 'none';
     });
@@ -172,13 +202,12 @@ function initModal() {
         if (e.target === modal) modal.style.display = 'none';
     });
     
-    let isLoginMode = false; // По умолчанию регистрация
+    let isLoginMode = false;
     const title = document.getElementById('modalTitle');
     const submitBtn = document.getElementById('submitBtn');
     const switchBtn = document.getElementById('switchMode');
     const errorDiv = document.getElementById('errorMessage');
     
-    // Переключение режима
     switchBtn?.addEventListener('click', () => {
         isLoginMode = !isLoginMode;
         title.innerText = isLoginMode ? 'Вход' : 'Регистрация';
@@ -189,7 +218,6 @@ function initModal() {
         errorDiv.innerText = '';
     });
     
-    // Отправка формы
     submitBtn?.addEventListener('click', () => {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
