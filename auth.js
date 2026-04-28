@@ -1,77 +1,6 @@
-// ========== КЛЮЧИ ДЛЯ ХРАНЕНИЯ ==========
+// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
-
-// ========== ПРЕМИУМ ФУНКЦИИ ==========
-function isPremium() {
-    const expiry = localStorage.getItem('bike_trails_premium_expiry');
-    if (!expiry) return false;
-    const expiryDate = new Date(expiry);
-    const now = new Date();
-    return expiryDate > now;
-}
-
-function getPremiumBadge() {
-    if (isPremium()) {
-        return '<span class="premium-gold-badge">💎</span>';
-    }
-    return '';
-}
-
-function setPremiumTheme(themeName) {
-    if (themeName === 'ultra-dark' || themeName === 'sport') {
-        if (!isPremium()) {
-            alert('💎 Тема доступна только премиум');
-            return false;
-        }
-    }
-    document.body.classList.remove('ultra-dark-theme', 'sport-theme', 'light-theme');
-    if (themeName === 'ultra-dark') {
-        document.body.classList.add('ultra-dark-theme');
-        localStorage.setItem('bike_trails_theme', 'ultra-dark');
-    } else if (themeName === 'sport') {
-        document.body.classList.add('sport-theme');
-        localStorage.setItem('bike_trails_theme', 'sport');
-    } else if (themeName === 'light') {
-        document.body.classList.add('light-theme');
-        localStorage.setItem('bike_trails_theme', 'light');
-    } else {
-        localStorage.setItem('bike_trails_theme', 'dark');
-    }
-    return true;
-}
-
-function initTheme() {
-    const savedTheme = localStorage.getItem('bike_trails_theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-    } else if (savedTheme === 'ultra-dark' && isPremium()) {
-        document.body.classList.add('ultra-dark-theme');
-    } else if (savedTheme === 'sport' && isPremium()) {
-        document.body.classList.add('sport-theme');
-    }
-}
-
-function toggleTheme() {
-    const currentTheme = localStorage.getItem('bike_trails_theme') || 'dark';
-    if (currentTheme === 'dark') {
-        setPremiumTheme('light');
-    } else if (currentTheme === 'light') {
-        if (isPremium()) {
-            setPremiumTheme('ultra-dark');
-        } else {
-            setPremiumTheme('dark');
-        }
-    } else if (currentTheme === 'ultra-dark') {
-        if (isPremium()) {
-            setPremiumTheme('sport');
-        } else {
-            setPremiumTheme('dark');
-        }
-    } else if (currentTheme === 'sport') {
-        setPremiumTheme('dark');
-    }
-}
 
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
@@ -121,27 +50,11 @@ function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
-        let isPremiumValid = false;
-        if (user.premiumExpiry) {
-            const expiryDate = new Date(user.premiumExpiry);
-            const now = new Date();
-            if (expiryDate > now) {
-                isPremiumValid = true;
-            } else {
-                user.isPremium = false;
-                user.premiumExpiry = null;
-                const userIndex = users.findIndex(u => u.id === user.id);
-                if (userIndex !== -1) {
-                    users[userIndex] = user;
-                    saveUsers(users);
-                }
-            }
-        }
         setCurrentUser({ 
             id: user.id, 
             username: user.username, 
             favorites: user.favorites || [],
-            isPremium: isPremiumValid,
+            isPremium: user.isPremium || false,
             premiumExpiry: user.premiumExpiry
         });
         return { success: true };
@@ -151,109 +64,38 @@ function login(username, password) {
 
 function logout() {
     setCurrentUser(null);
-    window.location.href = 'index.html';
+    location.reload();
 }
 
-function addToFavorites(userId, trailId) {
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
-        users[userIndex].favorites.push(trailId);
-        saveUsers(users);
-        const current = getCurrentUser();
-        if (current && current.id === userId) {
-            current.favorites = users[userIndex].favorites;
-            setCurrentUser(current);
-        }
-        return true;
-    }
-    return false;
-}
-
-function removeFromFavorites(userId, trailId) {
-    const users = getUsers();
-    const userIndex = users.findIndex(u => u.id === userId);
-    if (userIndex !== -1) {
-        users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
-        saveUsers(users);
-        const current = getCurrentUser();
-        if (current && current.id === userId) {
-            current.favorites = users[userIndex].favorites;
-            setCurrentUser(current);
-        }
-        return true;
-    }
-    return false;
-}
-
-function isFavorite(userId, trailId) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    return user ? user.favorites.includes(trailId) : false;
-}
-
+// ========== ОБНОВЛЕНИЕ ШАПКИ ==========
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
     if (!container) return;
     
     if (user) {
-        const premiumBadge = getPremiumBadge();
         container.innerHTML = `
             <div class="user-info">
-                <span class="user-name">👤 ${user.username}${premiumBadge}</span>
-                <button class="theme-btn" id="themeBtn">🌓</button>
-                <div class="dropdown">
-                    <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
-                    <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">👨‍💼 Кабинет</a>
-                        <a href="favorites.html">❤️ Избранное</a>
-                        <a href="planner.html">📅 Планировщик</a>
-                        <a href="map.html">🗺️ Карта</a>
-                        <a href="weather.html">🌤️ Погода</a>
-                        <a href="help.html">🆘 Помощь</a>
-                        <a href="premium.html">💎 Premium</a>
-                        <a href="download.html">📱 Скачать</a>
-                        <a href="#" id="logoutDropdown">🚪 Выйти</a>
-                    </div>
-                </div>
+                <span class="user-name">👤 ${user.username}</span>
+                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
             </div>
         `;
-        const themeBtn = document.getElementById('themeBtn');
-        const dropdownBtn = document.getElementById('dropdownBtn');
-        const dropdownContent = document.getElementById('dropdownContent');
-        const logoutDropdown = document.getElementById('logoutDropdown');
-        if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-        if (dropdownBtn) {
-            dropdownBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdownContent.classList.toggle('show');
-            });
-        }
-        if (logoutDropdown) {
-            logoutDropdown.addEventListener('click', (e) => {
-                e.preventDefault();
-                logout();
-            });
-        }
-        window.addEventListener('click', () => {
-            dropdownContent?.classList.remove('show');
-        });
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
     } else {
-        container.innerHTML = `
-            <div class="user-info">
-                <button class="theme-btn" id="themeBtn">🌓</button>
-                <button class="btn-login" id="openLoginBtn">🔑 Вход</button>
-            </div>
-        `;
-        document.getElementById('themeBtn')?.addEventListener('click', toggleTheme);
-        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
-            document.getElementById('authModal')?.classList.add('active');
-        });
+        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
+        
+        const loginBtn = document.getElementById('openLoginBtn');
+        const modal = document.getElementById('authModal');
+        
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => {
+                if (modal) modal.style.display = 'flex';
+            });
+        }
     }
 }
 
-// ========== МОДАЛЬНОЕ ОКНО (РЕГИСТРАЦИЯ ПО УМОЛЧАНИЮ) ==========
+// ========== МОДАЛЬНОЕ ОКНО ==========
 function initModal() {
     const modal = document.getElementById('authModal');
     const closeBtn = document.getElementById('closeModal');
@@ -261,15 +103,17 @@ function initModal() {
     const submitBtn = document.getElementById('submitBtn');
     const modalTitle = document.getElementById('modalTitle');
     const errorDiv = document.getElementById('errorMessage');
-    let isLoginMode = false; // ← РЕГИСТРАЦИЯ ПО УМОЛЧАНИЮ
+    let isLoginMode = false; // По умолчанию регистрация
 
     if (!modal) return;
 
-    closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
+    // Закрытие
+    closeBtn?.addEventListener('click', () => modal.style.display = 'none');
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
+        if (e.target === modal) modal.style.display = 'none';
     });
     
+    // Переключение режима
     switchBtn?.addEventListener('click', () => {
         isLoginMode = !isLoginMode;
         modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
@@ -280,6 +124,7 @@ function initModal() {
         errorDiv.innerText = '';
     });
 
+    // Отправка формы
     submitBtn?.addEventListener('click', () => {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
@@ -292,7 +137,7 @@ function initModal() {
         const result = isLoginMode ? login(username, password) : register(username, password);
         
         if (result.success) {
-            modal.classList.remove('active');
+            modal.style.display = 'none';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             errorDiv.innerText = '';
@@ -305,8 +150,8 @@ function initModal() {
     });
 }
 
+// ========== ЗАПУСК ==========
 document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
     updateAuthUI();
     initModal();
 });
