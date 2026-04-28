@@ -15,9 +15,6 @@
         .favorite-btn-added { background: linear-gradient(135deg, #4cd964, #34c759); }
         .gps-btn { background: linear-gradient(135deg, #4a90e2, #7b3fe4); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; font-weight: bold; cursor: pointer; margin: 1rem 0; transition: transform 0.2s; margin-left: 1rem; }
         .gps-btn:hover { transform: scale(1.02); }
-        .gpx-btn { background: linear-gradient(135deg, #2c3e50, #1a1a2e); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; font-weight: bold; cursor: pointer; margin: 1rem 0; transition: transform 0.2s; margin-left: 1rem; }
-        .gpx-btn:hover { transform: scale(1.02); }
-        .premium-badge { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 1rem; margin-left: 0.5rem; vertical-align: middle; }
         .trail-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
     </style>
 </head>
@@ -40,7 +37,6 @@
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
                 <button class="gps-btn" id="navigateBtn" data-id="1" data-lat="55.7106" data-lon="37.5436">📍 Построить маршрут</button>
-                <button class="gpx-btn" id="downloadGpxBtn">📥 Скачать GPX <span class="premium-badge">💎 Premium</span></button>
             </div>
 
             <div class="gallery">
@@ -51,23 +47,13 @@
 
             <div class="trail-description-full">
                 <h3>📖 О маршруте</h3>
-                <p>Маршрут начинается у смотровой площадки на Воробьёвых горах — одной из самых высоких точек Москвы. Отсюда открывается потрясающий вид на Лужники, МГУ и центр столицы. Далее трасса проходит по велодорожкам парка "Воробьёвы горы" и спускается к Москве-реке.</p>
-                
-                <div class="tip">
-                    💡 <strong>Совет райдера:</strong> Лучшее время для поездки — раннее утро выходного дня.
-                </div>
-
+                <p>Маршрут начинается у смотровой площадки на Воробьёвых горах — одной из самых высоких точек Москвы.</p>
+                <div class="tip">💡 <strong>Совет райдера:</strong> Лучшее время для поездки — раннее утро выходного дня.</div>
                 <h3>📍 Особенности маршрута</h3>
-                <ul>
-                    <li>Идеально для начинающих и семейных поездок</li>
-                    <li>Выделенные велодорожки на всём протяжении</li>
-                    <li>Прокат велосипедов рядом с метро «Воробьёвы горы»</li>
-                    <li>Несколько смотровых площадок с видом на город</li>
-                </ul>
-
+                <ul><li>Идеально для начинающих</li><li>Выделенные велодорожки</li></ul>
                 <div class="how-to-get">
                     <h3>🚗 Как добраться</h3>
-                    <p><strong>На метро:</strong> Станция «Воробьёвы горы» (выход к смотровой площадке).</p>
+                    <p><strong>На метро:</strong> Станция «Воробьёвы горы»</p>
                     <p><strong>Координаты старта:</strong> <span class="coordinates">55.7106° N, 37.5436° E</span></p>
                 </div>
             </div>
@@ -79,20 +65,21 @@
 
     <script>
         const TRAIL_ID = 1;
+        const CURRENT_USER_KEY = 'bike_trails_current_user';
+        const USERS_KEY = 'bike_trails_users';
         
-        // ========== ПОЛЬЗОВАТЕЛЬСКИЕ ФУНКЦИИ ==========
         function getCurrentUser() {
-            const user = localStorage.getItem('bike_trails_current_user');
+            const user = localStorage.getItem(CURRENT_USER_KEY);
             return user ? JSON.parse(user) : null;
         }
         
         function getUsers() {
-            const users = localStorage.getItem('bike_trails_users');
+            const users = localStorage.getItem(USERS_KEY);
             return users ? JSON.parse(users) : [];
         }
         
         function saveUsers(users) {
-            localStorage.setItem('bike_trails_users', JSON.stringify(users));
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
         
         function isFavorite(userId, trailId) {
@@ -110,7 +97,7 @@
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
-                    localStorage.setItem('bike_trails_current_user', JSON.stringify(current));
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(current));
                 }
                 return true;
             }
@@ -126,7 +113,7 @@
                 const current = getCurrentUser();
                 if (current && current.id === userId) {
                     current.favorites = users[userIndex].favorites;
-                    localStorage.setItem('bike_trails_current_user', JSON.stringify(current));
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(current));
                 }
                 return true;
             }
@@ -153,37 +140,6 @@
             btn.disabled = false;
         }
         
-        // ========== ПРЕМИУМ ПРОВЕРКА ==========
-        function isPremium() {
-            const expiry = localStorage.getItem('bike_trails_premium_expiry');
-            console.log('[GPX] Проверка премиум: expiry =', expiry);
-            if (!expiry) return false;
-            const expiryDate = new Date(expiry);
-            const now = new Date();
-            const isActive = expiryDate > now;
-            console.log('[GPX] Премиум активна?', isActive);
-            return isActive;
-        }
-        
-        // ========== GPX ГЕНЕРАЦИЯ ==========
-        function generateGPX() {
-            const points = [
-                [55.7106, 37.5436, "Старт: смотровая площадка"],
-                [55.7150, 37.5450, "Велодорожка парка"],
-                [55.7200, 37.5500, "Спуск к набережной"],
-                [55.7250, 37.5550, "Андреевский мост"],
-                [55.7180, 37.5480, "Возврат в парк"],
-                [55.7106, 37.5436, "Финиш"]
-            ];
-            let gpx = '<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Bike Trails">\n<trk>\n<name>Vorobyovy Gory</name>\n<trkseg>\n';
-            points.forEach(p => {
-                gpx += `<trkpt lat="${p[0]}" lon="${p[1]}">\n<ele>200</ele>\n<name>${p[2]}</name>\n</trkpt>\n`;
-            });
-            gpx += '</trkseg>\n</trk>\n</gpx>';
-            return gpx;
-        }
-        
-        // ========== ОБРАБОТЧИКИ ==========
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
@@ -210,55 +166,6 @@
             const url = isIOS ? `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
             window.open(url, '_blank');
         });
-        
-        // ========== GPX СКАЧИВАНИЕ (ТОЛЬКО ДЛЯ ПРЕМИУМ) ==========
-        const gpxBtn = document.getElementById('downloadGpxBtn');
-        if (gpxBtn) {
-            gpxBtn.addEventListener('click', () => {
-                console.log('[GPX] Кнопка нажата');
-                console.log('[GPX] isPremium() =', isPremium());
-                
-                const user = getCurrentUser();
-                if (!user) {
-                    alert('🔒 Войдите в аккаунт, чтобы скачивать GPX треки');
-                    return;
-                }
-                
-                if (!isPremium()) {
-                    alert('💎 Скачивание GPX треков доступно только для премиум-подписчиков!\n\nОформите подписку в разделе Premium.');
-                    return;
-                }
-                
-                console.log('[GPX] Премиум подтверждён, скачиваю...');
-                
-                const gpxContent = generateGPX();
-                const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `trail-${TRAIL_ID}.gpx`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                alert('✅ GPX трек скачан! Импортируйте его в ваш GPS-навигатор.');
-            });
-        }
-        
-        // ========== ДОБАВЛЯЕМ XP ЗА ПОСТРОЕНИЕ МАРШРУТА ==========
-        const navBtn = document.getElementById('navigateBtn');
-        if (navBtn) {
-            navBtn.addEventListener('click', () => {
-                setTimeout(() => {
-                    const user = getCurrentUser();
-                    if (user && typeof addRouteBuilt !== 'undefined') {
-                        addRouteBuilt(user.id, TRAIL_ID);
-                    }
-                }, 500);
-            });
-        }
     </script>
-    <script src="premium.js"></script>
 </body>
 </html>
