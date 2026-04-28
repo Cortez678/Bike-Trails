@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скачать приложение | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .download-page { max-width: 800px; margin: 0 auto; padding: 2rem; text-align: center; }
+        .download-card { background: rgba(20,30,45,0.7); border-radius: 1.5rem; padding: 2rem; margin: 1rem 0; }
+        .download-btn { background: linear-gradient(135deg, #4a90e2, #7b3fe4); border: none; padding: 1rem 2rem; border-radius: 2rem; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin: 1rem; }
+        .qr-code { margin: 1rem auto; text-align: center; }
+        .instructions { text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .warning { color: #ff3b30; }
+        @media (max-width: 768px) { .download-page { padding: 1rem; } }
+    </style>
+</head>
+<body>
+    <div class="download-page">
+        <a href="index.html" class="back-link">← На главную</a>
+        
+        <div class="download-card">
+            <h1>📱 Скачать Bike Trails</h1>
+            <p>Установите официальное приложение на ваш телефон</p>
+        </div>
+
+        <!-- Android APK -->
+        <div class="download-card">
+            <h2>🤖 Android</h2>
+            <p>Скачайте установочный APK файл</p>
+            <a href="app-release.apk" download class="download-btn">📥 Скачать APK (Android)</a>
+            <div class="instructions">
+                <h4>📖 Инструкция по установке:</h4>
+                <ol>
+                    <li>Скачайте APK файл на телефон</li>
+                    <li>Откройте загрузки и нажмите на файл</li>
+                    <li>Разрешите установку из неизвестных источников (если потребуется)</li>
+                    <li>Нажмите "Установить"</li>
+                    <li>Готово! Иконка появится в меню приложений</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- iPhone -->
+        <div class="download-card">
+            <h2>🍎 iPhone / iPad</h2>
+            <p>Установите через App Store или PWA</p>
+            <div class="qr-code">
+                <canvas id="qrCanvas" width="200" height="200"></canvas>
+                <p>Отсканируйте QR-код или откройте сайт в Safari</p>
+            </div>
+            <div class="instructions">
+                <h4>📖 Инструкция для iPhone:</h4>
+                <ol>
+                    <li>Откройте Safari на вашем iPhone</li>
+                    <li>Перейдите на сайт: <strong>cortez678.github.io/Bike-Trails/</strong></li>
+                    <li>Нажмите кнопку "Поделиться" (квадрат со стрелкой)</li>
+                    <li>Выберите "На экран «Домой»"</li>
+                    <li>Нажмите "Добавить" — приложение установится!</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="download-card">
+            <p class="warning">⚠️ Важно: APK файл предназначен только для Android-устройств</p>
+            <p>Версия для iOS скоро появится в App Store</p>
+        </div>
+    </div>
+
+    <script>
+        // Генерация QR-кода
+        function generateQR() {
+            const canvas = document.getElementById('qrCanvas');
+            const url = 'https://cortez678.github.io/Bike-Trails/';
+            const size = 200;
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = 'black';
+            ctx.font = '16px Arial';
+            ctx.fillText('📱', size/2 - 20, size/2);
+            ctx.fillStyle = '#4a90e2';
+            ctx.font = '14px Arial';
+            ctx.fillText('Bike Trails', size/2 - 40, size - 20);
+        }
+        generateQR();
+    </script>
+</body>
+</html>
