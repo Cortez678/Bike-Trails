@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Bike Trails | Веломаршруты России</title>
     
-    <!-- PWA метатеги для установки на телефон -->
+    <!-- PWA метатеги -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-512.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,13 +21,13 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Шапка с авторизацией -->
+        <!-- Шапка -->
         <div class="header-top">
             <div class="logo">🚴‍♂️ Bike Trails</div>
             <div class="auth-buttons" id="authButtons"></div>
         </div>
 
-        <!-- Баннер установки PWA -->
+        <!-- Баннер установки -->
         <div id="installBanner" class="install-banner" style="display: none;">
             <div class="install-banner-content">
                 <div class="install-icon">📱</div>
@@ -92,17 +92,17 @@
         </footer>
     </div>
 
-    <!-- Модальное окно входа/регистрации -->
-    <div class="modal" id="authModal">
+    <!-- МОДАЛЬНОЕ ОКНО РЕГИСТРАЦИИ/ВХОДА -->
+    <div id="authModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h2 id="modalTitle">Вход</h2>
-            <div class="error-message" id="errorMessage"></div>
+            <span id="closeModal" class="close-modal">&times;</span>
+            <h2 id="modalTitle">Регистрация</h2>
+            <div id="errorMessage" class="error-message"></div>
             <input type="text" id="username" placeholder="Имя пользователя">
             <input type="password" id="password" placeholder="Пароль">
-            <button id="submitBtn">Войти</button>
-            <div class="modal-switch" id="switchMode">
-                Нет аккаунта? <span>Зарегистрироваться</span>
+            <button id="submitBtn">Зарегистрироваться</button>
+            <div id="switchMode" class="modal-switch">
+                Уже есть аккаунт? <span>Войти</span>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@
     <script src="auth.js"></script>
     <script src="script.js"></script>
     <script>
-        // ========== PWA УСТАНОВКА ==========
+        // PWA установка
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
         const installBtn = document.getElementById('installBtn');
@@ -139,12 +139,11 @@
             });
         }
 
-        // ========== РЕГИСТРАЦИЯ SERVICE WORKER ==========
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/Bike-Trails/sw.js')
-                    .then(reg => console.log('✅ Service Worker зарегистрирован:', reg))
-                    .catch(err => console.error('❌ Ошибка регистрации SW:', err));
+                    .then(reg => console.log('SW зарегистрирован'))
+                    .catch(err => console.error('SW ошибка:', err));
             });
         }
     </script>
