@@ -261,7 +261,7 @@ function updateAuthUI() {
     }
 }
 
-// ========== МОДАЛЬНОЕ ОКНО ==========
+// ========== МОДАЛЬНОЕ ОКНО (РЕГИСТРАЦИЯ ПО УМОЛЧАНИЮ) ==========
 function initModal() {
     const modal = document.getElementById('authModal');
     const closeBtn = document.getElementById('closeModal');
@@ -269,7 +269,7 @@ function initModal() {
     const submitBtn = document.getElementById('submitBtn');
     const modalTitle = document.getElementById('modalTitle');
     const errorDiv = document.getElementById('errorMessage');
-    let isLoginMode = true;
+    let isLoginMode = false; // ← ПО УМОЛЧАНИЮ РЕГИСТРАЦИЯ
 
     if (!modal) return;
 
