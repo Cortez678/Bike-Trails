@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Bike Trails | Веломаршруты России</title>
     
-    <!-- PWA метатеги -->
+    <!-- PWA метатеги для установки на телефон -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-512.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,16 +21,10 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Шапка -->
+        <!-- Шапка с авторизацией -->
         <div class="header-top">
-            <div class="logo" data-i18n="logo">🚴‍♂️ Bike Trails</div>
+            <div class="logo">🚴‍♂️ Bike Trails</div>
             <div class="auth-buttons" id="authButtons"></div>
-        </div>
-
-        <!-- Переключатель языков (будет добавлен через JS) -->
-        <div id="langSwitcherContainer" class="lang-switcher-container" style="display: none;">
-            <button class="lang-btn" data-lang="ru">🇷🇺 Русский</button>
-            <button class="lang-btn" data-lang="en">🇬🇧 English</button>
         </div>
 
         <!-- Баннер установки PWA -->
@@ -38,34 +32,34 @@
             <div class="install-banner-content">
                 <div class="install-icon">📱</div>
                 <div class="install-text">
-                    <strong data-i18n="installTitle">Установить приложение</strong>
-                    <span data-i18n="installSubtitle">Быстрый доступ с главного экрана</span>
+                    <strong>Установить приложение</strong>
+                    <span>Быстрый доступ с главного экрана</span>
                 </div>
-                <button id="installBtn" class="install-btn" data-i18n="installBtn">Установить</button>
+                <button id="installBtn" class="install-btn">Установить</button>
                 <button id="closeBannerBtn" class="close-banner">✕</button>
             </div>
         </div>
 
         <!-- Hero секция -->
         <header class="hero">
-            <div class="hero-badge" data-i18n="heroBadge">🚵‍♂️ RIDE RUSSIA</div>
-            <h1 class="hero-title"><span data-i18n="heroTitle">Bike </span><span class="gradient-text" data-i18n="heroTitleGradient">Trails</span></h1>
-            <p class="hero-subtitle" data-i18n="heroSubtitle">Лучшие веломаршруты России</p>
+            <div class="hero-badge">🚵‍♂️ RIDE RUSSIA</div>
+            <h1 class="hero-title">Bike <span class="gradient-text">Trails</span></h1>
+            <p class="hero-subtitle">Лучшие веломаршруты России</p>
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value">6</div><div class="stat-label" data-i18n="statsRoutes">Маршрутов</div></div>
-                <div class="stat-card"><div class="stat-value">6+</div><div class="stat-label" data-i18n="statsRegions">Регионов</div></div>
-                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label" data-i18n="statsLevels">Уровня</div></div>
+                <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Маршрутов</div></div>
+                <div class="stat-card"><div class="stat-value">6+</div><div class="stat-label">Регионов</div></div>
+                <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Уровня</div></div>
             </div>
         </header>
 
         <!-- Фильтры -->
         <div class="filters-section">
-            <h2 class="section-title" data-i18n="selectRoute">Выбери свой маршрут</h2>
+            <h2 class="section-title">Выбери свой маршрут</h2>
             <div class="filter-buttons">
-                <button class="filter-btn active" data-level="all" data-i18n="allRoutes">Все маршруты</button>
-                <button class="filter-btn" data-level="easy" data-i18n="easy">🟢 Лёгкие</button>
-                <button class="filter-btn" data-level="medium" data-i18n="medium">🔵 Средние</button>
-                <button class="filter-btn" data-level="hard" data-i18n="hard">⚫ Сложные</button>
+                <button class="filter-btn active" data-level="all">Все маршруты</button>
+                <button class="filter-btn" data-level="easy">🟢 Лёгкие</button>
+                <button class="filter-btn" data-level="medium">🔵 Средние</button>
+                <button class="filter-btn" data-level="hard">⚫ Сложные</button>
             </div>
         </div>
 
@@ -74,26 +68,26 @@
             <div class="loading-spinner"></div>
         </div>
 
-        <!-- ФУТЕР (ПОДВАЛ) -->
+        <!-- Футер -->
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3 data-i18n="logo">🚴‍♂️ Bike Trails</h3>
-                    <p data-i18n="footerDesc">Веломаршруты по России для настоящих райдеров</p>
+                    <h3>🚴‍♂️ Bike Trails</h3>
+                    <p>Веломаршруты по России для настоящих райдеров</p>
                 </div>
                 <div class="footer-section">
-                    <h3 data-i18n="contacts">📞 Контакты</h3>
+                    <h3>📞 Контакты</h3>
                     <div class="social-links">
                         <a href="https://t.me/ogmark17" target="_blank" class="social-link">📱 Telegram: @ogmark17</a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h3 data-i18n="cooperation">📧 Сотрудничество</h3>
-                    <p data-i18n="cooperationText">По вопросам сотрудничества<br>пишите в Telegram</p>
+                    <h3>📧 Сотрудничество</h3>
+                    <p>По вопросам сотрудничества<br>пишите в Telegram</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p data-i18n="copyright">© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
+                <p>© 2025 Bike Trails — Все маршруты созданы с ❤️ для райдеров</p>
             </div>
         </footer>
     </div>
@@ -102,37 +96,21 @@
     <div class="modal" id="authModal">
         <div class="modal-content">
             <span class="close-modal" id="closeModal">&times;</span>
-            <h2 id="modalTitle" data-i18n="loginTitle">Вход</h2>
+            <h2 id="modalTitle">Вход</h2>
             <div class="error-message" id="errorMessage"></div>
-            <input type="text" id="username" placeholder="Имя пользователя" data-i18n-placeholder="username">
-            <input type="password" id="password" placeholder="Пароль" data-i18n-placeholder="password">
-            <button id="submitBtn" data-i18n="loginBtn">Войти</button>
+            <input type="text" id="username" placeholder="Имя пользователя">
+            <input type="password" id="password" placeholder="Пароль">
+            <button id="submitBtn">Войти</button>
             <div class="modal-switch" id="switchMode">
-                <span data-i18n="noAccount">Нет аккаунта? </span><span data-i18n="registerLink">Зарегистрироваться</span>
+                Нет аккаунта? <span>Зарегистрироваться</span>
             </div>
         </div>
     </div>
+
     <script src="auth.js"></script>
     <script src="script.js"></script>
     <script>
-        // Инициализация переводов после загрузки
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof updateAllTexts === 'function') {
-                updateAllTexts();
-            }
-            
-            // Обработчики кнопок языка
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const lang = btn.getAttribute('data-lang');
-                    if (typeof setLanguage === 'function') {
-                        setLanguage(lang);
-                    }
-                });
-            });
-        });
-        
-        // PWA установка
+        // ========== PWA УСТАНОВКА ==========
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
         const installBtn = document.getElementById('installBtn');
@@ -161,11 +139,12 @@
             });
         }
 
+        // ========== РЕГИСТРАЦИЯ SERVICE WORKER ==========
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/Bike-Trails/sw.js')
-                    .then(reg => console.log('SW зарегистрирован'))
-                    .catch(err => console.error('Ошибка SW:', err));
+                    .then(reg => console.log('✅ Service Worker зарегистрирован:', reg))
+                    .catch(err => console.error('❌ Ошибка регистрации SW:', err));
             });
         }
     </script>
