@@ -13,7 +13,7 @@ function isPremium() {
 
 function getPremiumBadge() {
     if (isPremium()) {
-        return '<span class="premium-gold-badge" title="Премиум подписчик">💎</span>';
+        return '<span class="premium-gold-badge">💎</span>';
     }
     return '';
 }
@@ -21,13 +21,11 @@ function getPremiumBadge() {
 function setPremiumTheme(themeName) {
     if (themeName === 'ultra-dark' || themeName === 'sport') {
         if (!isPremium()) {
-            alert('💎 Эксклюзивные темы доступны только премиум-подписчикам!');
+            alert('💎 Тема доступна только премиум');
             return false;
         }
     }
-    
     document.body.classList.remove('ultra-dark-theme', 'sport-theme', 'light-theme');
-    
     if (themeName === 'ultra-dark') {
         document.body.classList.add('ultra-dark-theme');
         localStorage.setItem('bike_trails_theme', 'ultra-dark');
@@ -54,7 +52,6 @@ function initTheme() {
     }
 }
 
-// ========== ТЕМА (для кнопки) ==========
 function toggleTheme() {
     const currentTheme = localStorage.getItem('bike_trails_theme') || 'dark';
     if (currentTheme === 'dark') {
@@ -76,7 +73,6 @@ function toggleTheme() {
     }
 }
 
-// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : [];
@@ -150,7 +146,7 @@ function login(username, password) {
         });
         return { success: true };
     }
-    return { success: false, error: 'Неверное имя пользователя или пароль' };
+    return { success: false, error: 'Неверное имя или пароль' };
 }
 
 function logout() {
@@ -158,7 +154,6 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-// ========== РАБОТА С ИЗБРАННЫМ ==========
 function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -197,7 +192,6 @@ function isFavorite(userId, trailId) {
     return user ? user.favorites.includes(trailId) : false;
 }
 
-// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
@@ -212,25 +206,23 @@ function updateAuthUI() {
                 <div class="dropdown">
                     <button class="dropdown-btn" id="dropdownBtn">⚙️</button>
                     <div class="dropdown-content" id="dropdownContent">
-                        <a href="cabinet.html">👨‍💼 Личный кабинет</a>
+                        <a href="cabinet.html">👨‍💼 Кабинет</a>
                         <a href="favorites.html">❤️ Избранное</a>
                         <a href="planner.html">📅 Планировщик</a>
-                        <a href="map.html">🗺️ Карта маршрутов</a>
-                        <a href="weather.html">🌤️ Прогноз погоды</a>
+                        <a href="map.html">🗺️ Карта</a>
+                        <a href="weather.html">🌤️ Погода</a>
                         <a href="help.html">🆘 Помощь</a>
                         <a href="premium.html">💎 Premium</a>
-                        <a href="download.html">📱 Скачать приложение</a>
+                        <a href="download.html">📱 Скачать</a>
                         <a href="#" id="logoutDropdown">🚪 Выйти</a>
                     </div>
                 </div>
             </div>
         `;
-        
         const themeBtn = document.getElementById('themeBtn');
         const dropdownBtn = document.getElementById('dropdownBtn');
         const dropdownContent = document.getElementById('dropdownContent');
         const logoutDropdown = document.getElementById('logoutDropdown');
-        
         if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
         if (dropdownBtn) {
             dropdownBtn.addEventListener('click', (e) => {
@@ -269,7 +261,7 @@ function initModal() {
     const submitBtn = document.getElementById('submitBtn');
     const modalTitle = document.getElementById('modalTitle');
     const errorDiv = document.getElementById('errorMessage');
-    let isLoginMode = false; // ← ПО УМОЛЧАНИЮ РЕГИСТРАЦИЯ
+    let isLoginMode = false; // ← РЕГИСТРАЦИЯ ПО УМОЛЧАНИЮ
 
     if (!modal) return;
 
@@ -313,7 +305,6 @@ function initModal() {
     });
 }
 
-// ========== ЗАПУСК ==========
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     updateAuthUI();
