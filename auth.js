@@ -1,4 +1,4 @@
-// ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+// ========== ПРОСТАЯ РАБОТАЮЩАЯ ВЕРСИЯ ==========
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
 
@@ -37,8 +37,6 @@ function register(username, password) {
         username: username,
         password: password,
         favorites: [],
-        isPremium: false,
-        premiumExpiry: null,
         createdAt: new Date().toISOString()
     };
     users.push(newUser);
@@ -50,13 +48,7 @@ function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
-        setCurrentUser({ 
-            id: user.id, 
-            username: user.username, 
-            favorites: user.favorites || [],
-            isPremium: user.isPremium || false,
-            premiumExpiry: user.premiumExpiry
-        });
+        setCurrentUser({ id: user.id, username: user.username, favorites: user.favorites || [] });
         return { success: true };
     }
     return { success: false, error: 'Неверное имя или пароль' };
@@ -67,75 +59,59 @@ function logout() {
     location.reload();
 }
 
-// ========== ОБНОВЛЕНИЕ ШАПКИ ==========
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
     if (!container) return;
     
     if (user) {
-        container.innerHTML = `
-            <div class="user-info">
-                <span class="user-name">👤 ${user.username}</span>
-                <button class="btn-logout" id="logoutBtn">🚪 Выйти</button>
-            </div>
-        `;
+        container.innerHTML = `<div class="user-info"><span>👤 ${user.username}</span> <button id="logoutBtn" class="btn-logout">Выйти</button></div>`;
         document.getElementById('logoutBtn')?.addEventListener('click', logout);
     } else {
-        container.innerHTML = `<button class="btn-login" id="openLoginBtn">🔑 Вход</button>`;
+        container.innerHTML = `<button id="openLoginBtn" class="btn-login">🔑 Вход</button>`;
         
-        const loginBtn = document.getElementById('openLoginBtn');
-        const modal = document.getElementById('authModal');
-        
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => {
-                if (modal) modal.style.display = 'flex';
-            });
-        }
+        document.getElementById('openLoginBtn')?.addEventListener('click', () => {
+            const modal = document.getElementById('authModal');
+            if (modal) modal.style.display = 'flex';
+        });
     }
 }
 
-// ========== МОДАЛЬНОЕ ОКНО ==========
+// Модальное окно
 function initModal() {
     const modal = document.getElementById('authModal');
-    const closeBtn = document.getElementById('closeModal');
-    const switchBtn = document.getElementById('switchMode');
-    const submitBtn = document.getElementById('submitBtn');
-    const modalTitle = document.getElementById('modalTitle');
-    const errorDiv = document.getElementById('errorMessage');
-    let isLoginMode = false; // По умолчанию регистрация
-
     if (!modal) return;
-
-    // Закрытие
-    closeBtn?.addEventListener('click', () => modal.style.display = 'none');
+    
+    document.getElementById('closeModal')?.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.style.display = 'none';
     });
     
-    // Переключение режима
+    let isLoginMode = false;
+    const switchBtn = document.getElementById('switchMode');
+    const submitBtn = document.getElementById('submitBtn');
+    const modalTitle = document.getElementById('modalTitle');
+    const errorDiv = document.getElementById('errorMessage');
+    
     switchBtn?.addEventListener('click', () => {
         isLoginMode = !isLoginMode;
         modalTitle.innerText = isLoginMode ? 'Вход' : 'Регистрация';
         submitBtn.innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-        switchBtn.innerHTML = isLoginMode 
-            ? 'Нет аккаунта? <span>Зарегистрироваться</span>' 
-            : 'Уже есть аккаунт? <span>Войти</span>';
+        switchBtn.innerHTML = isLoginMode ? 'Нет аккаунта? <span>Зарегистрироваться</span>' : 'Уже есть аккаунт? <span>Войти</span>';
         errorDiv.innerText = '';
     });
-
-    // Отправка формы
+    
     submitBtn?.addEventListener('click', () => {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
-        
         if (!username || !password) {
             errorDiv.innerText = 'Заполните все поля';
             return;
         }
-        
         const result = isLoginMode ? login(username, password) : register(username, password);
-        
         if (result.success) {
             modal.style.display = 'none';
             document.getElementById('username').value = '';
@@ -150,7 +126,6 @@ function initModal() {
     });
 }
 
-// ========== ЗАПУСК ==========
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     initModal();
