@@ -2,22 +2,81 @@
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
 
-// ========== ТЕМА ==========
+// ========== ПРЕМИУМ ФУНКЦИИ ==========
+function isPremium() {
+    const expiry = localStorage.getItem('bike_trails_premium_expiry');
+    if (!expiry) return false;
+    const expiryDate = new Date(expiry);
+    const now = new Date();
+    return expiryDate > now;
+}
+
+function getPremiumBadge() {
+    if (isPremium()) {
+        return '<span class="premium-gold-badge" title="Премиум подписчик">💎</span>';
+    }
+    return '';
+}
+
+function setPremiumTheme(themeName) {
+    if (themeName === 'ultra-dark' || themeName === 'sport') {
+        if (!isPremium()) {
+            alert('💎 Эксклюзивные темы доступны только премиум-подписчикам!');
+            return false;
+        }
+    }
+    
+    document.body.classList.remove('ultra-dark-theme', 'sport-theme', 'light-theme');
+    
+    if (themeName === 'ultra-dark') {
+        document.body.classList.add('ultra-dark-theme');
+        localStorage.setItem('bike_trails_theme', 'ultra-dark');
+    } else if (themeName === 'sport') {
+        document.body.classList.add('sport-theme');
+        localStorage.setItem('bike_trails_theme', 'sport');
+    } else if (themeName === 'light') {
+        document.body.classList.add('light-theme');
+        localStorage.setItem('bike_trails_theme', 'light');
+    } else {
+        localStorage.setItem('bike_trails_theme', 'dark');
+    }
+    return true;
+}
+
 function initTheme() {
     const savedTheme = localStorage.getItem('bike_trails_theme');
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
+    } else if (savedTheme === 'ultra-dark' && isPremium()) {
+        document.body.classList.add('ultra-dark-theme');
+    } else if (savedTheme === 'sport' && isPremium()) {
+        document.body.classList.add('sport-theme');
     }
 }
 
+// ========== ТЕМА (для кнопки) ==========
 function toggleTheme() {
-    document.body.classList.toggle('light-theme');
-    const isLight = document.body.classList.contains('light-theme');
-    localStorage.setItem('bike_trails_theme', isLight ? 'light' : 'dark');
+    const currentTheme = localStorage.getItem('bike_trails_theme') || 'dark';
+    if (currentTheme === 'dark') {
+        setPremiumTheme('light');
+    } else if (currentTheme === 'light') {
+        if (isPremium()) {
+            setPremiumTheme('ultra-dark');
+        } else {
+            setPremiumTheme('dark');
+        }
+    } else if (currentTheme === 'ultra-dark') {
+        if (isPremium()) {
+            setPremiumTheme('sport');
+        } else {
+            setPremiumTheme('dark');
+        }
+    } else if (currentTheme === 'sport') {
+        setPremiumTheme('dark');
+    }
 }
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
-
 function getUsers() {
     const users = localStorage.getItem(USERS_KEY);
     return users ? JSON.parse(users) : [];
@@ -40,19 +99,14 @@ function setCurrentUser(user) {
     }
 }
 
-// ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
-
 function register(username, password) {
     const users = getUsers();
-    
     if (users.find(u => u.username === username)) {
         return { success: false, error: 'Пользователь уже существует' };
     }
-    
     if (password.length < 4) {
         return { success: false, error: 'Пароль должен быть не менее 4 символов' };
     }
-    
     const newUser = {
         id: Date.now(),
         username: username,
@@ -62,17 +116,14 @@ function register(username, password) {
         premiumExpiry: null,
         createdAt: new Date().toISOString()
     };
-    
     users.push(newUser);
     saveUsers(users);
-    
     return { success: true };
 }
 
 function login(username, password) {
     const users = getUsers();
     const user = users.find(u => u.username === username && u.password === password);
-    
     if (user) {
         let isPremiumValid = false;
         if (user.premiumExpiry) {
@@ -90,7 +141,6 @@ function login(username, password) {
                 }
             }
         }
-        
         setCurrentUser({ 
             id: user.id, 
             username: user.username, 
@@ -100,7 +150,6 @@ function login(username, password) {
         });
         return { success: true };
     }
-    
     return { success: false, error: 'Неверное имя пользователя или пароль' };
 }
 
@@ -110,23 +159,18 @@ function logout() {
 }
 
 // ========== РАБОТА С ИЗБРАННЫМ ==========
-
 function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex !== -1) {
-        if (!users[userIndex].favorites.includes(trailId)) {
-            users[userIndex].favorites.push(trailId);
-            saveUsers(users);
-            
-            const current = getCurrentUser();
-            if (current && current.id === userId) {
-                current.favorites = users[userIndex].favorites;
-                setCurrentUser(current);
-            }
-            return true;
+    if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
+        users[userIndex].favorites.push(trailId);
+        saveUsers(users);
+        const current = getCurrentUser();
+        if (current && current.id === userId) {
+            current.favorites = users[userIndex].favorites;
+            setCurrentUser(current);
         }
+        return true;
     }
     return false;
 }
@@ -134,11 +178,9 @@ function addToFavorites(userId, trailId) {
 function removeFromFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
-    
     if (userIndex !== -1) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
-        
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
@@ -155,50 +197,14 @@ function isFavorite(userId, trailId) {
     return user ? user.favorites.includes(trailId) : false;
 }
 
-// ========== ПРЕМИУМ ФУНКЦИИ ==========
-
-function isUserPremium() {
-    const user = getCurrentUser();
-    if (!user) return false;
-    if (user.isPremium) return true;
-    
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        if (expiryDate > now) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function getPremiumDaysLeft() {
-    const user = getCurrentUser();
-    if (!user) return 0;
-    
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        const diffTime = expiryDate - now;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays > 0 ? diffDays : 0;
-    }
-    return 0;
-}
-
-// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ==========
-
+// ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
 function updateAuthUI() {
     const user = getCurrentUser();
     const container = document.getElementById('authButtons');
     if (!container) return;
     
     if (user) {
-        const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
+        const premiumBadge = getPremiumBadge();
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
@@ -208,6 +214,7 @@ function updateAuthUI() {
                     <div class="dropdown-content" id="dropdownContent">
                         <a href="cabinet.html">👨‍💼 Личный кабинет</a>
                         <a href="favorites.html">❤️ Избранное</a>
+                        <a href="planner.html">📅 Планировщик</a>
                         <a href="map.html">🗺️ Карта маршрутов</a>
                         <a href="weather.html">🌤️ Прогноз погоды</a>
                         <a href="help.html">🆘 Помощь</a>
@@ -246,7 +253,6 @@ function updateAuthUI() {
                 <button class="btn-login" id="openLoginBtn">🔑 Вход</button>
             </div>
         `;
-        
         document.getElementById('themeBtn')?.addEventListener('click', toggleTheme);
         document.getElementById('openLoginBtn')?.addEventListener('click', () => {
             document.getElementById('authModal')?.classList.add('active');
@@ -255,7 +261,6 @@ function updateAuthUI() {
 }
 
 // ========== МОДАЛЬНОЕ ОКНО ==========
-
 function initModal() {
     const modal = document.getElementById('authModal');
     const closeBtn = document.getElementById('closeModal');
