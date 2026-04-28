@@ -1,3 +1,20 @@
+// Базовый Service Worker для PWA
+self.addEventListener('install', event => {
+    console.log('SW установлен');
+    self.skipWaiting();
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            return new Response('Офлайн режим', {
+                status: 200,
+                statusText: 'OK',
+                headers: { 'Content-Type': 'text/plain' }
+            });
+        })
+    );
+});
 const CACHE_NAME = 'bike-trails-v1';
 
 const FILES_TO_CACHE = [
