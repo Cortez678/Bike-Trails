@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик поездок | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .planner-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        .planner-header { text-align: center; margin-bottom: 2rem; }
+        .planner-header h1 { color: #4a90e2; margin-bottom: 0.5rem; }
+        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 2rem; }
+        .calendar-day { background: rgba(20,30,45,0.7); border-radius: 0.8rem; padding: 0.8rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .calendar-day:hover { transform: translateY(-3px); background: rgba(74,144,226,0.3); }
+        .calendar-day.selected { background: #4a90e2; border: 2px solid #ffd700; }
+        .calendar-day.weekend { border-left: 3px solid #ff9500; }
+        .day-number { font-size: 1.1rem; font-weight: bold; }
+        .day-name { font-size: 0.65rem; color: #8a9bb5; }
+        .add-ride-form { background: rgba(20,30,45,0.5); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; }
+        .add-ride-form h3 { margin-bottom: 1rem; color: #4a90e2; }
+        .add-ride-form input, .add-ride-form select, .add-ride-form textarea { width: 100%; padding: 0.6rem; margin-bottom: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 0.5rem; color: white; font-family: inherit; }
+        .add-ride-form input:focus, .add-ride-form select:focus, .add-ride-form textarea:focus { outline: none; border-color: #4a90e2; }
+        .rides-list { display: flex; flex-direction: column; gap: 0.8rem; max-height: 300px; overflow-y: auto; }
+        .ride-item { background: rgba(20,30,45,0.5); border-radius: 0.8rem; padding: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; border-left: 4px solid #4a90e2; }
+        .ride-remove { background: #ff3b30; border: none; padding: 0.2rem 0.6rem; border-radius: 1rem; cursor: pointer; color: white; }
+        .premium-only { background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,149,0,0.1)); border: 1px solid #ffd700; text-align: center; padding: 2rem; border-radius: 1rem; }
+        .premium-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: #4a90e2; text-decoration: none; }
+        @media (max-width: 768px) { .calendar { grid-template-columns: repeat(4, 1fr); } .planner-container { padding: 1rem; } }
+    </style>
+</head>
+<body>
+    <div class="planner-container">
+        <a href="index.html" class="back-link">← На главную</a>
+        <div id="premiumCheck"></div>
+    </div>
+    <script src="premium.js"></script>
+    <script>
+        const container = document.getElementById('premiumCheck');
+        
+        if (!isPremium()) {
+            container.innerHTML = `
+                <div class="premium-only">
+                    <div class="premium-icon">💎</div>
+                    <h2>Планировщик поездок</h2>
+                    <p>Доступен только для премиум-подписчиков</p>
+                    <button onclick="location.href='premium.html'" style="background: linear-gradient(135deg,#ffd700,#ff9500); border:none; padding:0.6rem 1.5rem; border-radius:2rem; margin-top:1rem; cursor:pointer;">✨ Оформить подписку ✨</button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div class="planner-header">
+                    <h1>📅 Планировщик поездок</h1>
+                    <p>Планируйте свои велопутешествия и получайте напоминания</p>
+                </div>
+                <div class="calendar" id="calendar"></div>
+                <div class="add-ride-form">
+                    <h3>➕ Добавить поездку</h3>
+                    <input type="text" id="rideTitle" placeholder="Название маршрута">
+                    <select id="rideRoute">
+                        <option value="1">Воробьёвы горы</option>
+                        <option value="2">Куршская коса</option>
+                        <option value="3">Лаго-Наки</option>
+                        <option value="4">Алтайский Марс</option>
+                        <option value="5">Байкальская петля</option>
+                        <option value="6">Долина гейзеров</option>
+                    </select>
+                    <textarea id="rideNote" rows="2" placeholder="Заметки к поездке..."></textarea>
+                    <button id="addRideBtn" style="background:#4a90e2; border:none; padding:0.6rem; border-radius:2rem; cursor:pointer; color:white; width:100%;">✨ Добавить поездку</button>
+                </div>
+                <div id="ridesList" class="rides-list"></div>
+            `;
+            
+            let currentDate = new Date();
+            let selectedDate = currentDate.toISOString().split('T')[0];
+            
+            function loadPlans() {
+                const plans = JSON.parse(localStorage.getItem('bike_trails_plans') || '{}');
+                const ridesList = document.getElementById('ridesList');
+                const datePlans = plans[selectedDate] || [];
+                
+                if (datePlans.length === 0) {
+                    ridesList.innerHTML = '<div style="text-align:center; padding:1rem; color:#8a9bb5;">Нет запланированных поездок на этот день</div>';
+                } else {
+                    ridesList.innerHTML = datePlans.map((plan, idx) => `
+                        <div class="ride-item">
+                            <div>
+                                <strong>🚴 ${escapeHtml(plan.title)}</strong>
+                                <div style="font-size:0.75rem; color:#8a9bb5;">📍 ${plan.route}</div>
+                                ${plan.note ? `<div style="font-size:0.7rem; color:#6e85a8;">📝 ${escapeHtml(plan.note)}</div>` : ''}
+                            </div>
+                            <button class="ride-remove" data-date="${selectedDate}" data-idx="${idx}">✕</button>
+                        </div>
+                    `).join('');
+                    
+                    document.querySelectorAll('.ride-remove').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const date = btn.getAttribute('data-date');
+                            const idx = parseInt(btn.getAttribute('data-idx'));
+                            const allPlans = JSON.parse(localStorage.getItem('bike_trails_plans') || '{}');
+                            if (allPlans[date]) {
+                                allPlans[date].splice(idx, 1);
+                                if (allPlans[date].length === 0) delete allPlans[date];
+                                localStorage.setItem('bike_trails_plans', JSON.stringify(allPlans));
+                                loadPlans();
+                                renderCalendar();
+                            }
+                        });
+                    });
+                }
+            }
+            
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/[&<>]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    return m;
+                });
+            }
+            
+            function renderCalendar() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const plans = JSON.parse(localStorage.getItem('bike_trails_plans') || '{}');
+                const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+                
+                let html = `<div style="text-align:center; margin-bottom:1rem;">
+                    <button id="prevMonth" style="background:#4a90e2; border:none; padding:0.3rem 0.8rem; border-radius:1rem; cursor:pointer;">◀</button>
+                    <span style="margin:0 1rem; font-weight:bold;">${monthNames[month]} ${year}</span>
+                    <button id="nextMonth" style="background:#4a90e2; border:none; padding:0.3rem 0.8rem; border-radius:1rem; cursor:pointer;">▶</button>
+                </div><div class="calendar">`;
+                
+                const weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+                weekdays.forEach(day => {
+                    html += `<div class="calendar-day" style="background:none; font-weight:bold;">${day}</div>`;
+                });
+                
+                let startOffset = firstDay === 0 ? 6 : firstDay - 1;
+                for (let i = 0; i < startOffset; i++) html += '<div class="calendar-day"></div>';
+                
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    const hasPlan = plans[dateStr] && plans[dateStr].length > 0;
+                    const dayOfWeek = (startOffset + d - 1) % 7;
+                    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+                    html += `
+                        <div class="calendar-day ${isWeekend ? 'weekend' : ''} ${hasPlan ? 'has-plan' : ''} ${dateStr === selectedDate ? 'selected' : ''}" data-date="${dateStr}">
+                            <div class="day-number">${d}</div>
+                            ${hasPlan ? '<div style="font-size:0.6rem; color:#ffd700;">📌</div>' : ''}
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                document.getElementById('calendar').innerHTML = html;
+                
+                document.querySelectorAll('.calendar-day[data-date]').forEach(day => {
+                    day.addEventListener('click', () => {
+                        selectedDate = day.getAttribute('data-date');
+                        renderCalendar();
+                        loadPlans();
+                    });
+                });
+                
+                document.getElementById('prevMonth')?.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    renderCalendar();
+                    loadPlans();
+                });
+                document.getElementById('nextMonth')?.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    renderCalendar();
+                    loadPlans();
+                });
+            }
+            
+            document.getElementById('addRideBtn')?.addEventListener('click', () => {
+                const title = document.getElementById('rideTitle').value.trim();
+                const route = document.getElementById('rideRoute').value;
+                const note = document.getElementById('rideNote').value;
+                const routeNames = {1:'Воробьёвы горы',2:'Куршская коса',3:'Лаго-Наки',4:'Алтайский Марс',5:'Байкальская петля',6:'Долина гейзеров'};
+                
+                if (!title) {
+                    alert('Введите название поездки');
+                    return;
+                }
+                
+                const plans = JSON.parse(localStorage.getItem('bike_trails_plans') || '{}');
+                if (!plans[selectedDate]) plans[selectedDate] = [];
+                plans[selectedDate].push({ title: title, route: routeNames[route], note: note, date: new Date().toISOString() });
+                localStorage.setItem('bike_trails_plans', JSON.stringify(plans));
+                
+                document.getElementById('rideTitle').value = '';
+                document.getElementById('rideNote').value = '';
+                renderCalendar();
+                loadPlans();
+                alert('✅ Поездка добавлена в календарь!');
+            });
+            
+            renderCalendar();
+            loadPlans();
+        }
+    </script>
+</body>
+</html>
