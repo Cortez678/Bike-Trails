@@ -219,6 +219,7 @@ function updateAuthUI() {
                         <a href="weather.html">🌤️ Прогноз погоды</a>
                         <a href="help.html">🆘 Помощь</a>
                         <a href="premium.html">💎 Premium</a>
+                        <a href="download.html">📱 Скачать приложение</a>
                         <a href="#" id="logoutDropdown">🚪 Выйти</a>
                     </div>
                 </div>
