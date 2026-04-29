@@ -1,6 +1,7 @@
 // ========== КЛЮЧИ ДЛЯ ХРАНЕНИЯ ==========
 const USERS_KEY = 'bike_trails_users';
 const CURRENT_USER_KEY = 'bike_trails_current_user';
+const PREMIUM_EXPIRY_KEY = 'bike_trails_premium_expiry';
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
@@ -24,6 +25,69 @@ function setCurrentUser(user) {
     } else {
         localStorage.removeItem(CURRENT_USER_KEY);
     }
+}
+
+// ========== ПРОВЕРКА ПРЕМИУМ-СТАТУСА ==========
+
+function isUserPremium() {
+    // Сначала проверяем в localStorage премиум-ключ
+    const premiumExpiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
+    if (premiumExpiry) {
+        const expiryDate = new Date(premiumExpiry);
+        if (expiryDate > new Date()) {
+            return true;
+        } else {
+            // Если истёк — удаляем
+            localStorage.removeItem(PREMIUM_EXPIRY_KEY);
+        }
+    }
+    
+    // Проверяем в данных текущего пользователя
+    const user = getCurrentUser();
+    if (user && user.isPremium && user.premiumExpiry) {
+        const expiryDate = new Date(user.premiumExpiry);
+        if (expiryDate > new Date()) {
+            return true;
+        }
+    }
+    
+    // Проверяем в массиве всех пользователей
+    const users = getUsers();
+    if (user) {
+        const fullUser = users.find(u => u.id === user.id);
+        if (fullUser && fullUser.premiumExpiry) {
+            const expiryDate = new Date(fullUser.premiumExpiry);
+            if (expiryDate > new Date()) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+function getPremiumDaysLeft() {
+    // Проверяем в localStorage
+    const premiumExpiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
+    if (premiumExpiry) {
+        const expiryDate = new Date(premiumExpiry);
+        if (expiryDate > new Date()) {
+            const diff = expiryDate - new Date();
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+    }
+    
+    // Проверяем в данных пользователя
+    const user = getCurrentUser();
+    if (user && user.premiumExpiry) {
+        const expiryDate = new Date(user.premiumExpiry);
+        if (expiryDate > new Date()) {
+            const diff = expiryDate - new Date();
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+    }
+    
+    return 0;
 }
 
 // ========== РЕГИСТРАЦИЯ, ВХОД, ВЫХОД ==========
@@ -60,21 +124,23 @@ function login(username, password) {
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
+        // Проверяем премиум-статус
         let isPremiumValid = false;
+        let premiumExpiry = null;
+        
         if (user.premiumExpiry) {
             const expiryDate = new Date(user.premiumExpiry);
-            const now = new Date();
-            if (expiryDate > now) {
+            if (expiryDate > new Date()) {
                 isPremiumValid = true;
-            } else {
-                user.isPremium = false;
-                user.premiumExpiry = null;
-                const userIndex = users.findIndex(u => u.id === user.id);
-                if (userIndex !== -1) {
-                    users[userIndex] = user;
-                    saveUsers(users);
-                }
+                premiumExpiry = user.premiumExpiry;
             }
+        }
+        
+        // Также проверяем глобальный ключ
+        const globalExpiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
+        if (globalExpiry && new Date(globalExpiry) > new Date()) {
+            isPremiumValid = true;
+            premiumExpiry = globalExpiry;
         }
         
         setCurrentUser({ 
@@ -82,7 +148,7 @@ function login(username, password) {
             username: user.username, 
             favorites: user.favorites || [],
             isPremium: isPremiumValid,
-            premiumExpiry: user.premiumExpiry
+            premiumExpiry: premiumExpiry
         });
         return { success: true };
     }
@@ -152,25 +218,6 @@ function getUserFavorites() {
     return user.favorites || [];
 }
 
-// ========== ПРЕМИУМ ФУНКЦИИ ==========
-
-function isUserPremium() {
-    const user = getCurrentUser();
-    if (!user) return false;
-    if (user.isPremium) return true;
-    
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        if (expiryDate > now) {
-            return true;
-        }
-    }
-    return false;
-}
-
 function activateUserPremium(userId, days = 30) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
@@ -183,6 +230,9 @@ function activateUserPremium(userId, days = 30) {
         users[userIndex].premiumExpiry = expiryDate.toISOString();
         saveUsers(users);
         
+        // Сохраняем глобальный ключ
+        localStorage.setItem(PREMIUM_EXPIRY_KEY, expiryDate.toISOString());
+        
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.isPremium = true;
@@ -194,22 +244,6 @@ function activateUserPremium(userId, days = 30) {
     return false;
 }
 
-function getPremiumDaysLeft() {
-    const user = getCurrentUser();
-    if (!user) return 0;
-    
-    const users = getUsers();
-    const fullUser = users.find(u => u.id === user.id);
-    if (fullUser && fullUser.premiumExpiry) {
-        const expiryDate = new Date(fullUser.premiumExpiry);
-        const now = new Date();
-        const diffTime = expiryDate - now;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays > 0 ? diffDays : 0;
-    }
-    return 0;
-}
-
 // ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ШАПКИ ==========
 
 function updateAuthUI() {
@@ -218,7 +252,10 @@ function updateAuthUI() {
     if (!container) return;
     
     if (user) {
-        const premiumBadge = user.isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
+        // Проверяем премиум-статус и показываем бриллиантик
+        const isPremium = isUserPremium();
+        const premiumBadge = isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
+        
         container.innerHTML = `
             <div class="user-info">
                 <span class="user-name">👤 ${user.username}${premiumBadge}</span>
