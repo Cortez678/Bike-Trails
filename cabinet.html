@@ -7,138 +7,105 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .cabinet-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-        .cabinet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .back-btn { background: rgba(74, 144, 226, 0.2); border: none; padding: 0.5rem 1rem; border-radius: 2rem; cursor: pointer; color: white; }
-        .user-info-card { background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem; }
-        .logout-btn { background: #ff3b30; border: none; padding: 0.5rem 1rem; border-radius: 2rem; cursor: pointer; color: white; margin-top: 1rem; }
-        .gamification-block { background: rgba(20, 30, 45, 0.5); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; }
-        .level-section { text-align: center; margin-bottom: 1.5rem; }
-        .level-badge { display: inline-block; background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; padding: 0.5rem 1.5rem; border-radius: 2rem; font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem; }
-        .xp-bar-container { background: rgba(255, 255, 255, 0.1); border-radius: 1rem; height: 20px; overflow: hidden; margin: 0.5rem 0; }
-        .xp-bar { background: linear-gradient(135deg, #4a90e2, #7b3fe4); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 1rem; }
-        .xp-info { font-size: 0.8rem; color: #8a9bb5; }
-        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.8rem; margin-top: 1rem; margin-bottom: 1.5rem; }
-        .achievement-card { background: rgba(0, 0, 0, 0.3); border-radius: 0.8rem; padding: 0.8rem; text-align: center; transition: transform 0.2s; }
-        .achievement-card.unlocked { border: 1px solid #ffd700; background: rgba(255, 215, 0, 0.1); }
-        .achievement-card.locked { opacity: 0.5; }
-        .achievement-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
-        .achievement-name { font-size: 0.75rem; font-weight: bold; }
-        .achievement-desc { font-size: 0.65rem; color: #8a9bb5; margin-top: 0.2rem; }
-        .xp-history-list { max-height: 200px; overflow-y: auto; margin-top: 1rem; }
-        .xp-history-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.8rem; }
-        .xp-history-amount { color: #4cd964; font-weight: bold; }
-        .xp-history-date { font-size: 0.7rem; color: #8a9bb5; }
-        
-        /* Стили для выбора темы */
-        .theme-selector { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
-        .theme-option { background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 0.8rem; padding: 0.8rem; text-align: center; cursor: pointer; transition: all 0.2s; flex: 1; min-width: 80px; }
-        .theme-option:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.2); }
-        .theme-option.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); }
-        .theme-preview { font-size: 1.5rem; margin-bottom: 0.3rem; }
-        .premium-locked { font-size: 0.65rem; color: #ffd700; margin-top: 0.3rem; }
-        
-        @media (max-width: 768px) { .cabinet-container { padding: 1rem; } .achievements-grid { grid-template-columns: repeat(2, 1fr); } }
+        .cabinet-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .cabinet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .info-card {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+        .premium-active {
+            background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,149,0,0.1));
+            border: 2px solid #ffd700;
+            border-radius: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .premium-inactive {
+            background: rgba(255,255,255,0.03);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .favorite-card {
+            background: rgba(20,30,45,0.7);
+            border-radius: 1rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .favorite-card:hover {
+            transform: translateY(-3px);
+        }
+        .favorite-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+        .favorite-info {
+            padding: 1rem;
+        }
+        .btn-back, .btn-premium-action {
+            background: rgba(74,144,226,0.2);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+        }
+        .btn-premium-action {
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            color: #1a1a2e;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="cabinet-container">
         <div class="cabinet-header">
             <h1>👤 Личный кабинет</h1>
-            <button class="back-btn" onclick="location.href='index.html'">← На главную</button>
+            <button class="btn-back" onclick="location.href='index.html'">← На главную</button>
         </div>
         
-        <div class="user-info-card">
-            <p><strong>Имя пользователя:</strong> <span id="usernameDisplay"></span> <span id="premiumBadge"></span></p>
+        <!-- Премиум статус -->
+        <div id="premiumStatusBlock"></div>
+        
+        <div class="info-card">
+            <p><strong>Имя пользователя:</strong> <span id="usernameDisplay"></span></p>
             <p><strong>Дата регистрации:</strong> <span id="regDateDisplay"></span></p>
-            
-            <!-- Выбор темы -->
-            <div id="themeSelectorBlock" style="margin-top: 1.5rem;">
-                <h3>🎨 Оформление</h3>
-                <div class="theme-selector">
-                    <div class="theme-option" data-theme="dark">
-                        <div class="theme-preview">🌙</div>
-                        <div>Тёмная</div>
-                        <div class="premium-locked">🔓 Бесплатно</div>
-                    </div>
-                    <div class="theme-option" data-theme="light">
-                        <div class="theme-preview">☀️</div>
-                        <div>Светлая</div>
-                        <div class="premium-locked">🔓 Бесплатно</div>
-                    </div>
-                    <div class="theme-option premium-theme" data-theme="ultra-dark">
-                        <div class="theme-preview">🌑</div>
-                        <div>Ультра-тёмная</div>
-                        <div class="premium-locked">💎 Premium</div>
-                    </div>
-                    <div class="theme-option premium-theme" data-theme="sport">
-                        <div class="theme-preview">🔥</div>
-                        <div>Спортивная</div>
-                        <div class="premium-locked">💎 Premium</div>
-                    </div>
-                </div>
-            </div>
-            
-            <button id="logoutBtn" class="logout-btn">Выйти</button>
         </div>
         
-        <div class="gamification-block">
-            <div class="level-section">
-                <div class="level-badge" id="levelBadge">🚲 Новичок</div>
-                <div class="xp-bar-container">
-                    <div class="xp-bar" id="xpBar" style="width: 0%"></div>
-                </div>
-                <div class="xp-info">
-                    <span id="currentXP">0</span> / <span id="nextXP">100</span> XP
-                </div>
-            </div>
-            <h3>🏆 Достижения</h3>
-            <div id="achievementsList" class="achievements-grid"></div>
-            <h3>📜 История опыта</h3>
-            <div id="xpHistoryList" class="xp-history-list"></div>
+        <h2>⭐ Избранные маршруты</h2>
+        <div id="favoritesContainer" class="favorites-grid">
+            <div style="padding:2rem; text-align:center;">Загрузка...</div>
         </div>
     </div>
-
-    <script src="premium.js"></script>
-    <script src="gamification.js"></script>
+    
+    <script src="theme.js"></script>
     <script>
         const CURRENT_USER_KEY = 'bike_trails_current_user';
         const USERS_KEY = 'bike_trails_users';
-        
-        // Проверка премиум (дублируем на всякий случай)
-        function isPremiumLocal() {
-            const expiry = localStorage.getItem('bike_trails_premium_expiry');
-            if (!expiry) return false;
-            const expiryDate = new Date(expiry);
-            const now = new Date();
-            return expiryDate > now;
-        }
-        
-        // Установка темы
-        function setTheme(themeName) {
-            // Проверка премиум для премиум-тем
-            if ((themeName === 'ultra-dark' || themeName === 'sport') && !isPremiumLocal()) {
-                alert('💎 Эта тема доступна только премиум-подписчикам!');
-                return false;
-            }
-            
-            // Удаляем все классы тем
-            document.body.classList.remove('light-theme', 'ultra-dark-theme', 'sport-theme');
-            
-            if (themeName === 'light') {
-                document.body.classList.add('light-theme');
-                localStorage.setItem('bike_trails_theme', 'light');
-            } else if (themeName === 'ultra-dark') {
-                document.body.classList.add('ultra-dark-theme');
-                localStorage.setItem('bike_trails_theme', 'ultra-dark');
-            } else if (themeName === 'sport') {
-                document.body.classList.add('sport-theme');
-                localStorage.setItem('bike_trails_theme', 'sport');
-            } else {
-                localStorage.setItem('bike_trails_theme', 'dark');
-            }
-            return true;
-        }
         
         function getCurrentUser() {
             const user = localStorage.getItem(CURRENT_USER_KEY);
@@ -150,9 +117,52 @@
             return users ? JSON.parse(users) : [];
         }
         
-        function logout() {
-            localStorage.removeItem(CURRENT_USER_KEY);
-            location.href = 'index.html';
+        function isPremium() {
+            const user = getCurrentUser();
+            if (!user) return false;
+            if (user.isPremium) return true;
+            
+            const users = getUsers();
+            const fullUser = users.find(u => u.id === user.id);
+            if (fullUser && fullUser.premiumExpiry) {
+                const expiryDate = new Date(fullUser.premiumExpiry);
+                if (expiryDate > new Date()) return true;
+            }
+            return false;
+        }
+        
+        function getPremiumDaysLeft() {
+            const user = getCurrentUser();
+            if (!user) return 0;
+            const users = getUsers();
+            const fullUser = users.find(u => u.id === user.id);
+            if (fullUser && fullUser.premiumExpiry) {
+                const diff = new Date(fullUser.premiumExpiry) - new Date();
+                return Math.ceil(diff / (1000 * 60 * 60 * 24));
+            }
+            return 0;
+        }
+        
+        function displayPremiumStatus() {
+            const container = document.getElementById('premiumStatusBlock');
+            if (!container) return;
+            
+            if (isPremium()) {
+                const daysLeft = getPremiumDaysLeft();
+                container.innerHTML = `
+                    <div class="premium-active">
+                        <div style="font-size:2rem;">💎</div>
+                        <div><strong>Премиум-статус активен!</strong><br>Осталось дней: ${daysLeft}<br>Вам доступны эксклюзивные маршруты.</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="premium-inactive">
+                        💎 Нет активной премиум-подписки<br>
+                        <button class="btn-premium-action" onclick="location.href='premium.html'" style="margin-top:0.5rem;">Оформить подписку</button>
+                    </div>
+                `;
+            }
         }
         
         const user = getCurrentUser();
@@ -163,94 +173,37 @@
             const users = getUsers();
             const fullUser = users.find(u => u.id === user.id);
             if (fullUser && fullUser.createdAt) {
-                const date = new Date(fullUser.createdAt);
-                document.getElementById('regDateDisplay').innerText = date.toLocaleDateString('ru-RU');
+                document.getElementById('regDateDisplay').innerText = new Date(fullUser.createdAt).toLocaleDateString('ru-RU');
             } else {
                 document.getElementById('regDateDisplay').innerText = 'Неизвестно';
             }
             
-            // Золотой значок премиум
-            if (isPremiumLocal()) {
-                document.getElementById('premiumBadge').innerHTML = '<span class="premium-gold-badge">💎 Премиум</span>';
-            }
-        }
-        
-        document.getElementById('logoutBtn')?.addEventListener('click', logout);
-        
-        // ========== ВЫБОР ТЕМЫ ==========
-        function initThemeSelector() {
-            const currentTheme = localStorage.getItem('bike_trails_theme') || 'dark';
+            displayPremiumStatus();
             
-            document.querySelectorAll('.theme-option').forEach(opt => {
-                const theme = opt.getAttribute('data-theme');
-                if (theme === currentTheme) {
-                    opt.classList.add('selected');
-                }
-                
-                opt.addEventListener('click', () => {
-                    const selectedTheme = opt.getAttribute('data-theme');
-                    if (setTheme(selectedTheme)) {
-                        document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-                        opt.classList.add('selected');
-                    }
-                });
-            });
-        }
-        
-        initThemeSelector();
-        
-        // ========== ГЕЙМИФИКАЦИЯ ==========
-        function displayGamification() {
-            if (!user) return;
-            const userId = user.id;
-            if (typeof getUserXP === 'undefined') return;
+            const trails = [
+                { id: 1, name: "Воробьёвы горы", image: "images/vorobyovy-gory-1.jpg" },
+                { id: 2, name: "Куршская коса", image: "images/kurshskaya-kosa-1.jpg" },
+                { id: 3, name: "Лаго-Наки", image: "" },
+                { id: 4, name: "Алтайский Марс", image: "" },
+                { id: 5, name: "Байкальская петля", image: "" },
+                { id: 6, name: "Долина гейзеров", image: "" }
+            ];
             
-            const xp = getUserXP(userId);
-            const level = getUserLevel(xp);
-            const xpToNext = getXPToNextLevel(xp);
-            const progress = getLevelProgress(xp);
+            const favorites = user.favorites || [];
+            const container = document.getElementById('favoritesContainer');
             
-            document.getElementById('levelBadge').innerHTML = `${level.name} (ур. ${level.level})`;
-            document.getElementById('xpBar').style.width = `${progress}%`;
-            document.getElementById('currentXP').innerText = xp;
-            document.getElementById('nextXP').innerText = xpToNext;
-            
-            const userAchievements = getUserAchievements(userId);
-            const achievementsContainer = document.getElementById('achievementsList');
-            achievementsContainer.innerHTML = achievements.map(ach => {
-                const isUnlocked = userAchievements.includes(ach.id);
-                return `
-                    <div class="achievement-card ${isUnlocked ? 'unlocked' : 'locked'}">
-                        <div class="achievement-icon">${ach.icon}</div>
-                        <div class="achievement-name">${ach.name}</div>
-                        <div class="achievement-desc">${ach.description}</div>
-                        ${isUnlocked ? '<small>✅ Получено</small>' : '<small>🔒 Не разблокировано</small>'}
-                    </div>
-                `;
-            }).join('');
-            
-            const history = getXPHistory(userId);
-            const historyContainer = document.getElementById('xpHistoryList');
-            if (history.length === 0) {
-                historyContainer.innerHTML = '<div class="xp-history-item">Пока нет активных действий</div>';
+            if (favorites.length === 0) {
+                container.innerHTML = '<div style="padding:2rem; text-align:center; color:#8a9bb5;">⭐ У вас пока нет избранных маршрутов</div>';
             } else {
-                historyContainer.innerHTML = history.map(item => `
-                    <div class="xp-history-item">
-                        <span>${item.action}</span>
-                        <div>
-                            <span class="xp-history-amount">+${item.amount} XP</span>
-                            <span class="xp-history-date">${new Date(item.date).toLocaleDateString()}</span>
-                        </div>
+                const favoriteTrails = trails.filter(t => favorites.includes(t.id));
+                container.innerHTML = favoriteTrails.map(trail => `
+                    <div class="favorite-card" onclick="location.href='trail-${trail.id}.html'">
+                        <div class="favorite-image" style="background: ${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg,#2b2d42,#353b48)'}; background-size:cover; background-position:center;"></div>
+                        <div class="favorite-info"><h3>${trail.name}</h3></div>
                     </div>
                 `).join('');
             }
         }
-        
-        setTimeout(() => {
-            if (typeof getUserXP !== 'undefined') {
-                displayGamification();
-            }
-        }, 500);
     </script>
 </body>
 </html>
