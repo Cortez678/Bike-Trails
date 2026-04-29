@@ -7,15 +7,13 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .how-to-get { background: rgba(74, 144, 226, 0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
+        .how-to-get { background: rgba(74,144,226,0.1); border-left: 4px solid #4a90e2; padding: 1rem; border-radius: 1rem; margin-top: 1rem; }
         .coordinates { font-family: monospace; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.3rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; }
-        .tip { background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
-        .warning { background: rgba(255, 59, 48, 0.1); border-left: 4px solid #ff3b30; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .tip { background: rgba(255,193,7,0.1); border-left: 4px solid #ffc107; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
+        .warning { background: rgba(255,59,48,0.1); border-left: 4px solid #ff3b30; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
         .favorite-btn { background: linear-gradient(135deg, #ff3b30, #ff9500); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; font-weight: bold; cursor: pointer; margin: 1rem 0; transition: transform 0.2s; }
         .favorite-btn:hover { transform: scale(1.02); }
         .favorite-btn-added { background: linear-gradient(135deg, #4cd964, #34c759); }
-        .gps-btn { background: linear-gradient(135deg, #4a90e2, #7b3fe4); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; font-weight: bold; cursor: pointer; margin: 1rem 0; transition: transform 0.2s; margin-left: 1rem; }
-        .gps-btn:hover { transform: scale(1.02); }
         .trail-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
     </style>
 </head>
@@ -37,7 +35,6 @@
 
             <div class="trail-actions">
                 <button class="favorite-btn" id="favoriteBtn">❤️ В избранное</button>
-                <button class="gps-btn" id="navigateBtn" data-id="6" data-lat="54.1333" data-lon="159.9167">📍 Построить маршрут</button>
             </div>
 
             <div class="gallery">
@@ -48,14 +45,23 @@
 
             <div class="trail-description-full">
                 <h3>📖 О маршруте</h3>
-                <p>Маршрут проходит по Кроноцкому заповеднику — одному из самых труднодоступных мест планеты. Финал — Долина гейзеров, где из-под земли бьют десятки гейзеров.</p>
-                <div class="warning">⚠️ <strong>Экстремальное предупреждение!</strong> Маршрут только для опытных экспедиционеров. Обязательно наличие гида.</div>
-                <div class="tip">💡 <strong>Совет райдера:</strong> Приготовьтесь к любым погодным условиям — на Камчатке они меняются каждые 20 минут.</div>
+                <p>Маршрут проходит по Кроноцкому заповеднику — одному из самых труднодоступных мест планеты. Вы будете пробираться через высокогорные перевалы, пересекать термальные источники, пробираться по медвежьим тропам. Финал — Долина гейзеров, где из-под земли бьют десятки гейзеров, а земля парит.</p>
+                
+                <div class="warning">
+                    ⚠️ <strong>Экстремальное предупреждение!</strong> Маршрут ТОЛЬКО для опытных экспедиционеров. Обязательно наличие гида и разрешения от Кроноцкого заповедника.
+                </div>
+
                 <h3>📍 Особенности маршрута</h3>
-                <ul><li>Один из самых труднодоступных треков на планете</li><li>Уникальные пейзажи: гейзеры, вулканы</li><li>Термальные источники вдоль всего пути</li></ul>
+                <ul>
+                    <li>Один из самых труднодоступных треков на планете</li>
+                    <li>Уникальные пейзажи: гейзеры, вулканы, фумаролы</li>
+                    <li>Термальные источники вдоль всего пути</li>
+                </ul>
+
                 <div class="how-to-get">
                     <h3>🚁 Как добраться</h3>
-                    <p><strong>Только на вертолёте:</strong> Из Елизово (Петропавловск-Камчатский) организуются вертолётные туры в Кроноцкий заповедник.</p>
+                    <p><strong>Только на вертолёте:</strong> Из Елизово (Петропавловск-Камчатский).</p>
+                    <p><strong>Обязательно:</strong> Зарегистрироваться в Кроноцком заповеднике.</p>
                     <p><strong>Координаты старта:</strong> <span class="coordinates">54.1333° N, 159.9167° E</span></p>
                 </div>
             </div>
@@ -65,10 +71,11 @@
         </footer>
     </div>
 
+    <script src="theme.js"></script>
     <script>
-        const TRAIL_ID = 6;
         const CURRENT_USER_KEY = 'bike_trails_current_user';
         const USERS_KEY = 'bike_trails_users';
+        const TRAIL_ID = 6;
         
         function getCurrentUser() {
             const user = localStorage.getItem(CURRENT_USER_KEY);
@@ -145,7 +152,7 @@
         document.getElementById('favoriteBtn').addEventListener('click', () => {
             const user = getCurrentUser();
             if (!user) {
-                alert('Войдите в аккаунт');
+                alert('Войдите в аккаунт, чтобы добавить маршрут в избранное');
                 return;
             }
             const isFav = isFavorite(user.id, TRAIL_ID);
@@ -160,14 +167,6 @@
         });
         
         updateFavoriteButton();
-        
-        document.getElementById('navigateBtn').addEventListener('click', () => {
-            const lat = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lat'));
-            const lon = parseFloat(document.getElementById('navigateBtn').getAttribute('data-lon'));
-            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            const url = isIOS ? `http://maps.apple.com/?daddr=${lat},${lon}&dirflg=d` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=bicycling`;
-            window.open(url, '_blank');
-        });
     </script>
 </body>
 </html>
