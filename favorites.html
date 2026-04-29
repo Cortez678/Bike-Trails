@@ -15,38 +15,20 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-        .back-btn {
-            background: rgba(74, 144, 226, 0.2);
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .back-btn:hover {
-            background: rgba(74, 144, 226, 0.4);
-        }
         .favorites-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
-            margin-top: 1.5rem;
         }
         .favorite-card {
-            background: rgba(20, 30, 45, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(20,30,45,0.7);
             border-radius: 1rem;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .favorite-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(74, 144, 226, 0.3);
         }
         .favorite-image {
             height: 180px;
@@ -63,13 +45,10 @@
             border-radius: 50%;
             width: 32px;
             height: 32px;
-            font-size: 1.2rem;
             cursor: pointer;
             color: #ff3b30;
-            transition: all 0.2s;
         }
         .remove-fav:hover {
-            transform: scale(1.1);
             background: #ff3b30;
             color: white;
         }
@@ -80,29 +59,13 @@
             text-align: center;
             padding: 3rem;
             color: #8a9bb5;
-            background: rgba(255,255,255,0.03);
-            border-radius: 1rem;
         }
-        .empty-favorites button {
-            margin-top: 1rem;
-            background: linear-gradient(135deg, #4a90e2, #7b3fe4);
+        .back-btn {
+            background: rgba(74,144,226,0.2);
             border: none;
-            padding: 0.6rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 2rem;
-            color: white;
             cursor: pointer;
-        }
-        .trail-stats {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
-            font-size: 0.85rem;
-            color: #b8c7e5;
-        }
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
         }
     </style>
 </head>
@@ -112,31 +75,19 @@
             <h1>❤️ Избранные маршруты</h1>
             <button class="back-btn" onclick="location.href='index.html'">← На главную</button>
         </div>
-        
         <div id="favoritesContainer" class="favorites-grid">
             <div class="empty-favorites">Загрузка...</div>
         </div>
-        
         <footer class="footer">
             <p>© 2025 Bike Trails — веломаршруты по России</p>
         </footer>
     </div>
     
+    <script src="theme.js"></script>
     <script>
-        // Ключи для localStorage
         const CURRENT_USER_KEY = 'bike_trails_current_user';
         const USERS_KEY = 'bike_trails_users';
         
-        // Данные маршрутов
-        const trails = [{ id: 1, name: "Воробьёвы горы", location: "Москва", difficulty: "easy", difficultyText: "🟢 Лёгкий", image: "images/vorobyovy-gory-1.jpg" },
-            { id: 2, name: "Куршская коса", location: "Калининградская область", difficulty: "medium", difficultyText: "🔵 Средний", image: "images/kurshskaya-kosa-1.jpg" },
-            { id: 3, name: "Лаго-Наки", location: "Адыгея", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" },
-            { id: 4, name: "Алтайский Марс", location: "Республика Алтай", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" },
-            { id: 5, name: "Байкальская петля", location: "Иркутская область", difficulty: "medium", difficultyText: "🔵 Средний", image: "" },
-            { id: 6, name: "Долина гейзеров", location: "Камчатский край", difficulty: "hard", difficultyText: "⚫ Сложный", image: "" }
-        ];
-        
-        // Функции работы с localStorage
         function getCurrentUser() {
             const user = localStorage.getItem(CURRENT_USER_KEY);
             return user ? JSON.parse(user) : null;
@@ -151,98 +102,58 @@
             localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
         
-        // Удаление из избранного
         function removeFromFavorites(trailId) {
             const user = getCurrentUser();
             if (!user) return;
-            
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === user.id);
-            
             if (userIndex !== -1) {
-                // Удаляем ID маршрута из массива favorites
                 users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
                 saveUsers(users);
-                
-                // Обновляем текущего пользователя в localStorage
-                const updatedUser = { ...user, favorites: users[userIndex].favorites };
-                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedUser));
-                
-                // Перезагружаем страницу, чтобы обновить список
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({ ...user, favorites: users[userIndex].favorites }));
                 location.reload();
             }
         }
         
-        // Отображение избранного
-        function displayFavorites() {
-            const container = document.getElementById('favoritesContainer');
-            const user = getCurrentUser();
-            
-            // Проверка авторизации
-            if (!user) {
-                container.innerHTML = `
-                    <div class="empty-favorites">
-                        🔒 Войдите в аккаунт, чтобы просматривать избранные маршруты<br>
-                        <button onclick="location.href='index.html'">Перейти на главную</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Получаем массив ID избранных маршрутов
-            const favoritesIds = user.favorites || [];
-            console.log('Избранные ID:', favoritesIds); // Для отладки
-            
-            if (favoritesIds.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-favorites">
-                        ⭐ У вас пока нет избранных маршрутов<br>
-                        <button onclick="location.href='index.html'">Выбрать маршруты</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Фильтруем маршруты, которые есть в избранном
-            const favoriteTrails = trails.filter(trail => favoritesIds.includes(trail.id));
+        const user = getCurrentUser();
+        const container = document.getElementById('favoritesContainer');
+        
+        if (!user) {
+            container.innerHTML = '<div class="empty-favorites">🔒 Войдите в аккаунт, чтобы просматривать избранные маршруты<br><button class="back-btn" onclick="location.href=\'index.html\'" style="margin-top:1rem;">На главную</button></div>';
+        } else {
+            const trails = [
+                { id: 1, name: "Воробьёвы горы", image: "images/vorobyovy-gory-1.jpg" },
+                { id: 2, name: "Куршская коса", image: "images/kurshskaya-kosa-1.jpg" },
+                { id: 3, name: "Лаго-Наки", image: "" },
+                { id: 4, name: "Алтайский Марс", image: "" },
+                { id: 5, name: "Байкальская петля", image: "" },
+                { id: 6, name: "Долина гейзеров", image: "" }
+            ];
+            const favorites = user.favorites || [];
+            const favoriteTrails = trails.filter(t => favorites.includes(t.id));
             
             if (favoriteTrails.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-favorites">
-                        ⭐ Маршруты не найдены<br>
-                        <button onclick="location.href='index.html'">На главную</button>
-                    </div>`;
-                return;
-            }
-            
-            // Отображаем карточки избранных маршрутов
-            container.innerHTML = favoriteTrails.map(trail => `
-                <div class="favorite-card" data-id="${trail.id}">
-                    <div class="favorite-image" style="background: ${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg, #2b2d42, #353b48)'}; background-size: cover; background-position: center;">
-                        <button class="remove-fav" data-id="${trail.id}" title="Удалить из избранного">✕</button>
-                    </div>
-                    <div class="favorite-info" onclick="location.href='trail-${trail.id}.html'">
-                        <h3>${trail.name}</h3>
-                        <div class="trail-stats">
-                            <span class="stat-item">${trail.difficultyText}</span>
-                            <span class="stat-item">📍 ${trail.location}</span>
+                container.innerHTML = '<div class="empty-favorites">⭐ У вас пока нет избранных маршрутов<br><button class="back-btn" onclick="location.href=\'index.html\'" style="margin-top:1rem;">Выбрать маршруты</button></div>';
+            } else {
+                container.innerHTML = favoriteTrails.map(trail => `
+                    <div class="favorite-card">
+                        <div class="favorite-image" style="background: ${trail.image ? `url('${trail.image}')` : 'linear-gradient(135deg,#2b2d42,#353b48)'}; background-size:cover;">
+                            <button class="remove-fav" data-id="${trail.id}">✕</button>
+                        </div>
+                        <div class="favorite-info" onclick="location.href='trail-${trail.id}.html'">
+                            <h3>${trail.name}</h3>
                         </div>
                     </div>
-                </div>
-            `).join('');
-            
-            // Навешиваем обработчики на кнопки удаления
-            document.querySelectorAll('.remove-fav').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Чтобы не переходить на страницу маршрута
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    removeFromFavorites(id);
+                `).join('');
+                
+                document.querySelectorAll('.remove-fav').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeFromFavorites(parseInt(btn.dataset.id));
+                    });
                 });
-            });
+            }
         }
-        
-        // Запускаем отображение при загрузке страницы
-        displayFavorites();
     </script>
 </body>
 </html>
