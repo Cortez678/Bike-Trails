@@ -35,7 +35,6 @@ function initTheme() {
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
     } else {
-        // По умолчанию тёмная тема
         document.body.classList.remove('light-theme');
         if (!savedTheme) {
             localStorage.setItem(THEME_KEY, 'dark');
