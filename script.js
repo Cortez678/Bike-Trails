@@ -190,4 +190,22 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         setTimeout(initGamification, 500);
     }
+});// ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        // Убираем старый обработчик, если он был
+        const newToggle = themeToggle.cloneNode(true);
+        themeToggle.parentNode.replaceChild(newToggle, themeToggle);
+        
+        newToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleTheme();
+        });
+    }
+}
+
+// Запускаем после загрузки страницы
+document.addEventListener('DOMContentLoaded', () => {
+    setupThemeToggle();
 });
