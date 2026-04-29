@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трекер скорости | Bike Trails</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="speed-tracker.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="tracker-container">
+            <div class="tracker-header">
+                <a href="index.html" class="back-link">← На главную</a>
+                <h1>📊 Трекер скорости</h1>
+                <p>Отслеживайте свою скорость в реальном времени</p>
+            </div>
+
+            <div class="speed-stats">
+                <div class="stat-card-speed"><div class="stat-label">⚡ Текущая скорость</div><div class="stat-value current-speed" id="currentSpeed">0.0</div><div class="stat-unit">км/ч</div></div>
+                <div class="stat-card-speed"><div class="stat-label">📈 Максимальная скорость</div><div class="stat-value" id="maxSpeed">0.0</div><div class="stat-unit">км/ч</div></div>
+                <div class="stat-card-speed"><div class="stat-label">📉 Минимальная скорость</div><div class="stat-value" id="minSpeed">0.0</div><div class="stat-unit">км/ч</div></div>
+                <div class="stat-card-speed"><div class="stat-label">📊 Средняя скорость</div><div class="stat-value" id="avgSpeed">0.0</div><div class="stat-unit">км/ч</div></div>
+            </div>
+
+            <div class="tracker-controls">
+                <button id="resetStats" class="control-btn reset">🔄 Сбросить статистику</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="theme.js"></script>
+    <script>
+        let watchId = null;
+        let stats = { maxSpeed: 0, minSpeed: Infinity, speeds: [], startTime: null };
+        
+        function updateUI() {
+            document.getElementById('maxSpeed').innerText = stats.maxSpeed.toFixed(1);
+            document.getElementById('minSpeed').innerText = stats.minSpeed === Infinity ? '0.0' : stats.minSpeed.toFixed(1);
+            const avg = stats.speeds.length ? (stats.speeds.reduce((a,b)=>a+b,0)/stats.speeds.length).toFixed(1) : '0.0';
+            document.getElementById('avgSpeed').innerText = avg;
+        }
+        
+        function onPositionUpdate(position) {
+            let speed = position.coords.speed ? position.coords.speed * 3.6 : 0;
+            document.getElementById('currentSpeed').innerText = speed.toFixed(1);
+            
+            if (speed > stats.maxSpeed) { stats.maxSpeed = speed; updateUI(); }
+            if (speed > 0 && speed < stats.minSpeed) { stats.minSpeed = speed; updateUI(); }
+            if (speed > 0) { stats.speeds.push(speed); updateUI(); }
+        }
+        
+        function startTracking() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            watchId = navigator.geolocation.watchPosition(onPositionUpdate, console.error, { enableHighAccuracy: true });
+        }
+        
+        document.getElementById('resetStats')?.addEventListener('click', () => {
+            stats = { maxSpeed: 0, minSpeed: Infinity, speeds: [], startTime: null };
+            updateUI();
+            document.getElementById('currentSpeed').innerText = '0.0';
+            alert('Статистика сброшена');
+        });
+        
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(() => startTracking(), () => alert('Разрешите доступ к геолокации'));
+        } else {
+            alert('GPS не поддерживается');
+        }
+    </script>
+</body>
+</html>
