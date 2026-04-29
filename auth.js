@@ -37,7 +37,6 @@ function isUserPremium() {
         if (expiryDate > new Date()) {
             return true;
         } else {
-            // Если истёк — удаляем
             localStorage.removeItem(PREMIUM_EXPIRY_KEY);
         }
     }
@@ -67,7 +66,6 @@ function isUserPremium() {
 }
 
 function getPremiumDaysLeft() {
-    // Проверяем в localStorage
     const premiumExpiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
     if (premiumExpiry) {
         const expiryDate = new Date(premiumExpiry);
@@ -77,7 +75,6 @@ function getPremiumDaysLeft() {
         }
     }
     
-    // Проверяем в данных пользователя
     const user = getCurrentUser();
     if (user && user.premiumExpiry) {
         const expiryDate = new Date(user.premiumExpiry);
@@ -124,7 +121,6 @@ function login(username, password) {
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
-        // Проверяем премиум-статус
         let isPremiumValid = false;
         let premiumExpiry = null;
         
@@ -136,7 +132,6 @@ function login(username, password) {
             }
         }
         
-        // Также проверяем глобальный ключ
         const globalExpiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
         if (globalExpiry && new Date(globalExpiry) > new Date()) {
             isPremiumValid = true;
@@ -230,7 +225,6 @@ function activateUserPremium(userId, days = 30) {
         users[userIndex].premiumExpiry = expiryDate.toISOString();
         saveUsers(users);
         
-        // Сохраняем глобальный ключ
         localStorage.setItem(PREMIUM_EXPIRY_KEY, expiryDate.toISOString());
         
         const current = getCurrentUser();
@@ -252,7 +246,6 @@ function updateAuthUI() {
     if (!container) return;
     
     if (user) {
-        // Проверяем премиум-статус и показываем бриллиантик
         const isPremium = isUserPremium();
         const premiumBadge = isPremium ? '<span class="premium-badge-mini">💎</span>' : '';
         
@@ -265,6 +258,8 @@ function updateAuthUI() {
                         <a href="cabinet.html">👨‍💼 Личный кабинет</a>
                         <a href="favorites.html">❤️ Избранное</a>
                         <a href="speed-tracker.html">📊 Трекер скорости</a>
+                        <a href="weather.html">🌤️ Погода</a>
+                        <a href="map.html">🗺️ Карта маршрутов</a>
                         <a href="help.html">🆘 Помощь</a>
                         <a href="premium.html">💎 Premium</a>
                         <a href="#" id="themeToggle">🌓 Сменить тему</a>
