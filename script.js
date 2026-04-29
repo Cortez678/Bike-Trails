@@ -3,7 +3,7 @@ const trailsData = [
     {
         id: 1,
         name: "Воробьёвы горы",
-        description: "Легендарный маршрут по Москве-реке с панорамным видом на город.",
+        description: "Легендарный маршрут по Москве-реке с панорамным видом на город. Проходит через парк, набережную и смотровые площадки.",
         difficulty: "easy",
         distance: 15.5,
         elevation: 120,
@@ -14,7 +14,7 @@ const trailsData = [
     {
         id: 2,
         name: "Куршская коса",
-        description: "Уникальный маршрут по национальному парку между морем и заливом.",
+        description: "Уникальный маршрут по национальному парку между морем и заливом. Песчаные дюны, сосновый лес и побережье Балтики.",
         difficulty: "medium",
         distance: 22.0,
         elevation: 180,
@@ -25,7 +25,7 @@ const trailsData = [
     {
         id: 3,
         name: "Лаго-Наки",
-        description: "Высокогорный маршрут по альпийским лугам Адыгеи.",
+        description: "Высокогорный маршрут по альпийским лугам Адыгеи. Горы, водопады и виды, которые захватывают дух.",
         difficulty: "hard",
         distance: 28.5,
         elevation: 850,
@@ -36,7 +36,7 @@ const trailsData = [
     {
         id: 4,
         name: "Алтайский Марс",
-        description: "Космические пейзажи Алтая: красные скалы и горные тропы.",
+        description: "Космические пейзажи Алтая: красные скалы, бирюзовые реки и горные тропы в долине реки Чуя.",
         difficulty: "hard",
         distance: 32.0,
         elevation: 620,
@@ -47,7 +47,7 @@ const trailsData = [
     {
         id: 5,
         name: "Байкальская петля",
-        description: "Кольцевой маршрут вдоль озера Байкал.",
+        description: "Кольцевой маршрут вдоль озера Байкал с заездом в пик Черского и живописные бухты.",
         difficulty: "medium",
         distance: 35.0,
         elevation: 540,
@@ -58,7 +58,7 @@ const trailsData = [
     {
         id: 6,
         name: "Долина гейзеров",
-        description: "Экстремальный маршрут Камчатки.",
+        description: "Сложнейший маршрут Камчатки. Термальные источники, вулканы, медвежьи тропы и дикая природа.",
         difficulty: "hard",
         distance: 18.0,
         elevation: 950,
@@ -90,13 +90,10 @@ function getStarsHTML(rating) {
 
 function createTrailCard(trail) {
     const diff = getDifficultyColor(trail.difficulty);
-    const imageStyle = trail.previewImage ? 
-        `background-image: url('${trail.previewImage}'); background-size: cover; background-position: center;` : 
-        'background: linear-gradient(135deg, #2b2d42, #353b48);';
-    
+    const imageStyle = trail.previewImage ? `background-image: url('${trail.previewImage}');` : 'background: linear-gradient(135deg, #2b2d42, #353b48);';
     return `
         <div class="trail-card" data-difficulty="${trail.difficulty}" data-id="${trail.id}">
-            <div class="card-image" style="${imageStyle}">
+            <div class="card-image" style="${imageStyle} background-size: cover; background-position: center;">
                 <span class="difficulty-badge ${diff.class}">${diff.text}</span>
             </div>
             <div class="card-content">
@@ -144,68 +141,29 @@ function setupFilters() {
     });
 }
 
-// ========== ГЕЙМИФИКАЦИЯ ==========
-function initGamification() {
-    // Обработчики для кнопок "В избранное"
-    const favoriteBtns = document.querySelectorAll('#favoriteBtn');
-    favoriteBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setTimeout(() => {
-                const user = JSON.parse(localStorage.getItem('bike_trails_current_user'));
-                if (user && typeof addFavoriteCount !== 'undefined') {
-                    addFavoriteCount(user.id);
-                }
-            }, 500);
-        });
-    });
-    
-    // Обработчики для кнопок "Построить маршрут"
-    const navigateBtns = document.querySelectorAll('#navigateBtn');
-    navigateBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setTimeout(() => {
-                const user = JSON.parse(localStorage.getItem('bike_trails_current_user'));
-                if (user && typeof addRouteBuilt !== 'undefined') {
-                    const routeId = parseInt(btn.getAttribute('data-id') || '1');
-                    addRouteBuilt(user.id, routeId);
-                }
-            }, 500);
-        });
-    });
-}
-
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
 document.addEventListener('DOMContentLoaded', () => {
     filterTrails('all');
     setupFilters();
-    
-    // Подключаем gamification.js
-    if (!document.querySelector('script[src="gamification.js"]')) {
-        const script = document.createElement('script');
-        script.src = 'gamification.js';
-        document.body.appendChild(script);
-        script.onload = () => {
-            setTimeout(initGamification, 500);
-        };
-    } else {
-        setTimeout(initGamification, 500);
-    }
-});// ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
-function setupThemeToggle() {
+});
+
+// ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+function setupThemeToggleScript() {
     const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        // Убираем старый обработчик, если он был
+    if (themeToggle && typeof toggleTheme !== 'undefined') {
         const newToggle = themeToggle.cloneNode(true);
         themeToggle.parentNode.replaceChild(newToggle, themeToggle);
         
         newToggle.addEventListener('click', (e) => {
             e.preventDefault();
-            toggleTheme();
+            if (typeof toggleTheme === 'function') {
+                toggleTheme();
+            }
         });
     }
 }
 
-// Запускаем после загрузки страницы
-document.addEventListener('DOMContentLoaded', () => {
-    setupThemeToggle();
-});
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupThemeToggleScript);
+} else {
+    setupThemeToggleScript();
+}
