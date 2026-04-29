@@ -5,77 +5,216 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Премиум | Bike Trails</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="premium.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .premium-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .premium-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .premium-header h1 {
+            font-size: 2.5rem;
+            color: #ffd700;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .pricing-card {
+            background: rgba(20, 30, 45, 0.7);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .pricing-card.popular {
+            border: 2px solid #ffd700;
+        }
+        .popular-badge {
+            background: #ffd700;
+            color: #1a1a2e;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffd700;
+            margin: 1rem 0;
+        }
+        .pricing-card ul {
+            list-style: none;
+            text-align: left;
+            margin: 1rem 0;
+        }
+        .pricing-card li {
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-card li::before {
+            content: "✅";
+            color: #4cd964;
+        }
+        .premium-btn {
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            color: #1a1a2e;
+        }
+        .premium-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+        .status-box {
+            background: rgba(255,215,0,0.1);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 1px solid #ffd700;
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 2rem;
+        }
+        body.light-theme .pricing-card {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        body.light-theme .pricing-card li {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="premium-container">
-            <div class="premium-header">
-                <a href="index.html" class="back-link">← На главную</a>
-                <h1>💎 Premium Bike Trails</h1>
-                <p>Получи максимум от велопутешествий с премиум-подпиской</p>
+    <div class="premium-container">
+        <div class="premium-header">
+            <a href="index.html" class="back-link">← На главную</a>
+            <h1>💎 Premium Bike Trails</h1>
+            <p>Получи максимум от велопутешествий</p>
+        </div>
+
+        <div id="statusMessage"></div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>🆓 Бесплатно</h3>
+                <div class="price">0 ₽</div>
+                <ul>
+                    <li>6 маршрутов по России</li>
+                    <li>Избранное</li>
+                    <li>Помощь с автоответами</li>
+                </ul>
+                <button class="premium-btn" disabled>Текущий план</button>
             </div>
 
-            <div id="subscriptionStatus" class="subscription-status"></div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">🔥 Популярный</div>
+                <h3>📅 Месяц</h3>
+                <div class="price">299 ₽</div>
+                <ul>
+                    <li>15+ эксклюзивных маршрутов</li>
+                    <li>Детальные карты с офлайн-доступом</li>
+                    <li>Приоритетные ответы в помощи</li>
+                    <li>Без рекламы</li>
+                </ul>
+                <button class="premium-btn" id="monthlyBtn">Оформить за 299 ₽</button>
+            </div>
 
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>🆓 Бесплатно</h3>
-                    <div class="price">0 ₽</div>
-                    <ul><li>6 маршрутов по России</li><li>Избранное и помощь</li></ul>
-                    <button class="premium-btn" disabled style="opacity:0.5;">Текущий план</button>
-                </div>
-                <div class="pricing-card popular">
-                    <div class="popular-badge">🔥 Популярный</div>
-                    <h3>📅 Месяц</h3>
-                    <div class="price">299 ₽<span>/мес</span></div>
-                    <ul><li>15+ эксклюзивных маршрутов</li><li>Детальные карты</li><li>Приоритетные ответы</li></ul>
-                    <button class="premium-btn" id="monthlyBtn">Оформить за 299 ₽</button>
-                </div>
-                <div class="pricing-card">
-                    <h3>🌟 Год</h3>
-                    <div class="price">2 990 ₽<span>/год</span></div>
-                    <ul><li>Все возможности месяца</li><li>Приоритетная поддержка 24/7</li></ul>
-                    <button class="premium-btn" id="yearlyBtn">Оформить за 2 990 ₽</button>
-                </div>
+            <div class="pricing-card">
+                <h3>🌟 Год</h3>
+                <div class="price">2 990 ₽</div>
+                <div style="color:#4cd964; font-size:0.8rem;">экономия 2 месяца</div>
+                <ul>
+                    <li>Все возможности месяца</li>
+                    <li>Приоритетная поддержка 24/7</li>
+                    <li>Расширенная статистика</li>
+                </ul>
+                <button class="premium-btn" id="yearlyBtn">Оформить за 2 990 ₽</button>
             </div>
         </div>
+
+        <footer class="footer">
+            <p>© 2025 Bike Trails — веломаршруты по России</p>
+        </footer>
     </div>
 
     <script src="theme.js"></script>
-    <script src="premium.js"></script>
     <script>
+        const PREMIUM_EXPIRY_KEY = 'bike_trails_premium_expiry';
+
         function isPremium() {
-            const expiry = localStorage.getItem('bike_trails_premium_expiry');
+            const expiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
             if (!expiry) return false;
             return new Date(expiry) > new Date();
         }
-        
-        function activatePremium(plan) {
-            let days = plan === 'yearly' ? 365 : 30;
-            let price = plan === 'yearly' ? 2990 : 299;
-            let planName = plan === 'yearly' ? 'Годовая' : 'Месячная';
+
+        function getDaysLeft() {
+            const expiry = localStorage.getItem(PREMIUM_EXPIRY_KEY);
+            if (!expiry) return 0;
+            const diff = new Date(expiry) - new Date();
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function showStatus() {
+            const container = document.getElementById('statusMessage');
+            if (!container) return;
             
-            if (confirm(`Оформить премиум-подписку ${planName} за ${price} ₽?`)) {
+            if (isPremium()) {
+                container.innerHTML = `<div class="status-box">💎 У вас активна премиум-подписка! Осталось дней: ${getDaysLeft()}</div>`;
+            } else {
+                container.innerHTML = `<div class="status-box">💎 У вас нет активной премиум-подписки. Оформите сейчас!</div>`;
+            }
+        }
+
+        function activatePremium(plan, days, price) {
+            if (confirm(`Оформить премиум-подписку за ${price} ₽?`)) {
                 const expiry = new Date();
                 expiry.setDate(expiry.getDate() + days);
-                localStorage.setItem('bike_trails_premium_expiry', expiry.toISOString());
+                localStorage.setItem(PREMIUM_EXPIRY_KEY, expiry.toISOString());
+                
+                // Обновляем в текущем пользователе
+                const user = localStorage.getItem('bike_trails_current_user');
+                if (user) {
+                    const userData = JSON.parse(user);
+                    userData.isPremium = true;
+                    userData.premiumExpiry = expiry.toISOString();
+                    localStorage.setItem('bike_trails_current_user', JSON.stringify(userData));
+                }
+                
                 alert('✅ Премиум-подписка активирована!');
+                showStatus();
                 location.reload();
             }
         }
+
+        document.getElementById('monthlyBtn')?.addEventListener('click', () => activatePremium('monthly', 30, 299));
+        document.getElementById('yearlyBtn')?.addEventListener('click', () => activatePremium('yearly', 365, 2990));
         
-        function displayStatus() {
-            const container = document.getElementById('subscriptionStatus');
-            if (isPremium()) {
-                container.innerHTML = '<div class="premium-active">💎 У вас активна премиум-подписка! Спасибо за поддержку!</div>';
-            }
-        }
-        
-        document.getElementById('monthlyBtn')?.addEventListener('click', () => activatePremium('monthly'));
-        document.getElementById('yearlyBtn')?.addEventListener('click', () => activatePremium('yearly'));
-        displayStatus();
+        showStatus();
     </script>
 </body>
 </html>
