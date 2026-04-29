@@ -110,18 +110,15 @@ function addToFavorites(userId, trailId) {
     const users = getUsers();
     const userIndex = users.findIndex(u => u.id === userId);
     
-    if (userIndex !== -1) {
-        if (!users[userIndex].favorites.includes(trailId)) {
-            users[userIndex].favorites.push(trailId);
-            saveUsers(users);
-            
-            const current = getCurrentUser();
-            if (current && current.id === userId) {
-                current.favorites = users[userIndex].favorites;
-                setCurrentUser(current);
-            }
-            return true;
+    if (userIndex !== -1 && !users[userIndex].favorites.includes(trailId)) {
+        users[userIndex].favorites.push(trailId);
+        saveUsers(users);
+        const current = getCurrentUser();
+        if (current && current.id === userId) {
+            current.favorites = users[userIndex].favorites;
+            setCurrentUser(current);
         }
+        return true;
     }
     return false;
 }
@@ -133,7 +130,6 @@ function removeFromFavorites(userId, trailId) {
     if (userIndex !== -1) {
         users[userIndex].favorites = users[userIndex].favorites.filter(id => id !== trailId);
         saveUsers(users);
-        
         const current = getCurrentUser();
         if (current && current.id === userId) {
             current.favorites = users[userIndex].favorites;
@@ -231,6 +227,7 @@ function updateAuthUI() {
                     <div class="dropdown-content" id="dropdownContent">
                         <a href="cabinet.html">👨‍💼 Личный кабинет</a>
                         <a href="favorites.html">❤️ Избранное</a>
+                        <a href="speed-tracker.html">📊 Трекер скорости</a>
                         <a href="help.html">🆘 Помощь</a>
                         <a href="premium.html">💎 Premium</a>
                         <a href="#" id="themeToggle">🌓 Сменить тему</a>
@@ -255,7 +252,20 @@ function updateAuthUI() {
         if (themeToggle) {
             themeToggle.addEventListener('click', (e) => {
                 e.preventDefault();
-                toggleTheme();
+                if (typeof toggleTheme === 'function') {
+                    toggleTheme();
+                } else if (typeof window.toggleTheme === 'function') {
+                    window.toggleTheme();
+                } else {
+                    const body = document.body;
+                    if (body.classList.contains('light-theme')) {
+                        body.classList.remove('light-theme');
+                        localStorage.setItem('bike_trails_theme', 'dark');
+                    } else {
+                        body.classList.add('light-theme');
+                        localStorage.setItem('bike_trails_theme', 'light');
+                    }
+                }
                 dropdownContent.classList.remove('show');
             });
         }
